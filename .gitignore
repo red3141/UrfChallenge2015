@@ -1,0 +1,5 @@
+# Ignore Vim backup files
+*~
+
+# Don't publish Riot API keys publically
+key.txt
