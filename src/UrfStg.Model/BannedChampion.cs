@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CreepScoreAPI;
 
 namespace UrfStg.Model
 {
@@ -11,5 +7,15 @@ namespace UrfStg.Model
         public int ChampionId { get; set; }
         public int PickTurn { get; set; }
         public int? TeamId { get; set; }
+
+        public BannedChampion()
+        { }
+
+        public BannedChampion(BannedChampionAdvanced bc)
+        {
+            ChampionId = bc.championId;
+            PickTurn = bc.pickTurn;
+            TeamId = bc.teamId;
+        }
     }
 }

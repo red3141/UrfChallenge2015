@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CreepScoreAPI;
 
 namespace UrfStg.Model
 {
@@ -11,6 +12,23 @@ namespace UrfStg.Model
         public long SummonerId { get; set; }
         public string SummonerName { get; set; }
 
-        public int MatchId { get; set; }
+        public long MatchId { get; set; }
+
+        public ParticipantIdentity()
+        { }
+
+        public ParticipantIdentity(ParticipantIdentityAdvanced p, long matchId)
+        {
+            MatchId = matchId;
+            if (p == null)
+                return;
+            Id = p.participantId;
+            if (p.player == null)
+                return;
+            MatchHistoryUri = p.player.matchHistoryUri;
+            ProfileIcon = p.player.profileIcon;
+            SummonerId = p.player.summonerId;
+            SummonerName = p.player.summonerName;
+        }
     }
 }

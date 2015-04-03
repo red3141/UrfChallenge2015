@@ -5,7 +5,7 @@ namespace UrfStg.Model
 {
     public interface IRiotDataContext
     {
-        IDbSet<MatchDetailAdvanced> Matches { get; set; }
+        IDbSet<Match> Matches { get; set; }
 
         IDbSet<ParticipantIdentity> ParticipantIdentities { get; set; }
 
@@ -13,10 +13,10 @@ namespace UrfStg.Model
 
         IDbSet<Team> Teams { get; set; }
 
-        IDbSet<FrameAdvanced> Frames { get; set; }
-
         IDbSet<BannedChampion> BannedChampions { get; set; }
 
-        IDbSet<EventAdvanced> Events { get; set; }
+        IDbSet<Event> Events { get; set; }
+
+        int SaveChanges();
     }
 }

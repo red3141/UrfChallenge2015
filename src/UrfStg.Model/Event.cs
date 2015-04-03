@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CreepScoreAPI;
 using CreepScoreAPI.Constants;
 
 namespace UrfStg.Model
@@ -33,8 +34,6 @@ namespace UrfStg.Model
         /// </summary>
         public int? ParticipantId { get; set; }
 
-        public AdvancedMatchHistoryConstants.PointCapturedAdvanced PointCaptured { get; set; }
-
         /// <summary>
         /// Gets or sets the x-position where the event occurred.
         /// </summary>
@@ -65,6 +64,37 @@ namespace UrfStg.Model
 
         public AdvancedMatchHistoryConstants.WardTypeAdvanced WardType { get; set; }
 
-        public int MatchId { get; set; }
+        public long MatchId { get; set; }
+
+        public Event()
+        { }
+
+        public Event(EventAdvanced evt, long matchId)
+        {
+            MatchId = matchId;
+
+            if (evt == null)
+                return;
+            CreatorId = evt.creatorId;
+            EventType = evt.eventType;
+            ItemAfter = evt.itemAfter;
+            ItemBefore = evt.itemBefore;
+            ItemId = evt.itemId;
+            LaneType = evt.laneType;
+            LevelUpType = evt.levelUpType;
+            MonsterType = evt.monsterType;
+            ParticipantId = evt.participantId;
+            if (evt.position != null)
+            {
+                X = evt.position.x;
+                Y = evt.position.y;
+            }
+            SkillSlot = evt.skillSlot;
+            TeamId = evt.teamId;
+            Timestamp = evt.timestamp;
+            TowerType = evt.towerType;
+            VictimId = evt.victimId;
+            WardType = evt.wardType;
+        }
     }
 }

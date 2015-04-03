@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using CreepScoreAPI;
 
 namespace UrfStg.Model
 {
@@ -7,7 +9,7 @@ namespace UrfStg.Model
     {
         [Key]
         public int Id { get; set; }
-        public List<BannedChampion> Bans { get; set; }
+        public IList<BannedChampion> Bans { get; set; }
         public int BaronKills { get; set; }
         public int DragonKills { get; set; }
         public bool FirstBaron { get; set; }
@@ -20,6 +22,30 @@ namespace UrfStg.Model
         public int VilemawKills { get; set; }
         public bool Winner { get; set; }
 
-        public int MatchId { get; set; }
+        public long MatchId { get; set; }
+
+        public Team()
+        { }
+
+        public Team(TeamAdvanced team, long matchId)
+        {
+            MatchId = matchId;
+            if (team == null)
+                return;
+            Id = team.teamId;
+            if (team.bans != null)
+                Bans = team.bans.Select(b => new BannedChampion(b)).ToList();
+            BaronKills = team.baronKills;
+            DragonKills = team.dragonKills;
+            FirstBaron = team.firstBaron;
+            FirstBlood = team.firstBlood;
+            FirstDragon = team.firstDragon;
+            FirstInhibitor = team.firstInhibitor;
+            FirstTower = team.firstTower;
+            InhibitorKills = team.inhibitorKills;
+            TowerKills = team.towerKills;
+            VilemawKills = team.vilemawKills;
+            Winner = team.winner;
+        }
     }
 }
