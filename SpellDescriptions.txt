@@ -2,6 +2,7 @@ P1 = player position when spell cast
 O = starting point of spell
 
 Ahri: particle moves to P1, then returns to O, circular hitbox
+Anivia: particle moves in a line, circular hitbox; make it slow
 Annie: particle moves in line/arc, circular hitbox
 Ashe: 5 particles spread out, each moves as a line, rectangular hitbox
 Bard: Circular particle appears for a few seconds, any other particles touching it stop until it disappears
@@ -9,5 +10,9 @@ Blitzcrank: particle moves across screen, has trail, rectangular hitbox
 Brand: particle moves in a line, circular hitbox
 Braum: particle moves in a line, circular hitbox
 Caitlyn: particle moves in a line, circular hitbox?
+Cassiopeia: 2 particles move in parallel lines, circular hitbox?
+Corki: particle moves in a line, circular hitbox
+Darius: Axe swings on side of screen, arc hitbox
 Lee Sin: particle moves in line towards P1, circular hitbox
+Singed: series of particles appear in a line (random target), remain for a few seconds, circular hitbox/particle
 Twisted Fate: 3 particles spread out, each moves in a line, rectangular hitbox
