@@ -3,3 +3,11 @@
 
 # Don't publish Riot API keys publically
 key.txt
+
+# .NET files ans folders to ignore
+bin
+obj
+*/packages/*.*.*
+/TestResults
+*.suo
+*.user
