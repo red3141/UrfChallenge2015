@@ -26,20 +26,6 @@ namespace UrfStg.Tests.Controllers
         }
 
         [Test]
-        public void ShouldGetChildObjects()
-        {
-            var mockDb = Mock.Of<IRiotDataContext>(d =>
-                d.Matches == new MatchDbSet { new Match { Id = 12L } } &&
-                d.Events == new InMemoryDbSet<Event> { new Event { Id = 3L, MatchId = 12L } });
-            var controller = new GamesController(mockDb);
-
-            var match = controller.GetRandomGame();
-
-            Assert.That(match, Is.Not.Null);
-            Assert.That(match.Events, Is.Not.Null.And.Not.Empty);
-        }
-
-        [Test]
         public void ShouldGetRandomGame()
         {
             var matches = new MatchDbSet
