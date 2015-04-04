@@ -111,3 +111,7 @@ CREATE TABLE `assist` (
   CONSTRAINT `fk_assist_match` FOREIGN KEY (`matchId`) REFERENCES `match` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_assist_participant` FOREIGN KEY (`participantId`, `matchId`) REFERENCES `participant` (`id`, `matchId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
+
+ALTER TABLE `urf`.`event` 
+CHANGE COLUMN `gameTime` `timestamp` TIME NOT NULL ;
+

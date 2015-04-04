@@ -26,6 +26,20 @@ namespace UrfStg.Tests.Controllers
         }
 
         [Test]
+        public void ShouldGetChildObjects()
+        {
+            var mockDb = Mock.Of<IRiotDataContext>(d =>
+                d.Matches == new MatchDbSet { new Match { Id = 12L } } &&
+                d.Events == new InMemoryDbSet<Event> { new Event { Id = 3L, MatchId = 12L } });
+            var controller = new GamesController(mockDb);
+
+            var match = controller.GetRandomGame();
+
+            Assert.That(match, Is.Not.Null);
+            Assert.That(match.Events, Is.Not.Null.And.Not.Empty);
+        }
+
+        [Test]
         public void ShouldGetRandomGame()
         {
             var matches = new MatchDbSet
@@ -48,6 +62,8 @@ namespace UrfStg.Tests.Controllers
         [Test]
         public void ShouldHaveEvenDistribution()
         {
+            // Note that this test may fail intermittently due to the random nature of GetRandomGame().
+            // As long as this test passes most of the time, it's fine.
             var matches = new MatchDbSet
             {
                 new Match { Id = 134L },
@@ -58,6 +74,7 @@ namespace UrfStg.Tests.Controllers
                 new Match { Id = 11L },
                 new Match { Id = 98665457465L },
                 new Match { Id = 98665457466L },
+                new Match { Id = 98665457467L },
             };
             var numIterations = 1000;
             var counts = new int[matches.Count()];
@@ -75,7 +92,7 @@ namespace UrfStg.Tests.Controllers
             }
 
             var expected = (double)numIterations / counts.Length;
-            var tolerance = 0.1;
+            var tolerance = 0.15;
             var min = Convert.ToInt32(expected * (1 - tolerance));
             var max = Convert.ToInt32(expected * (1 + tolerance));
             foreach (var count in counts)

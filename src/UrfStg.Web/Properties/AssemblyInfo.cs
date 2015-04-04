@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UrfStg.Web")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A web API for getting URF games.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("UrfStg.Web")]

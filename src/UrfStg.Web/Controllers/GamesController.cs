@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -54,7 +55,11 @@ namespace UrfStg.Web.Controllers
                     Monitor.Exit(random);
             }
             var selectedId = ids[index];
-            var match = dataContext.Matches.Find(selectedId);
+            var match = dataContext.Matches
+                .Include(m => m.Events.Select(e => e.AssistingParticipants))
+                .Include(m => m.Participants)
+                .Include(m => m.Teams.Select(t => t.Bans))
+                .FirstOrDefault(m => m.Id == selectedId);
 
             return match;
         }

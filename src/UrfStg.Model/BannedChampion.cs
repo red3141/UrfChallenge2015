@@ -2,7 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Xml.Serialization;
 using CreepScoreAPI;
+using Newtonsoft.Json;
 
 namespace UrfStg.Model
 {
@@ -38,6 +40,7 @@ namespace UrfStg.Model
         /// Gets or sets the team that banned the champion.
         /// </summary>
         [ForeignKey("TeamRecordId")]
+        [JsonIgnore, XmlIgnore]
         public Team Team { get; set; }
 
         public long MatchId { get; set; }

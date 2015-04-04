@@ -11,3 +11,4 @@ obj
 /TestResults
 *.suo
 *.user
+*.pubxml

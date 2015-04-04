@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Xml.Serialization;
 using CreepScoreAPI;
 using CreepScoreAPI.Constants;
+using Newtonsoft.Json;
 
 namespace UrfStg.Model
 {
@@ -23,7 +25,16 @@ namespace UrfStg.Model
         /// <summary>
         /// Gets or sets the list of participants who assisted with the kill.
         /// </summary>
+        [JsonIgnore, XmlIgnore]
         public IList<Participant> AssistingParticipants { get; set; }
+
+        /// <summary>
+        /// Gets the list of IDs of participants who assisted with the kill.
+        /// </summary>
+        public IEnumerable<int> AssistingParticipantIds
+        {
+            get { return AssistingParticipants != null ? AssistingParticipants.Select(p => p.Id) : new int[0]; }
+        }
 
         public AdvancedMatchHistoryConstants.BuildingTypeAdvanced BuildingType { get; set; }
 
@@ -54,11 +65,7 @@ namespace UrfStg.Model
         /// <summary>
         /// Gets or sets the game time when the event occurred.
         /// </summary>
-        /// <remarks>
-        /// This field contains the timestamp field from the RIOT server.
-        /// The property is NOT called "Timestamp" because apparently that has a special meaning in EntityFramework that is not what we want.
-        /// </remarks>
-        public TimeSpan GameTime { get; set; }
+        public TimeSpan Timestamp { get; set; }
 
         public AdvancedMatchHistoryConstants.TowerTypeAdvanced TowerType { get; set; }
 
@@ -108,7 +115,7 @@ namespace UrfStg.Model
             }
             SkillSlot = evt.skillSlot;
             TeamId = evt.teamId;
-            GameTime = evt.timestamp;
+            Timestamp = evt.timestamp;
             TowerType = evt.towerType;
             VictimId = evt.victimId;
             WardType = evt.wardType;
