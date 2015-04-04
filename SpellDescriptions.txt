@@ -29,7 +29,12 @@ Gragas: particle moves in a line, circular hitbox
 Hecarim: Axe thing swings on side of screen, arc hitbox
 Heimerdinger: 5 particles move through P1, linear hitbox
 Irelia: 4 particles move in lines, linear hitbox?
+Janna: particle moves in a line, circular hitbox
+Jarvan: particle moves downwards in a line, rectangular hitbox
+Jayce: particle moves in a line, circular hitbox
+Jinx: particle moves in a line, circular hitbox
 Lee Sin: particle moves in line towards P1, circular hitbox
+Kalista: particle moves in a line, rectangular hitbox
 Malzahar: particle moves in a line, circular hitbox
 Morgana: particle moves in a line, circular hitbox
 Nocturne: Evelynn's ability plus all particles on Nocturne's side of the screen become redirected to P1
