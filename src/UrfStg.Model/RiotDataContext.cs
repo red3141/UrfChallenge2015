@@ -30,21 +30,10 @@ namespace UrfStg.Model
             modelBuilder.Entity<Event>()
                 .HasMany(e => e.AssistingParticipants)
                 .WithMany()
-                .Map(mc =>
-                {
-                    mc.MapLeftKey("eventId");
-                    mc.MapRightKey("participantId", "matchId");
-                    mc.ToTable("assist");
-                });
-
-            /*modelBuilder.Entity<Team>()
-                .HasMany(t => t.Bans)
-                .WithOptional(b => b.Team)
-                .Map(mc =>
-                {
-                    mc.MapKey("teamRecordId");
-                    mc.ToTable("team");
-                });*/
+                .Map(mc => mc
+                    .MapLeftKey("eventId")
+                    .MapRightKey("participantId", "matchId")
+                    .ToTable("assist"));
 
             base.OnModelCreating(modelBuilder);
         }
