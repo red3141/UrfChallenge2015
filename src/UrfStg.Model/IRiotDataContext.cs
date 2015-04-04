@@ -7,8 +7,6 @@ namespace UrfStg.Model
     {
         IDbSet<Match> Matches { get; set; }
 
-        IDbSet<ParticipantIdentity> ParticipantIdentities { get; set; }
-
         IDbSet<Participant> Participants { get; set; }
 
         IDbSet<Team> Teams { get; set; }
@@ -16,6 +14,8 @@ namespace UrfStg.Model
         IDbSet<BannedChampion> BannedChampions { get; set; }
 
         IDbSet<Event> Events { get; set; }
+
+        IDbSet<Champion> Champions { get; set; }
 
         int SaveChanges();
     }
