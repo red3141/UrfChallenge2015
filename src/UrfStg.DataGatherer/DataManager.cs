@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using CreepScoreAPI;
+using CreepScoreAPI.Constants;
 using UrfStg.Model;
+using Champion = UrfStg.Model.Champion;
 
 namespace UrfStg.DataGatherer
 {
@@ -42,10 +44,22 @@ namespace UrfStg.DataGatherer
         /// <summary>
         /// Starts downloading data at a regular interval.
         /// </summary>
-        public Task Start()
+        public async Task Start()
         {
+            // TODO: also update champion list, although we don't need to worry about that until a new champion comes out. 
+            if (!dataContext.Champions.Any())
+            {
+                Console.WriteLine("Downloading champion data...");
+                var champs = await lolClient.RetrieveChampionsData(region, StaticDataConstants.ChampData.Image);
+                Console.WriteLine("Saving champion data...");
+                foreach (var champ in champs.data.Values)
+                    dataContext.Champions.Add(new Champion(champ));
+                dataContext.SaveChanges();
+                Console.WriteLine("Finished saving champion data.");
+            }
+            Console.WriteLine("Starting to download games...");
             timer.Start();
-            return DownloadLatestGames();
+            await DownloadLatestGames();
         }
 
         /// <summary>
@@ -65,6 +79,12 @@ namespace UrfStg.DataGatherer
                     Console.WriteLine("Failed to get match IDs.");
                     return;
                 }
+                if (matchIds.Count == 0)
+                {
+                    Console.WriteLine("Got 0 match IDs.");
+                    return;
+                }
+                int current = 1;
                 foreach (var matchId in matchIds)
                 {
                     if (dataContext.Matches.Any(m => m.Id == matchId))
@@ -77,6 +97,8 @@ namespace UrfStg.DataGatherer
                         continue;
                     dataContext.Matches.Add(match);
                     dataContext.SaveChanges();
+                    Console.WriteLine("Saved game {0}/{1}: {2}", current, matchIds.Count, matchId);
+                    ++current;
                 }
             }
             catch (Exception ex)

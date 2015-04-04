@@ -12,8 +12,6 @@ namespace UrfStg.Model
 
         public IDbSet<Match> Matches { get; set; }
 
-        public IDbSet<ParticipantIdentity> ParticipantIdentities { get; set; }
-
         public IDbSet<Participant> Participants { get; set; }
 
         public IDbSet<Team> Teams { get; set; }
@@ -22,10 +20,31 @@ namespace UrfStg.Model
 
         public IDbSet<Event> Events { get; set; }
 
+        public IDbSet<Champion> Champions { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Types().Configure(c => c.ToTable(GetDbTableName(c.ClrType.Name)));
             modelBuilder.Properties().Configure(c => c.HasColumnName(GetDbColumnName(c.ClrPropertyInfo.Name)));
+
+            modelBuilder.Entity<Event>()
+                .HasMany(e => e.AssistingParticipants)
+                .WithMany()
+                .Map(mc =>
+                {
+                    mc.MapLeftKey("eventId");
+                    mc.MapRightKey("participantId", "matchId");
+                    mc.ToTable("assist");
+                });
+
+            /*modelBuilder.Entity<Team>()
+                .HasMany(t => t.Bans)
+                .WithOptional(b => b.Team)
+                .Map(mc =>
+                {
+                    mc.MapKey("teamRecordId");
+                    mc.ToTable("team");
+                });*/
 
             base.OnModelCreating(modelBuilder);
         }
@@ -33,9 +52,9 @@ namespace UrfStg.Model
         private static string GetDbTableName(string clrName)
         {
             // Add an underscore before each capital letter (but not before the first letter) to get the object name.
-            var result = Regex.Replace(clrName, ".[A-Z]", m => m.Value[0] + "_" + m.Value[1]);
+            var result = Regex.Replace(clrName, ".[A-Z]", m => m.Value[0] + "_" + m.Value[1]).ToLowerInvariant();
             // Table names in MySql are all lower case.
-            return result.ToLowerInvariant();
+            return result;
         }
 
         private static string GetDbColumnName(string clrName)
@@ -43,7 +62,8 @@ namespace UrfStg.Model
             if (string.IsNullOrEmpty(clrName))
                 return clrName;
             // Convert the first letter to lower case
-            return char.ToLowerInvariant(clrName[0]) + clrName.Substring(1);
+            var result = char.ToLowerInvariant(clrName[0]) + clrName.Substring(1);
+            return result;
         }
 
     }

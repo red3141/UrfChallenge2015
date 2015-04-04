@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using CreepScoreAPI;
 using CreepScoreAPI.Constants;
@@ -9,7 +10,7 @@ namespace UrfStg.Model
 {
     public class Match
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Id { get; set; }
         public long MapId { get; set; }
         public long MatchCreation { get; set; }
@@ -17,7 +18,6 @@ namespace UrfStg.Model
         public GameConstants.GameMode MatchMode { get; set; }
         public GameConstants.GameType MatchType { get; set; }
         public string MatchVersion { get; set; }
-        public IList<ParticipantIdentity> ParticipantIdentities { get; set; }
         public IList<Participant> Participants { get; set; }
         public AdvancedMatchHistoryConstants.QueueTypeAdvanced QueueType { get; set; }
         public string Region { get; set; }
@@ -27,7 +27,6 @@ namespace UrfStg.Model
 
         public Match() 
         {
-            ParticipantIdentities = new List<ParticipantIdentity>();
             Participants = new List<Participant>();
             Teams = new List<Team>();
             Events = new List<Event>();
@@ -46,10 +45,15 @@ namespace UrfStg.Model
             Region = matchDetail.region;
             Season = matchDetail.season;
 
-            ParticipantIdentities = matchDetail.participantIdentities.Select(p => new ParticipantIdentity(p, Id)).ToList();
-            Participants = matchDetail.participants.Select(p => new Participant(p, Id)).ToList();
-            Teams = matchDetail.teams.Select(t => new Team(t, Id)).ToList();
-            Events = matchDetail.timeline.frames.SelectMany(f => f.events.Select(e => new Event(e, Id))).ToList();
+            Participants = matchDetail.participants != null
+                ? matchDetail.participants.Select(p => new Participant(p, Id)).ToList()
+                : new List<Participant>();
+            Teams = matchDetail.teams != null
+                ? matchDetail.teams.Select(t => new Team(t, Id)).ToList()
+                : new List<Team>();
+            Events = matchDetail.timeline != null && matchDetail.timeline.frames != null
+                ? matchDetail.timeline.frames.Where(f => f.events != null).SelectMany(f => f.events.Select(e => new Event(e, Id, Participants))).ToList()
+                : new List<Event>();
         }
     }
 }

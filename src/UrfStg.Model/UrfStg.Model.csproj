@@ -68,12 +68,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Champion.cs" />
     <Compile Include="BannedChampion.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="IRiotDataContext.cs" />
     <Compile Include="Match.cs" />
     <Compile Include="Participant.cs" />
-    <Compile Include="ParticipantIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RiotDataContext.cs" />
     <Compile Include="Team.cs" />

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using CreepScoreAPI;
 using CreepScoreAPI.Constants;
 
@@ -7,12 +9,21 @@ namespace UrfStg.Model
 {
     public class Event
     {
-        public List<int> AssistingParticipantIds { get; set; }
+        /// <summary>
+        /// Gets or sets the unique identifier for this instance.
+        /// </summary>
+        [Key]
+        public long Id { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the participant who killed the target (if appliccable). A killer ID of 0 indicates a minion.
         /// </summary>
         public int? KillerId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of participants who assisted with the kill.
+        /// </summary>
+        public IList<Participant> AssistingParticipants { get; set; }
 
         public AdvancedMatchHistoryConstants.BuildingTypeAdvanced BuildingType { get; set; }
 
@@ -35,16 +46,6 @@ namespace UrfStg.Model
         public int? ParticipantId { get; set; }
 
         /// <summary>
-        /// Gets or sets the x-position where the event occurred.
-        /// </summary>
-        public int X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the y-position where the event occurred.
-        /// </summary>
-        public int Y { get; set; }
-
-        /// <summary>
         /// Gets or sets te index of the champion ability that caused the event.
         /// </summary>
         public int? SkillSlot { get; set; }
@@ -53,7 +54,11 @@ namespace UrfStg.Model
         /// <summary>
         /// Gets or sets the game time when the event occurred.
         /// </summary>
-        public TimeSpan Timestamp { get; set; }
+        /// <remarks>
+        /// This field contains the timestamp field from the RIOT server.
+        /// The property is NOT called "Timestamp" because apparently that has a special meaning in EntityFramework that is not what we want.
+        /// </remarks>
+        public TimeSpan GameTime { get; set; }
 
         public AdvancedMatchHistoryConstants.TowerTypeAdvanced TowerType { get; set; }
 
@@ -64,12 +69,24 @@ namespace UrfStg.Model
 
         public AdvancedMatchHistoryConstants.WardTypeAdvanced WardType { get; set; }
 
+        /// <summary>
+        /// Gets or sets the x-position where the event occurred.
+        /// </summary>
+        public int? X { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y-position where the event occurred.
+        /// </summary>
+        public int? Y { get; set; }
+
         public long MatchId { get; set; }
 
         public Event()
-        { }
+        {
+            AssistingParticipants = new List<Participant>();
+        }
 
-        public Event(EventAdvanced evt, long matchId)
+        public Event(EventAdvanced evt, long matchId, IList<Participant> participants)
         {
             MatchId = matchId;
 
@@ -91,10 +108,14 @@ namespace UrfStg.Model
             }
             SkillSlot = evt.skillSlot;
             TeamId = evt.teamId;
-            Timestamp = evt.timestamp;
+            GameTime = evt.timestamp;
             TowerType = evt.towerType;
             VictimId = evt.victimId;
             WardType = evt.wardType;
+
+            AssistingParticipants = evt.assistingParticipantIds != null
+                ? evt.assistingParticipantIds.Select(apid => participants.FirstOrDefault(p => p.Id == apid)).Where(p => p != null).ToList()
+                : new List<Participant>();
         }
     }
 }
