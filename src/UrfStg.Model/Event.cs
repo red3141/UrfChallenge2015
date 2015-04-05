@@ -104,6 +104,7 @@ namespace UrfStg.Model
             ItemAfter = evt.itemAfter;
             ItemBefore = evt.itemBefore;
             ItemId = evt.itemId;
+            KillerId = evt.killerId;
             LaneType = evt.laneType;
             LevelUpType = evt.levelUpType;
             MonsterType = evt.monsterType;

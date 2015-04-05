@@ -37,7 +37,10 @@ namespace UrfStg.DataGatherer
             timer.Elapsed += timer_Elapsed;
 
             this.dataContext = dataContext;
-            lolClient = new CreepScore(ConfigurationManager.AppSettings["RiotApiKey"]);
+            var apiKey = ConfigurationManager.AppSettings["RiotApiKey"];
+            if (string.IsNullOrEmpty(apiKey))
+                Console.WriteLine("No Riot API key found. Please specify a RiotApiKey in the appSettings section in App.config.");
+            lolClient = new CreepScore(apiKey);
             region = CreepScore.Region.NA;
         }
 

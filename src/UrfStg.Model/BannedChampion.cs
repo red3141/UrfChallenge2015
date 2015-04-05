@@ -39,8 +39,8 @@ namespace UrfStg.Model
         /// <summary>
         /// Gets or sets the team that banned the champion.
         /// </summary>
-        [ForeignKey("TeamRecordId")]
         [JsonIgnore, XmlIgnore]
+        [ForeignKey("TeamRecordId")]
         public Team Team { get; set; }
 
         public long MatchId { get; set; }

@@ -87,7 +87,7 @@ CREATE TABLE `event` (
   `participantId` int(11) DEFAULT NULL,
   `skillSlot` int(11) DEFAULT NULL,
   `teamId` int(11) DEFAULT NULL,
-  `gameTime` time NOT NULL,
+  `timestamp` time NOT NULL,
   `towerType` int(11) NOT NULL,
   `victimId` int(11) DEFAULT NULL,
   `wardType` int(11) NOT NULL,
@@ -111,7 +111,3 @@ CREATE TABLE `assist` (
   CONSTRAINT `fk_assist_match` FOREIGN KEY (`matchId`) REFERENCES `match` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_assist_participant` FOREIGN KEY (`participantId`, `matchId`) REFERENCES `participant` (`id`, `matchId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
-
-ALTER TABLE `urf`.`event` 
-CHANGE COLUMN `gameTime` `timestamp` TIME NOT NULL ;
-
