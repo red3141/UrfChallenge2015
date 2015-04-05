@@ -51,10 +51,15 @@ Lulu: two particles with different O both move in a line towards and past P1
 Lux: particle moves in a line towards P1, rectangular hitbox; make it fast, but long
 Malphite: particle moves in a line, circular hitbox
 Malzahar: particle moves in a line, circular hitbox
+Mao'Kai: particle moves in an arc, circular hitbox
+Miss Fortune: 5 particles spread out, each moves as a line, circular hitbox
 Morgana: particle moves in a line, circular hitbox
 Nocturne: Evelynn's ability plus all particles on Nocturne's side of the screen become redirected to P1
+Olaf: particle spins along a line, rectangular hitbox
+Orianna: particle starts off-screen, every spell cast makes the particle move somewhere on Orianna's side of the screen, circular hitbox; particle does not leave screen
 Rammus: particle moves in a line, perhaps back and forth across screen, circular hitbox. OK.
 Singed: series of particles appear in a line (random target), remain for a few seconds, circular hitbox/particle
 Taric: particle moves in a line towards P1
 Twisted Fate: 3 particles spread out, each moves in a line, rectangular hitbox
 Warwick: all particles on Warwick's side of the screen have their speed increased
+Wukong: spinning particle moves in a line, arc hitbox
