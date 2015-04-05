@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
+using System.Web.Mvc;
+using CreepScoreAPI.Constants;
 using UrfStg.Model;
 
 namespace UrfStg.Web.Controllers
@@ -13,7 +15,7 @@ namespace UrfStg.Web.Controllers
     /// <summary>
     /// Contains routes for accessing game data.
     /// </summary>
-    public class GamesController : ApiController
+    public class GamesController : JsonNetController
     {
         private IRiotDataContext dataContext;
         private readonly Random random;
@@ -35,9 +37,9 @@ namespace UrfStg.Web.Controllers
         /// Gets a random game.
         /// </summary>
         /// <returns>A <see cref="Match"/>.</returns>
-        [Route("api/games/random")]
-        public Match GetRandomGame()
+        public ActionResult Random()
         {
+            Console.WriteLine("Getting random game...");
             var ids = dataContext.Matches.Select(m => m.Id).ToList();
 
             // Try to re-use the same random number generator to avoid burdening the garbage collector.
@@ -55,13 +57,25 @@ namespace UrfStg.Web.Controllers
                     Monitor.Exit(random);
             }
             var selectedId = ids[index];
+
+            Console.WriteLine("Getting match...");
             var match = dataContext.Matches
-                .Include(m => m.Events.Select(e => e.AssistingParticipants))
+                //.Include(m => m.Events.Select(e => e.AssistingParticipants))
                 .Include(m => m.Participants)
                 .Include(m => m.Teams.Select(t => t.Bans))
                 .FirstOrDefault(m => m.Id == selectedId);
 
-            return match;
+            Console.WriteLine("Getting events...");
+
+            // The client is only interested in champion kill events.
+            match.Events = dataContext.Events
+                .Include(e => e.AssistingParticipants)
+                .Where(e => e.MatchId == selectedId && e.EventType == AdvancedMatchHistoryConstants.EventTypeAdvanced.ChampionKill).ToList();
+            // Important: do NOT save changes at this point.
+
+            Console.WriteLine("Done accessing database.");
+
+            return JsonNet(match, JsonRequestBehavior.AllowGet);
         }
     }
 }
