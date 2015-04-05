@@ -13,7 +13,7 @@ Brand: particle moves in a line, circular hitbox
 Braum: particle moves in a line, circular hitbox
 Caitlyn: particle moves in a line, circular hitbox?
 Cassiopeia: 2 particles move in parallel lines, circular hitbox?
-Chogath: particle comes up from bottom of screen, then moves back down, rectangular hitbox
+Cho'Gath: particle comes up from bottom of screen, then moves back down, rectangular hitbox
 Corki: particle moves in a line, circular hitbox
 Darius: Axe swings on side of screen, arc hitbox
 Draven: particle moves in a line, circular hitbox
@@ -53,7 +53,12 @@ Malphite: particle moves in a line, circular hitbox
 Malzahar: particle moves in a line, circular hitbox
 Mao'Kai: particle moves in an arc, circular hitbox
 Miss Fortune: 5 particles spread out, each moves as a line, circular hitbox
+Mordekaiser: particle comes up from bottom of screen, then moves back down, circular hitbox
 Morgana: particle moves in a line, circular hitbox
+Nami: particle moves in a line, circular hitbox
+Nautilus: particle moves across screen, has trail, rectangular hitbox
+Nidalee: particle moves in a line, rectangular hitbox
+Pantheon: particle moves in a line, rectangular hitbox
 Nocturne: Evelynn's ability plus all particles on Nocturne's side of the screen become redirected to P1
 Olaf: particle spins along a line, rectangular hitbox
 Orianna: particle starts off-screen, every spell cast makes the particle move somewhere on Orianna's side of the screen, circular hitbox; particle does not leave screen
