@@ -23,6 +23,7 @@ Evelynn: particle follows you; transparent circle around you, black elsewhere, f
 Ezreal: particle moves in a line, circular hitbox
 Fiora: particle moves in a line, rectangular hitbox
 Fizz: particle increases in size, then decreases in size
+Gangplank: particle moves in a line, circular hitbox
 Garen: spinning particle moves in a line, arc hitbox
 Gnar: particle moves in a line, circular hitbox
 Gragas: particle moves in a line, circular hitbox
@@ -58,11 +59,15 @@ Morgana: particle moves in a line, circular hitbox
 Nami: particle moves in a line, circular hitbox
 Nautilus: particle moves across screen, has trail, rectangular hitbox
 Nidalee: particle moves in a line, rectangular hitbox
-Pantheon: particle moves in a line, rectangular hitbox
 Nocturne: Evelynn's ability plus all particles on Nocturne's side of the screen become redirected to P1
 Olaf: particle spins along a line, rectangular hitbox
 Orianna: particle starts off-screen, every spell cast makes the particle move somewhere on Orianna's side of the screen, circular hitbox; particle does not leave screen
+Pantheon: particle moves in a line, rectangular hitbox
+Poppy: spinning particle moves in a line, arc hitbox
+Quinn: particle comes out from side of screen, then moves back, circular hitbox?
 Rammus: particle moves in a line, perhaps back and forth across screen, circular hitbox. OK.
+Rek'Sai: particles moves in a line, circular hitbox
+Renekton: weapon swings on side of screen, arc hitbox
 Singed: series of particles appear in a line (random target), remain for a few seconds, circular hitbox/particle
 Taric: particle moves in a line towards P1
 Twisted Fate: 3 particles spread out, each moves in a line, rectangular hitbox
