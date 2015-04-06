@@ -82,7 +82,12 @@ Sona: particle moves across the screen, ciruclar hitbox
 Soraka: particle moves across the screen, rectangular hitbox?
 Swain: particle moves across the screen, circular hitbox
 Syndra: particle moves across the screen, circular hitbox
+Talon: 3 particles moves in lines, out and then back, circular hitboxes
 Taric: particle moves in a line towards P1
+Teemo: a particle appears breifly, then vanishes, moving over that location results in a hit, circular hitbox
+Thresh: particle moves across screen, has trail, circular hitbox
+Tristana: particle moves in a line, circular hitbox
+Trundle: particle comes up from bottom of screen, then moves back down, circular hitbox
 Twisted Fate: 3 particles spread out, each moves in a line, rectangular hitbox
 Warwick: all particles on Warwick's side of the screen have their speed increased
 Wukong: spinning particle moves in a line, arc hitbox
