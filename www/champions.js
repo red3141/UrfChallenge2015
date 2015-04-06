@@ -6,7 +6,19 @@ Units:
 
 Properties:
 - name: champion name
-- image: particle image ID
+- image: details about the particle image
+  - id: DOM element ID
+  - regXRatio: X-position of the "origin" of the image from 0-1 (default is .5).
+          0 = left edge; 1 = right edge.
+  - regYRatio: Y-position of the "origin" of the image from 0-1 (default is .5).
+          0 = top edge; 1 = bottom edge.
+  - pointAngle: the angle at which the image is pointing for arrow-like images.
+                If specified, the image will automatically rotate to point in 
+                the direction in which it is moving.
+  - flipTeam1: flip the image horizontally for team 1 (true/false)
+  - flipTeam2: flip the image horizontally for team 2 (true/false)
+    * If flipped, rotation and rotationSpeed are applied in the opposite
+      direction
 - attacks: attacks to fire when the champion gets a kill
   - type: attack type
   - speed: particle speed
@@ -18,18 +30,8 @@ Properties:
   - delay: delay until the attack is fired
   - duration: duration for still attacks
   - layer: the LayerType on which the particle should appear
-  - regX: registration X-position relative to the left edge of the image.
-          The registration point acts as the centre of rotation.
-  - regY: registration Y-position relative to the top edge of the image.
-          The registration point acts as the centre of rotation.
   - rotation: the initial rotation of the particle
   - rotationSpeed: the speed at which the particle rotates
-  - autoRotate: indicates whether the particle should rotate based on its
-                current movement direction (true/false)
-  - flipTeam1: flip the image horizontally for team 1 (true/false)
-  - flipTeam2: flip the image horizontally for team 2 (true/false)
-    * If flipped, rotation and rotationSpeed are applied in the opposite
-      direction
   - finished: the FinishedAction to do when the particle reaches the edge of
               the screen
   - targeted: should fire directly at the player initially (true/false)
@@ -37,99 +39,146 @@ Properties:
 
 champions = {
     "266": {
-        name: "Aatrox", image: "aatrox", attacks: []
+        name: "Aatrox",
+        image: { id: "aatrox" },
+        attacks: []
     },
     "103": {
-        name: "Ahri", image: "ahri", attacks: [
-            { type: AttackType.FromCorner, finished: FinishedAction.Return, speed: 300, returnSpeed: 180 }
+        name: "Ahri",
+        image: { id: "ahri" },
+        attacks: [
+            { type: AttackType.Bullet, finished: FinishedAction.Return, speed: 300, returnSpeed: 180 }
         ]
     },
     "84": {
-        name: "Akali", image: "akali", attacks: [
+        name: "Akali",
+        image: { id: "akali" },
+        attacks: [
             { type: AttackType.Still, layerType: LayerType.AboveAll, duration: 5 }
         ]
     },
     "12": {
-        name: "Alistar", image: "alistar", attacks: [
-            { type: AttackType.FromCorner, speed: 300, autoRotate: true, imageAngle: 0, flipTeam2: true }
+        name: "Alistar",
+        image: { id: "alistar", flipTeam2: true, pointAngle: 0 },
+        attacks: [
+            { type: AttackType.Bullet, speed: 300 }
         ]
     },
-    "32": { name: "Amumu", image: "amumu", attacks: [] },
+    "32": {
+        name: "Amumu",
+        image: { id: "amumu" },
+        attacks: []
+    },
     "34": {
-        name: "Anivia", image: "anivia", attacks: [
-            { type: AttackType.FromCorner, speed: 100, rotationSpeed: 180 }
+        name: "Anivia",
+        image: { id: "anivia" },
+        attacks: [
+            { type: AttackType.Bullet, speed: 100, rotationSpeed: 180 }
         ]
     },
     "1": {
-        name: "Annie", image: "annie", attacks: [
-            { type: AttackType.FromCorner, speed: 200 }
+        name: "Annie",
+        image: { id: "annie" },
+        attacks: [
+            { type: AttackType.Bullet, speed: 200 }
         ]
     },
     "22": {
-        name: "Ashe", image: "ashe", attacks: [
-            { type: AttackType.FromCorner, speed: 200, autoRotate: true, imageAngle: 45, angleOffset: -20 },
-            { type: AttackType.FromCorner, speed: 200, autoRotate: true, imageAngle: 45, angleOffset: -10 },
-            { type: AttackType.FromCorner, speed: 200, autoRotate: true, imageAngle: 45, angleOffset: 0 },
-            { type: AttackType.FromCorner, speed: 200, autoRotate: true, imageAngle: 45, angleOffset: 10 },
-            { type: AttackType.FromCorner, speed: 200, autoRotate: true, imageAngle: 45, angleOffset: 20 },
+        name: "Ashe",
+        image: { id: "ashe", pointAngle: 45 },
+        attacks: [
+            { type: AttackType.Bullet, speed: 200, angleOffset: -20 },
+            { type: AttackType.Bullet, speed: 200, angleOffset: -10 },
+            { type: AttackType.Bullet, speed: 200, angleOffset: 0 },
+            { type: AttackType.Bullet, speed: 200, angleOffset: 10 },
+            { type: AttackType.Bullet, speed: 200, angleOffset: 20 },
         ]
     },
-    "268": { name: "Azir", image: "azir", attacks: [] },
+    "268": {
+        name: "Azir",
+        image: { id: "azir" },
+        attacks: []
+    },
     "432": {
-        name: "Bard", image: "bard", attacks: [
+        name: "Bard",
+        image: { id: "bard" },
+        attacks: [
             { type: AttackType.Still, layerType: LayerType.BelowAll, duration: 2.5 }
         ]
     },
     "53": {
-        name: "Blitzcrank", image: "blitzcrank", attacks: [
-            { type: AttackType.FromCorner, speed: 450, autoRotate: true, imageAngle: -30, flipTeam2: true }
+        name: "Blitzcrank",
+        image: { id: "blitzcrank", pointAngle: -30, flipTeam2: true },
+        attacks: [
+            { type: AttackType.Bullet, speed: 450 }
         ]
     },
     "63": {
-        name: "Brand", image: "brand", attacks: [
-            { type: AttackType.FromCorner, speed: 200, autoRotate: true, imageAngle: 150 }
+        name: "Brand",
+        image: { id: "brand", pointAngle: 150 },
+        attacks: [
+            { type: AttackType.Bullet, speed: 200 }
         ]
     },
     "201": {
-        name: "Braum", image: "braum", attacks: [
-            { type: AttackType.FromCorner, speed: 200, autoRotate: true, imageAngle: 30, flipTeam2: true }
+        name: "Braum",
+        image: { id: "braum", pointAngle: 30, flipTeam2: true },
+        attacks: [
+            { type: AttackType.Bullet, speed: 200 }
         ]
     },
     "51": {
-        name: "Caitlyn", image: "caitlyn", attacks: [
-            { type: AttackType.FromCorner, speed: 300, autoRotate: true, imageAngle: 135, flipTeam1: true }
+        name: "Caitlyn",
+        image: { id: "caitlyn", pointAngle: 135, flipTeam1: true },
+        attacks: [
+            { type: AttackType.Bullet, speed: 300 }
         ]
     },
     "69": {
-        name: "Cassiopeia", image: "cassiopeia", attacks: [
-            { type: AttackType.FromCorner, speed: 250, offset: -3, autoRotate: true, imageAngle: 100, flipTeam1: true },
-            { type: AttackType.FromCorner, speed: 200, offset: 3, autoRotate: true, imageAngle: 100, flipTeam1: true },
+        name: "Cassiopeia",
+        image: { id: "cassiopeia", pointAngle: 100, flipTeam1: true },
+        attacks: [
+            { type: AttackType.Bullet, speed: 250, offset: -3 },
+            { type: AttackType.Bullet, speed: 200, offset: 3 },
         ]
     },
     "31": {
-        name: "Cho'Gath", image: "cho'gath", attacks: [
+        name: "Cho'Gath",
+        image: { id: "chogath" },
+        attacks: [
             { type: AttackType.FromBottom, speed: 300 }
         ]
     },
     "42": {
-        name: "Corki", image: "corki", attacks: [
-            { type: AttackType.FromCorner, speed: 250, autoRotate: true, imageAngle: 150, flipTeam1: true }
+        name: "Corki",
+        image: { id: "corki", pointAngle: 150, flipTeam1: true },
+        attacks: [
+            { type: AttackType.Bullet, speed: 250 }
         ]
     },
     "122": {
-        name: "Darius", image: "darius", attacks: [
-            { type: AttackType.FromSide, rotationSpeed: -250, flipTeam1: true }
+        name: "Darius",
+        image: { id: "darius", flipTeam1: true },
+        attacks: [
+            { type: AttackType.FromSide, rotationSpeed: -250 }
         ]
     },
-    "131": { name: "Diana", image: "diana" },
+    "131": {
+        name: "Diana",
+        image: { id: "diana" },
+    },
     "119": {
-        name: "Draven", image: "draven", attacks: [
-            { type: AttackType.FromCorner, speed: 250, rotationSpeed: 250 }
+        name: "Draven",
+        image: { id: "draven" },
+        attacks: [
+            { type: AttackType.Bullet, speed: 250, rotationSpeed: 250 }
         ]
     },
     "36": {
-        name: "Dr. Mundo", image: "drmundo", attacks: [
-            { type: AttackType.FromCorner, speed: 250, rotationSpeed: 250, flipTeam2: true }
+        name: "Dr. Mundo",
+        image: { id: "drmundo", flipTeam2: true },
+        attacks: [
+            { type: AttackType.Bullet, speed: 250, rotationSpeed: 250 }
         ]
     },
     "60": {
