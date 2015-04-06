@@ -47,7 +47,7 @@ champions = {
         name: "Ahri",
         image: { id: "ahri" },
         attacks: [
-            { type: AttackType.Bullet, finished: FinishedAction.Return, speed: 300, returnSpeed: 180 }
+            { type: AttackType.Bullet, finished: FinishedAction.Return, speed: 350, returnSpeed: 180 }
         ]
     },
     "84": {
@@ -73,7 +73,7 @@ champions = {
         name: "Anivia",
         image: { id: "anivia" },
         attacks: [
-            { type: AttackType.Bullet, speed: 100, rotationSpeed: 180 }
+            { type: AttackType.Bullet, speed: 100, rotationSpeed: 360 }
         ]
     },
     "1": {

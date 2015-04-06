@@ -85,26 +85,38 @@
         particle.regY = particle.image.height * (image.regYRatio || 0.5);
         particle.x = spawnPoint.x;
         particle.y = spawnPoint.y;
+        if (attack.duration)
+            particle.destoryTime = new Date().getTime() + attack.duration * 1000;
         switch (attack.type) {
             case AttackType.Bullet:
                 if (attack.angleOffset)
                     angle += attack.angleOffset * Math.PI / 180;
-                particle.vx = attack.speed * Math.cos(angle);
-                particle.vy = attack.speed * Math.sin(angle);
-                if (image.pointAngle !== undefined)
-                    particle.rotation = angle * 180 / Math.PI - image.pointAngle;
-                if (particle.scaleX == -1)
-                    particle.rotation += 2 * image.pointAngle - 180;
+                setVelocity(particle, attack.speed, angle);
+                break;
+            case AttackType.Still:
+                particle.x = targetPoint.x;
+                particle.y = targetPoint.y;
                 break;
         }
         particles.push(particle);
         mainLayer.addChild(particle);
     }
 
+    function setVelocity(particle, speed, angleInRadians) {
+
+        particle.vx = speed * Math.cos(angleInRadians);
+        particle.vy = speed * Math.sin(angleInRadians);
+        if (particle.imageDef.pointAngle !== undefined) {
+            particle.rotation = angleInRadians * 180 / Math.PI - particle.imageDef.pointAngle;
+            if (particle.scaleX == -1)
+                particle.rotation += 2 * particle.imageDef.pointAngle - 180;
+        }
+    }
+
     var prevTickTime = new Date().getTime();
 
     // Events
-    Ticker.framerate = 30;
+    Ticker.framerate = 60;
     Ticker.addEventListener("tick", function(e) {
         var currentTime = new Date().getTime();
         var elapsedSeconds = (currentTime - prevTickTime) / 1000;
@@ -115,7 +127,43 @@
                 particle.x += particle.vx * elapsedSeconds;
             if (particle.vy)
                 particle.y += particle.vy * elapsedSeconds;
-            // TODO: apply rotationSpeed
+            if (particle.attack.rotationSpeed)
+                particle.rotation += particle.attack.rotationSpeed * elapsedSeconds;
+
+            if (particle.x > stage.width || particle.x < 0 || particle.y > stage.height || particle.y < 0) {
+                switch (particle.attack.finished) {
+                    case FinishedAction.None:
+                        // Wait for the particle to move fully off the screen, then destroy it.
+                        particle.destoryTime = currentTime + 1000;
+                        break;
+                    case FinishedAction.Disappear:
+                        particle.destoryTime = currentTime;
+                        break;
+                    case FinishedAction.Return:
+                        if (particle.isReturning) {
+                            // Particle has already returned to its origin. Desroy it.
+                            particle.destoryTime = currentTime;
+                        } else {
+                            particle.isReturning = true;
+                            // Back up the particle so it is not outside the boundaries on the next iteration
+                            // (otherwise it will get destroyed)
+                            particle.x -= particle.vx * elapsedSeconds;
+                            particle.y -= particle.vy * elapsedSeconds;
+
+                            var angle = Math.atan2(particle.vy, particle.vx) + Math.PI;
+                            var speed = particle.attack.returnSpeed || Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+                            setVelocity(particle, speed, angle);
+                        }
+                        break;
+                }
+            }
+
+            if (particle.destoryTime && currentTime >= particle.destoryTime) {
+                particle.parent.removeChild(particle);
+                particles.splice(i, 1);
+                --i;
+            }
+
             // TODO: check if the particle has left the screen or its duration has completed.
         }
         // TODO: move player
@@ -124,10 +172,9 @@
     });
 
     // Test code (remove sometime)
-    fireAttackGroup(champions["103"], 100);
+    fireAttackGroup(champions["103"], 200);
     fireAttackGroup(champions["22"], 200);
     fireAttackGroup(champions["42"], 100);
-    fireAttackGroup(champions["42"], 200);
     fireAttackGroup(champions["201"], 100);
-    fireAttackGroup(champions["201"], 200);
+    fireAttackGroup(champions["84"], 100);
 })();
