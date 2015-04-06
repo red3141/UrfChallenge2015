@@ -13,9 +13,9 @@ Brand: particle moves in a line, circular hitbox
 Braum: particle moves in a line, circular hitbox
 Caitlyn: particle moves in a line, circular hitbox?
 Cassiopeia: 2 particles move in parallel lines, circular hitbox?
-Chogath: particle comes up from bottom of screen, then moves back down, rectangular hitbox
+Cho'Gath: particle comes up from bottom of screen, then moves back down, rectangular hitbox
 Corki: particle moves in a line, circular hitbox
-Darius: Axe swings on side of screen, arc hitbox
+Darius: weapon swings on side of screen, arc hitbox
 Draven: particle moves in a line, circular hitbox
 Dr. Mundo: particle moves in a line, spinning, rectangular hitbox?
 Elise: particle moves in a line, circular hitbox
@@ -23,6 +23,7 @@ Evelynn: particle follows you; transparent circle around you, black elsewhere, f
 Ezreal: particle moves in a line, circular hitbox
 Fiora: particle moves in a line, rectangular hitbox
 Fizz: particle increases in size, then decreases in size
+Gangplank: particle moves in a line, circular hitbox
 Garen: spinning particle moves in a line, arc hitbox
 Gnar: particle moves in a line, circular hitbox
 Gragas: particle moves in a line, circular hitbox
@@ -51,10 +52,29 @@ Lulu: two particles with different O both move in a line towards and past P1
 Lux: particle moves in a line towards P1, rectangular hitbox; make it fast, but long
 Malphite: particle moves in a line, circular hitbox
 Malzahar: particle moves in a line, circular hitbox
+Mao'Kai: particle moves in an arc, circular hitbox
+Miss Fortune: 5 particles spread out, each moves as a line, circular hitbox
+Mordekaiser: particle comes up from bottom of screen, then moves back down, circular hitbox
 Morgana: particle moves in a line, circular hitbox
+Nami: particle moves in a line, circular hitbox
+Nautilus: particle moves across screen, has trail, rectangular hitbox
+Nidalee: particle moves in a line, rectangular hitbox
 Nocturne: Evelynn's ability plus all particles on Nocturne's side of the screen become redirected to P1
+Olaf: particle spins along a line, rectangular hitbox
+Orianna: particle starts off-screen, every spell cast makes the particle move somewhere on Orianna's side of the screen, circular hitbox; particle does not leave screen
+Pantheon: particle moves in a line, rectangular hitbox
+Poppy: spinning particle moves in a line, arc hitbox
+Quinn: particle comes out from side of screen, then moves back, circular hitbox?
 Rammus: particle moves in a line, perhaps back and forth across screen, circular hitbox. OK.
+Rek'Sai: particles moves in a line, circular hitbox
+Renekton: weapon swings on side of screen, arc hitbox
+Rengar: particle moves in a line, circular hitbox
+Riven: weapon swings on side of screen, arc hitbox
+Rumble: starting from the side of the screen and moving inwards, particles spawn and down across the screen, rectangular hitbox
+Ryze: particle moves in a line, circular hitbox
+Sejuani: particle spins across the screen, circular hitbox
 Singed: series of particles appear in a line (random target), remain for a few seconds, circular hitbox/particle
 Taric: particle moves in a line towards P1
 Twisted Fate: 3 particles spread out, each moves in a line, rectangular hitbox
 Warwick: all particles on Warwick's side of the screen have their speed increased
+Wukong: spinning particle moves in a line, arc hitbox
