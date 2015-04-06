@@ -77,7 +77,8 @@
         var particle = new Bitmap(document.getElementById(image.id));
         particle.imageDef = image;
         particle.attack = attack;
-        if ((team == Team.One && image.flipTeam1) || (team == Team.Two && image.flipTeam2))
+        var angle = Math.atan2(targetPoint.y - spawnPoint.y, targetPoint.x - spawnPoint.x);
+        if ((image.flipIfForward && Math.abs(angle) < Math.PI / 2) || (image.flipIfBackward && Math.abs(angle) > Math.PI / 2))
             particle.scaleX = -1;
 
         particle.regX = particle.image.width * (image.regXRatio || 0.5);
@@ -86,13 +87,14 @@
         particle.y = spawnPoint.y;
         switch (attack.type) {
             case AttackType.Bullet:
-                var angle = Math.atan2(targetPoint.y - spawnPoint.y, targetPoint.x - spawnPoint.x);
                 if (attack.angleOffset)
                     angle += attack.angleOffset * Math.PI / 180;
                 particle.vx = attack.speed * Math.cos(angle);
                 particle.vy = attack.speed * Math.sin(angle);
                 if (image.pointAngle !== undefined)
-                    particle.rotation = (angle * 180 / Math.PI - image.pointAngle) * particle.scaleX;
+                    particle.rotation = angle * 180 / Math.PI - image.pointAngle;
+                if (particle.scaleX == -1)
+                    particle.rotation += 2 * image.pointAngle - 180;
                 break;
         }
         particles.push(particle);
@@ -124,4 +126,8 @@
     // Test code (remove sometime)
     fireAttackGroup(champions["103"], 100);
     fireAttackGroup(champions["22"], 200);
+    fireAttackGroup(champions["42"], 100);
+    fireAttackGroup(champions["42"], 200);
+    fireAttackGroup(champions["201"], 100);
+    fireAttackGroup(champions["201"], 200);
 })();

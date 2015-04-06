@@ -15,8 +15,8 @@ Properties:
   - pointAngle: the angle at which the image is pointing for arrow-like images.
                 If specified, the image will automatically rotate to point in 
                 the direction in which it is moving.
-  - flipTeam1: flip the image horizontally for team 1 (true/false)
-  - flipTeam2: flip the image horizontally for team 2 (true/false)
+  - flipIfForward: flip the image horizontally if travelling from left to right (true/false)
+  - flipIfBackward: flip the image horizontally if travelling from right to left (true/false)
     * If flipped, rotation and rotationSpeed are applied in the opposite
       direction
 - attacks: attacks to fire when the champion gets a kill
@@ -59,7 +59,7 @@ champions = {
     },
     "12": {
         name: "Alistar",
-        image: { id: "alistar", flipTeam2: true, pointAngle: 0 },
+        image: { id: "alistar", flipIfBackward: true, pointAngle: 0 },
         attacks: [
             { type: AttackType.Bullet, speed: 300 }
         ]
@@ -87,11 +87,11 @@ champions = {
         name: "Ashe",
         image: { id: "ashe", pointAngle: 45 },
         attacks: [
-            { type: AttackType.Bullet, speed: 200, angleOffset: -20 },
-            { type: AttackType.Bullet, speed: 200, angleOffset: -10 },
-            { type: AttackType.Bullet, speed: 200, angleOffset: 0 },
-            { type: AttackType.Bullet, speed: 200, angleOffset: 10 },
-            { type: AttackType.Bullet, speed: 200, angleOffset: 20 },
+            { type: AttackType.Bullet, speed: 175, angleOffset: -20 },
+            { type: AttackType.Bullet, speed: 175, angleOffset: -10 },
+            { type: AttackType.Bullet, speed: 175, angleOffset: 0 },
+            { type: AttackType.Bullet, speed: 175, angleOffset: 10 },
+            { type: AttackType.Bullet, speed: 175, angleOffset: 20 },
         ]
     },
     "268": {
@@ -108,7 +108,7 @@ champions = {
     },
     "53": {
         name: "Blitzcrank",
-        image: { id: "blitzcrank", pointAngle: -30, flipTeam2: true },
+        image: { id: "blitzcrank", pointAngle: -30, flipIfBackward: true },
         attacks: [
             { type: AttackType.Bullet, speed: 450 }
         ]
@@ -122,21 +122,21 @@ champions = {
     },
     "201": {
         name: "Braum",
-        image: { id: "braum", pointAngle: 30, flipTeam2: true },
+        image: { id: "braum", pointAngle: 40, flipIfBackward: true },
         attacks: [
             { type: AttackType.Bullet, speed: 200 }
         ]
     },
     "51": {
         name: "Caitlyn",
-        image: { id: "caitlyn", pointAngle: 135, flipTeam1: true },
+        image: { id: "caitlyn", pointAngle: 135, flipIfForward: true },
         attacks: [
             { type: AttackType.Bullet, speed: 300 }
         ]
     },
     "69": {
         name: "Cassiopeia",
-        image: { id: "cassiopeia", pointAngle: 100, flipTeam1: true },
+        image: { id: "cassiopeia", pointAngle: 100, flipIfForward: true },
         attacks: [
             { type: AttackType.Bullet, speed: 250, offset: -3 },
             { type: AttackType.Bullet, speed: 200, offset: 3 },
@@ -151,14 +151,14 @@ champions = {
     },
     "42": {
         name: "Corki",
-        image: { id: "corki", pointAngle: 150, flipTeam1: true },
+        image: { id: "corki", pointAngle: 150, flipIfForward: true },
         attacks: [
             { type: AttackType.Bullet, speed: 250 }
         ]
     },
     "122": {
         name: "Darius",
-        image: { id: "darius", flipTeam1: true },
+        image: { id: "darius", flipIfForward: true },
         attacks: [
             { type: AttackType.FromSide, rotationSpeed: -250 }
         ]
@@ -176,7 +176,7 @@ champions = {
     },
     "36": {
         name: "Dr. Mundo",
-        image: { id: "drmundo", flipTeam2: true },
+        image: { id: "drmundo", flipIfBackward: true },
         attacks: [
             { type: AttackType.Bullet, speed: 250, rotationSpeed: 250 }
         ]
