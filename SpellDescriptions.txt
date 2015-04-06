@@ -15,7 +15,7 @@ Caitlyn: particle moves in a line, circular hitbox?
 Cassiopeia: 2 particles move in parallel lines, circular hitbox?
 Cho'Gath: particle comes up from bottom of screen, then moves back down, rectangular hitbox
 Corki: particle moves in a line, circular hitbox
-Darius: Axe swings on side of screen, arc hitbox
+Darius: weapon swings on side of screen, arc hitbox
 Draven: particle moves in a line, circular hitbox
 Dr. Mundo: particle moves in a line, spinning, rectangular hitbox?
 Elise: particle moves in a line, circular hitbox
@@ -68,6 +68,11 @@ Quinn: particle comes out from side of screen, then moves back, circular hitbox?
 Rammus: particle moves in a line, perhaps back and forth across screen, circular hitbox. OK.
 Rek'Sai: particles moves in a line, circular hitbox
 Renekton: weapon swings on side of screen, arc hitbox
+Rengar: particle moves in a line, circular hitbox
+Riven: weapon swings on side of screen, arc hitbox
+Rumble: starting from the side of the screen and moving inwards, particles spawn and down across the screen, rectangular hitbox
+Ryze: particle moves in a line, circular hitbox
+Sejuani: particle spins across the screen, circular hitbox
 Singed: series of particles appear in a line (random target), remain for a few seconds, circular hitbox/particle
 Taric: particle moves in a line towards P1
 Twisted Fate: 3 particles spread out, each moves in a line, rectangular hitbox
