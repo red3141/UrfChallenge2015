@@ -73,8 +73,12 @@ Riven: weapon swings on side of screen, arc hitbox
 Rumble: starting from the side of the screen and moving inwards, particles spawn and down across the screen, rectangular hitbox
 Ryze: particle moves in a line, circular hitbox
 Sejuani: particle spins across the screen, circular hitbox
+Shen: particle moves across the screen, rectangular hitbox
+Shyvana: particle moves across the screen, rectangular hitbox
 Singed: series of particles appear in a line (random target), remain for a few seconds, circular hitbox/particle
+Sivir: particle spins while moving to a position, then returns to O, circular hitbox
 Taric: particle moves in a line towards P1
 Twisted Fate: 3 particles spread out, each moves in a line, rectangular hitbox
 Warwick: all particles on Warwick's side of the screen have their speed increased
 Wukong: spinning particle moves in a line, arc hitbox
+Zed: 2 particles move in lines, circular hitbox
