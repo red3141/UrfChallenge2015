@@ -77,6 +77,11 @@ Shen: particle moves across the screen, rectangular hitbox
 Shyvana: particle moves across the screen, rectangular hitbox
 Singed: series of particles appear in a line (random target), remain for a few seconds, circular hitbox/particle
 Sivir: particle spins while moving to a position, then returns to O, circular hitbox
+Skarner: particle moves across the screen, ciruclar hitbox
+Sona: particle moves across the screen, ciruclar hitbox
+Soraka: particle moves across the screen, rectangular hitbox?
+Swain: particle moves across the screen, circular hitbox
+Syndra: particle moves across the screen, circular hitbox
 Taric: particle moves in a line towards P1
 Twisted Fate: 3 particles spread out, each moves in a line, rectangular hitbox
 Warwick: all particles on Warwick's side of the screen have their speed increased
