@@ -94,6 +94,11 @@ Twitch: particle moves in a line, circular hitbox
 Urgot: particle moves in a line, rectangular hitbox
 Varus: particle moves in a line, rectangular hitbox
 Vayne: particle moves in a line, rectangular hitbox
+Veigar: particle moves in a line, circular hitbox
+Vel'Koz: particle moves in a line, then splits into 2 particles which move perpendicularly to the original particle; circular hitboxes for all
+Vi: particle moves out from side of screen, then retracts; rectangular hitbox
+Viktor: particle moves along the top or bottom of the screen, rectangular hitbox
+Vladimir: particle (or perhaps multiple) move in a line, circular hitbox; if there are multiple, make them irregularly spaced
 Warwick: all particles on Warwick's side of the screen have their speed increased
 Wukong: spinning particle moves in a line, arc hitbox
 Zed: 2 particles move in lines, circular hitbox
