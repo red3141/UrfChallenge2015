@@ -66,7 +66,7 @@
             var attack = champion.attacks[i];
             var attackFunction = function() { fireAttack(champion, team, attack, spawnPoint, targetPoint); };
             if (attack.delay)
-                setTimeout(attackFunction, attack.delay);
+                setTimeout(attackFunction, attack.delay * 1000);
             else
                 attackFunction();
         }
@@ -81,6 +81,9 @@
         if ((image.flipIfForward && Math.abs(angle) < Math.PI / 2) || (image.flipIfBackward && Math.abs(angle) > Math.PI / 2))
             particle.scaleX = -1;
 
+        if (particle.image.width == 0) {
+            console.warn("image width is 0: " + image.id);
+        }
         particle.regX = particle.image.width * (image.regXRatio || 0.5);
         particle.regY = particle.image.height * (image.regYRatio || 0.5);
         particle.x = spawnPoint.x;
@@ -110,8 +113,31 @@
                 particle.y = targetPoint.y;
                 break;
         }
+        switch (attack.layer) {
+            case LayerType.AboveAll:
+                topLayer.addChild(particle);
+                break;
+            case LayerType.BelowAll:
+                bottomLayer.addChild(particle);
+                break;
+            default:
+                mainLayer.addChild(particle);
+                break;
+        }
+        if (attack.effect == Effect.Stasis) {
+            particle.affectedParticles = [];
+            for (var i = 0; i < particles.length; ++i) {
+                var otherParticle = particles[i];
+                //if (particle.hitTest(otherParticle.x, otherParticle.y)) {
+                var collision = ndgmr.checkPixelCollision(particle, otherParticle);
+                console.log(collision);
+                if (collision) {
+                    otherParticle.isInStasis = true;
+                    particle.affectedParticles.push(otherParticle);
+                }
+            }
+        }
         particles.push(particle);
-        mainLayer.addChild(particle);
     }
 
     function setVelocity(particle, speed, angleInRadians) {
@@ -124,12 +150,28 @@
                 particle.rotation += 2 * particle.imageDef.pointAngle - 180;
         }
     }
+
+    function destroyParticle(particle) {
+        if (particle.attack.effect == Effect.Stasis && particle.affectedParticles) {
+            for (var i = 0; i < particle.affectedParticles.length; ++i) {
+                particle.affectedParticles[i].isInStasis = false;
+            }
+        }
+        particle.parent.removeChild(particle);
+    }
+
     function onTick(e) {
         var currentTime = new Date().getTime();
-        var elapsedSeconds = (currentTime - prevTickTime) / 1000;
+        var elapsedMilliseconds = currentTime - prevTickTime;
+        var elapsedSeconds = elapsedMilliseconds / 1000;
         prevTickTime = currentTime;
         for (var i = 0; i < particles.length; ++i) {
             var particle = particles[i];
+            if (particle.isInStasis) {
+                if (particle.destoryTime)
+                    particle.destoryTime += elapsedMilliseconds;
+                continue;
+            }
             if (particle.vx)
                 particle.x += particle.vx * elapsedSeconds;
             if (particle.vy)
@@ -170,10 +212,8 @@
                     break;
 
                 case AttackType.FromBottom:
-                    console.log(particle.vy);
                     if (particle.y - particle.regY + particle.image.height < stage.height) {
 
-                        console.log("h: " + particle.image.height);
                         var angle = Math.PI / 2;
                         var speed = particle.attack.returnSpeed || Math.abs(particle.vy);
                         setVelocity(particle, speed, angle);
@@ -183,8 +223,7 @@
                     break;
             }
             if (particle.destoryTime && currentTime >= particle.destoryTime) {
-                console.log("destroy " + particle.imageDef.id);
-                particle.parent.removeChild(particle);
+                destroyParticle(particle);
                 particles.splice(i, 1);
                 --i;
             }
@@ -203,10 +242,29 @@
         Ticker.addEventListener("tick", onTick);
 
         // Test code (remove sometime)
+        function fireAhse() {
+            fireAttackGroup(champions["22"], 100);
+            fireAttackGroup(champions["22"], 100);
+            fireAttackGroup(champions["22"], 100);
+            fireAttackGroup(champions["22"], 100);
+            fireAttackGroup(champions["22"], 200);
+            fireAttackGroup(champions["22"], 200);
+            fireAttackGroup(champions["22"], 200);
+            fireAttackGroup(champions["22"], 200);
+        }
+        fireAhse();
+        setTimeout(fireAhse, 100);
+        setTimeout(fireAhse, 200);
+        setTimeout(fireAhse, 200);
+        setTimeout(fireAhse, 400);
+        setTimeout(fireAhse, 500);
+        setTimeout(fireAhse, 600);
+        setTimeout(fireAhse, 700);
+        setTimeout(fireAhse, 800);
+        setTimeout(fireAhse, 900);
+        setTimeout(fireAhse, 1000);
+        setTimeout(fireAhse, 1200);
         fireAttackGroup(champions["432"], 200);
-        fireAttackGroup(champions["63"], 200);
-        fireAttackGroup(champions["31"], 100);
-        fireAttackGroup(champions["42"], 100);
         fireAttackGroup(champions["122"], 100);
     });
 })();

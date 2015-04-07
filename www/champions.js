@@ -54,7 +54,7 @@ champions = {
         name: "Akali",
         image: { id: "akali" },
         attacks: [
-            { type: AttackType.Still, layerType: LayerType.AboveAll, duration: 5 }
+            { type: AttackType.Still, layer: LayerType.AboveAll, duration: 5 }
         ]
     },
     "12": {
@@ -103,7 +103,7 @@ champions = {
         name: "Bard",
         image: { id: "bard" },
         attacks: [
-            { type: AttackType.Still, layerType: LayerType.BelowAll, duration: 2.5 }
+            { type: AttackType.Still, layer: LayerType.BelowAll, effect: Effect.Stasis, duration: 2.5, delay: 1.5 }
         ]
     },
     "53": {

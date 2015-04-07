@@ -10,6 +10,10 @@ LayerType = {
     BelowAll: 1,
     AboveAll: 2
 };
+Effect = {
+    None: 0,
+    Stasis: 1,
+};
 FinishedAction = {
     None: 0,      // Continue moving off the screen
     Disappear: 1, // Disappear immediately
