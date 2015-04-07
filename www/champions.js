@@ -73,14 +73,14 @@ champions = {
         name: "Anivia",
         image: { id: "anivia" },
         attacks: [
-            { type: AttackType.Bullet, speed: 100, rotationSpeed: 360 }
+            { type: AttackType.Bullet, speed: 100, rotationSpeed: 180 }
         ]
     },
     "1": {
         name: "Annie",
         image: { id: "annie" },
         attacks: [
-            { type: AttackType.Bullet, speed: 200 }
+            { type: AttackType.Bullet, speed: 200, rotationSpeed: -90 }
         ]
     },
     "22": {
@@ -108,9 +108,9 @@ champions = {
     },
     "53": {
         name: "Blitzcrank",
-        image: { id: "blitzcrank", pointAngle: -30, flipIfBackward: true },
+        image: { id: "blitzcrank", pointAngle: -30, flipIfBackward: true, regXRatio: 1, regYRatio: 0 },
         attacks: [
-            { type: AttackType.Bullet, speed: 450 }
+            { type: AttackType.Bullet, speed: 450, finished: FinishedAction.Disappear }
         ]
     },
     "63": {
@@ -138,15 +138,15 @@ champions = {
         name: "Cassiopeia",
         image: { id: "cassiopeia", pointAngle: 100, flipIfForward: true },
         attacks: [
-            { type: AttackType.Bullet, speed: 250, offset: -3 },
-            { type: AttackType.Bullet, speed: 200, offset: 3 },
+            { type: AttackType.Bullet, speed: 250, offset: -9, rotationSpeed: -10 },
+            { type: AttackType.Bullet, speed: 250, offset: 9, rotationSpeed: -10 },
         ]
     },
     "31": {
         name: "Cho'Gath",
         image: { id: "chogath" },
         attacks: [
-            { type: AttackType.FromBottom, speed: 300 }
+            { type: AttackType.FromBottom, speed: 100 }
         ]
     },
     "42": {
@@ -158,7 +158,7 @@ champions = {
     },
     "122": {
         name: "Darius",
-        image: { id: "darius", flipIfForward: true },
+        image: { id: "darius", flipIfForward: true, regXRatio: 1, regYRatio: 0.9 },
         attacks: [
             { type: AttackType.FromSide, rotationSpeed: -250 }
         ]
@@ -206,7 +206,11 @@ champions = {
         name: "Gangplank", image: "gangplank"
     },
     "86": {
-        name: "Garen", image: "garen"
+        name: "Garen",
+        image: { id: "garen", regXRatio: 0 },
+        attacks: [
+            { type: AttackType.Bullet, speed: 250, rotationSpeed: 360 }
+        ]
     },
     "150": {
         name: "Gnar", image: "gnar"
@@ -482,7 +486,11 @@ champions = {
         name: "Zed", image: "zed"
     },
     "115": {
-        name: "Ziggs", image: "ziggs"
+        name: "Ziggs",
+        image: { id: "ziggs", regXRatio: 0, regYRatio: 0 },
+        attacks: [
+            { type: AttackType.Bullet, speed: 175, rotationSpeed: 150 }
+        ]
     },
     "26": {
         name: "Zilean", image: "zilean"
