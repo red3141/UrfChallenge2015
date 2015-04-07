@@ -60,6 +60,7 @@ Nami: particle moves in a line, circular hitbox
 Nautilus: particle moves across screen, has trail, rectangular hitbox
 Nidalee: particle moves in a line, rectangular hitbox
 Nocturne: Evelynn's ability plus all particles on Nocturne's side of the screen become redirected to P1
+Nunu: particle moves in a line, circular hitbox; make it slow
 Olaf: particle spins along a line, rectangular hitbox
 Orianna: particle starts off-screen, every spell cast makes the particle move somewhere on Orianna's side of the screen, circular hitbox; particle does not leave screen
 Pantheon: particle moves in a line, rectangular hitbox
@@ -99,6 +100,10 @@ Vel'Koz: particle moves in a line, then splits into 2 particles which move perpe
 Vi: particle moves out from side of screen, then retracts; rectangular hitbox
 Viktor: particle moves along the top or bottom of the screen, rectangular hitbox
 Vladimir: particle (or perhaps multiple) move in a line, circular hitbox; if there are multiple, make them irregularly spaced
+Volibear: particle moves in a line, circular hitbox
 Warwick: all particles on Warwick's side of the screen have their speed increased
 Wukong: spinning particle moves in a line, arc hitbox
+Xerath: particle moves in a line, circular hitbox
+Xin Zhao: particle moves out from side of screen, then retracts; rectangular hitbox
+Yasuo: particle moves horizontally across the screen, rectangular hitbox
 Zed: 2 particles move in lines, circular hitbox
