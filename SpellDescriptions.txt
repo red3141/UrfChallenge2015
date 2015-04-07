@@ -106,4 +106,9 @@ Wukong: spinning particle moves in a line, arc hitbox
 Xerath: particle moves in a line, circular hitbox
 Xin Zhao: particle moves out from side of screen, then retracts; rectangular hitbox
 Yasuo: particle moves horizontally across the screen, rectangular hitbox
+Yorick: particle moves in a line, circular hitbox
+Zac: particle moves in a line, circular hitbox
 Zed: 2 particles move in lines, circular hitbox
+Ziggs: particle moves in a weird curvy line, circular hitbox
+Zilean: particle moves in a line, circular hitbox
+Zyra: particle moves in a line, circular hitbox
