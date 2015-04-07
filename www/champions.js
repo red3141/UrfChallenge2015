@@ -160,7 +160,7 @@ champions = {
         name: "Darius",
         image: { id: "darius", flipIfForward: true, regXRatio: 1, regYRatio: 0.9 },
         attacks: [
-            { type: AttackType.FromSide, rotationSpeed: -250 }
+            { type: AttackType.FromSide, rotationSpeed: -250, rotation: 90 }
         ]
     },
     "131": {
