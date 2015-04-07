@@ -35,6 +35,8 @@ Properties:
   - finished: the FinishedAction to do when the particle reaches the edge of
               the screen
   - targeted: should fire directly at the player initially (true/false)
+  - focusOnTarget: should fire directly at the target regardless of the attack group's angle (true/false)
+                   Useful if offset is <> 0.
 */
 
 champions = {
@@ -273,46 +275,44 @@ champions = {
         name: "Graves",
         image: { id: "graves", pointAngle: 45 },
         attacks: [
-            { type: AttackType.Bullet, speed: 250, angleOffset: -30 },
-            { type: AttackType.Bullet, speed: 250, angleOffset: 0 },
-            { type: AttackType.Bullet, speed: 250, angleOffset: 30 }
+            { type: AttackType.Bullet, speed: 300, angleOffset: -30 },
+            { type: AttackType.Bullet, speed: 300, angleOffset: 0 },
+            { type: AttackType.Bullet, speed: 300, angleOffset: 30 }
         ]
     },
     "120": {
         name: "Hecarim",
         image: { id: "hecarim", regXRatio: 0, regYRatio: 1, flipIfBackward: true },
         attacks: [
-            { type: AttackType.FromSide, rotationSpeed: 250, angle: -60 }
+            { type: AttackType.FromSide, rotationSpeed: 350, rotation: -60 }
         ]
     },
     "74": {
         name: "Heimerdinger",
         image: { id: "heimerdinger", pointAngle: 160 },
         attacks: [
-            // TODO: add a focusOnTarget property or something
-            { type: AttackType.Bullet, speed: 400, offset: -100 /*targeted: true*/ },
-            { type: AttackType.Bullet, speed: 400, offset: -50 /*targeted: true*/ },
-            { type: AttackType.Bullet, speed: 400, offset: 0 /*targeted: true*/ },
-            { type: AttackType.Bullet, speed: 400, offset: 50 /*targeted: true*/ },
-            { type: AttackType.Bullet, speed: 400, offset: 100 /*targeted: true*/ },
+            { type: AttackType.Bullet, speed: 400, offset: -120, targeted: true, focusOnTarget: true },
+            { type: AttackType.Bullet, speed: 400, offset: -60, targeted: true, focusOnTarget: true },
+            { type: AttackType.Bullet, speed: 400, offset: 0, targeted: true, focusOnTarget: true },
+            { type: AttackType.Bullet, speed: 400, offset: 60, targeted: true, focusOnTarget: true },
+            { type: AttackType.Bullet, speed: 400, offset: 120, targeted: true, focusOnTarget: true },
         ]
     },
     "39": {
         name: "Irelia",
-        image: { id: "irelia", pointAngle: 35 },
+        image: { id: "irelia", pointAngle: 45 },
         attacks: [
-            // TODO: should these rotate?
-            { type: AttackType.Bullet, speed: 300, offset: -30 },
-            { type: AttackType.Bullet, speed: 300, offset: -10, delay: 0.3 },
-            { type: AttackType.Bullet, speed: 300, offset: -10, delay: 0.6 },
-            { type: AttackType.Bullet, speed: 300, offset: -30, delay: 0.9 },
+            { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: -15 },
+            { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: -5, delay: 0.5 },
+            { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: 5, delay: 1.0 },
+            { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: 15, delay: 1.5 },
         ]
     },
     "40": {
         name: "Janna",
         image: { id: "janna", flipIfBackward: true },
         attacks: [
-            { type: AttackType.Bullet, speed: 150, rotationSpeed: -300 }
+            { type: AttackType.Bullet, speed: 175, rotationSpeed: -300 }
         ]
     },
     "59": {
@@ -569,9 +569,9 @@ champions = {
     },
     "115": {
         name: "Ziggs",
-        image: { id: "ziggs", regXRatio: 0, regYRatio: 0 },
+        image: { id: "ziggs", regXRatio: 0.1, regYRatio: 0.1 },
         attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 150 }
+            { type: AttackType.Bullet, speed: 250, rotationSpeed: 250 }
         ]
     },
     "26": {

@@ -19,6 +19,8 @@
     // The player should appear over all bullet layers (so they appear overtop of the Akali shoud)
     var player = new Bitmap();
     stage.addChild(player);
+    player.x = stage.width / 2;
+    player.y = stage.height - 100;
 
     var particles = [];
 
@@ -62,33 +64,36 @@
         if (team == Team.Two)
             spawnPoint.x = stage.width - spawnPoint.x;
 
-        for (var i = 0; i < champion.attacks.length; ++i) {
-            var attack = champion.attacks[i];
+        $.each(champion.attacks, function(i, attack) {
             var attackFunction = function() { fireAttack(champion, team, attack, spawnPoint, targetPoint); };
             if (attack.delay)
                 setTimeout(attackFunction, attack.delay * 1000);
             else
                 attackFunction();
-        }
+        });
     }
 
     function fireAttack(champion, team, attack, spawnPoint, targetPoint) {
-        var image = champion.image;
-        var particle = new Bitmap(document.getElementById(image.id));
-        particle.imageDef = image;
+        var imageDef = champion.image;
+        var particle = new Bitmap(document.getElementById(imageDef.id));
+        particle.imageDef = imageDef;
         particle.attack = attack;
         var angle = Math.atan2(targetPoint.y - spawnPoint.y, targetPoint.x - spawnPoint.x);
         particle.flipDirection = 1;
-        if ((image.flipIfForward && (attack.speed ? Math.abs(angle) < Math.PI / 2 : team == Team.One))
-            || (image.flipIfBackward && (attack.speed ? Math.abs(angle) > Math.PI / 2 : team == Team.Two))) {
+        if ((imageDef.flipIfForward && (attack.speed ? Math.abs(angle) < Math.PI / 2 : team == Team.One))
+            || (imageDef.flipIfBackward && (attack.speed ? Math.abs(angle) > Math.PI / 2 : team == Team.Two))) {
             particle.scaleX = -1;
             particle.flipDirection = -1;
         }
         if (particle.image.width == 0) {
-            console.warn("image width is 0: " + image.id);
+            console.warn("image width is 0: " + imageDef.id);
         }
-        particle.regX = particle.image.width * (image.regXRatio || 0.5);
-        particle.regY = particle.image.height * (image.regYRatio || 0.5);
+        if (imageDef.regXRatio === undefined)
+            imageDef.regXRatio = 0.5;
+        if (imageDef.regYRatio === undefined)
+            imageDef.regYRatio = 0.5;
+        particle.regX = particle.image.width * imageDef.regXRatio;
+        particle.regY = particle.image.height * imageDef.regYRatio;
         particle.x = spawnPoint.x;
         particle.y = spawnPoint.y;
         if (attack.offset) {
@@ -107,6 +112,8 @@
             particle.destoryTime = new Date().getTime() + attack.duration * 1000;
         switch (attack.type) {
             case AttackType.Bullet:
+                if (attack.focusOnTarget)
+                    angle = Math.atan2(targetPoint.y - particle.y, targetPoint.x - particle.x);
                 if (attack.angleOffset)
                     angle += attack.angleOffset * Math.PI / 180;
                 setVelocity(particle, attack.speed, angle);
@@ -249,7 +256,7 @@
 
                     case AttackType.FromSide:
                         if (Math.abs(particle.rotation - (particle.attack.rotation || 0) * particle.flipDirection) > 180) {
-                            particle.destoryTime = currentTime + 500;
+                            particle.destoryTime = currentTime + 150000 / particle.attack.rotationSpeed;
                         }
                         break;
                 }
@@ -274,10 +281,10 @@
         Ticker.addEventListener("tick", onTick);
 
         // Test code (remove sometime)
-        fireAttackGroup(champions["104"], 100);
-        fireAttackGroup(champions["120"], 100);
-        fireAttackGroup(champions["74"], 200);
+        //fireAttackGroup(champions["104"], 100);
         fireAttackGroup(champions["39"], 100);
-        fireAttackGroup(champions["40"], 200);
+        //fireAttackGroup(champions["74"], 200);
+        //fireAttackGroup(champions["39"], 100);
+        //fireAttackGroup(champions["40"], 200);
     });
 })();
