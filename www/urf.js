@@ -97,6 +97,12 @@
         }
         if (attack.rotation)
             particle.rotation = attack.rotation * particle.flipDirection;
+        if (attack.scale) {
+            particle.scaleX *= attack.scale;
+            particle.scaleY *= attack.scale;
+        }
+        if (attack.scaleSpeed)
+            particle.scaleSpeed = attack.scaleSpeed;
         if (attack.duration)
             particle.destoryTime = new Date().getTime() + attack.duration * 1000;
         switch (attack.type) {
@@ -173,6 +179,8 @@
         for (var i = 0; i < particles.length; ++i) {
             var particle = particles[i];
             if (particle.isInStasis) {
+                // If the particle is in stasis, don't let it move.
+                // Also delay the destroy time if there is one.
                 if (particle.destoryTime)
                     particle.destoryTime += elapsedMilliseconds;
                 continue;
@@ -183,6 +191,18 @@
                 particle.y += particle.vy * elapsedSeconds;
             if (particle.attack.rotationSpeed)
                 particle.rotation += particle.attack.rotationSpeed * elapsedSeconds * particle.flipDirection;
+            if (particle.scaleSpeed) {
+                if (particle.scaleSpeed < 0 && particle.scaleY < -particle.scaleSpeed * elapsedSeconds) {
+                    // Particle is too small now and should be destroyed
+                    particle.destoryTime = currentTime;
+                } else {
+                    particle.scaleX += particle.scaleSpeed * elapsedSeconds * particle.flipDirection;
+                    particle.scaleY += particle.scaleSpeed * elapsedSeconds;
+                    if (particle.attack.maxScale && particle.scaleY >= particle.attack.maxScale) {
+                        particle.scaleSpeed *= -1;
+                    }
+                }
+            }
 
             // Handle destroying particles
             if (!particle.destoryTime) {
@@ -254,28 +274,10 @@
         Ticker.addEventListener("tick", onTick);
 
         // Test code (remove sometime)
-        function fireAhse() {
-            fireAttackGroup(champions["115"], 100);
-            fireAttackGroup(champions["115"], 100);
-            fireAttackGroup(champions["115"], 100);
-            fireAttackGroup(champions["115"], 100);
-            fireAttackGroup(champions["115"], 200);
-            fireAttackGroup(champions["115"], 200);
-            fireAttackGroup(champions["115"], 200);
-            fireAttackGroup(champions["115"], 200);
-        }
-        /*fireAhse();
-        setTimeout(fireAhse, 100);
-        setTimeout(fireAhse, 200);
-        setTimeout(fireAhse, 200);
-        setTimeout(fireAhse, 400);
-        setTimeout(fireAhse, 500);
-        setTimeout(fireAhse, 600);
-        setTimeout(fireAhse, 700);
-        setTimeout(fireAhse, 800);
-        setTimeout(fireAhse, 900);
-        setTimeout(fireAhse, 1000);
-        setTimeout(fireAhse, 1200);*/
-        fireAttackGroup(champions["122"], 200);
+        fireAttackGroup(champions["104"], 100);
+        fireAttackGroup(champions["120"], 100);
+        fireAttackGroup(champions["74"], 200);
+        fireAttackGroup(champions["39"], 100);
+        fireAttackGroup(champions["40"], 200);
     });
 })();
