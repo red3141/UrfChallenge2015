@@ -85,12 +85,24 @@
         particle.regY = particle.image.height * (image.regYRatio || 0.5);
         particle.x = spawnPoint.x;
         particle.y = spawnPoint.y;
+        if (attack.offset) {
+            particle.x += attack.offset * Math.sin(angle);
+            particle.y += attack.offset * -Math.cos(angle);
+        }
+        if (attack.rotation)
+            particle.rotation = attack.rotation * particle.scaleX;
         if (attack.duration)
             particle.destoryTime = new Date().getTime() + attack.duration * 1000;
         switch (attack.type) {
             case AttackType.Bullet:
                 if (attack.angleOffset)
                     angle += attack.angleOffset * Math.PI / 180;
+                setVelocity(particle, attack.speed, angle);
+                break;
+            case AttackType.FromBottom:
+                particle.x = Math.max(particle.regX, Math.min(particle.x, stage.width -  particle.image.width + particle.regX));
+                particle.y = stage.height + particle.regY;
+                angle = -Math.PI / 2;
                 setVelocity(particle, attack.speed, angle);
                 break;
             case AttackType.Still:
@@ -112,12 +124,7 @@
                 particle.rotation += 2 * particle.imageDef.pointAngle - 180;
         }
     }
-
-    var prevTickTime = new Date().getTime();
-
-    // Events
-    Ticker.framerate = 60;
-    Ticker.addEventListener("tick", function(e) {
+    function onTick(e) {
         var currentTime = new Date().getTime();
         var elapsedSeconds = (currentTime - prevTickTime) / 1000;
         prevTickTime = currentTime;
@@ -128,37 +135,55 @@
             if (particle.vy)
                 particle.y += particle.vy * elapsedSeconds;
             if (particle.attack.rotationSpeed)
-                particle.rotation += particle.attack.rotationSpeed * elapsedSeconds;
+                particle.rotation += particle.attack.rotationSpeed * elapsedSeconds * particle.scaleX;
 
-            if (particle.x > stage.width || particle.x < 0 || particle.y > stage.height || particle.y < 0) {
-                switch (particle.attack.finished) {
-                    case FinishedAction.None:
-                        // Wait for the particle to move fully off the screen, then destroy it.
-                        particle.destoryTime = currentTime + 1000;
-                        break;
-                    case FinishedAction.Disappear:
-                        particle.destoryTime = currentTime;
-                        break;
-                    case FinishedAction.Return:
-                        if (particle.isReturning) {
-                            // Particle has already returned to its origin. Desroy it.
-                            particle.destoryTime = currentTime;
-                        } else {
-                            particle.isReturning = true;
-                            // Back up the particle so it is not outside the boundaries on the next iteration
-                            // (otherwise it will get destroyed)
-                            particle.x -= particle.vx * elapsedSeconds;
-                            particle.y -= particle.vy * elapsedSeconds;
+            // Handle destroying particles
+            switch (particle.attack.type) {
+                case AttackType.Bullet:
+                    if (particle.x > stage.width || particle.x < 0 || particle.y > stage.height || particle.y < 0) {
+                        switch (particle.attack.finished) {
+                            case FinishedAction.None:
+                                // Wait for the particle to move fully off the screen, then destroy it.
+                                particle.destoryTime = currentTime + 1000;
+                                break;
+                            case FinishedAction.Disappear:
+                                particle.destoryTime = currentTime;
+                                break;
+                            case FinishedAction.Return:
+                                if (particle.isReturning) {
+                                    // Particle has already returned to its origin. Desroy it.
+                                    particle.destoryTime = currentTime + 1000;
+                                } else {
+                                    particle.isReturning = true;
+                                    // Back up the particle so it is not outside the boundaries on the next iteration
+                                    // (otherwise it will get destroyed)
+                                    particle.x -= particle.vx * elapsedSeconds;
+                                    particle.y -= particle.vy * elapsedSeconds;
 
-                            var angle = Math.atan2(particle.vy, particle.vx) + Math.PI;
-                            var speed = particle.attack.returnSpeed || Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
-                            setVelocity(particle, speed, angle);
+                                    var angle = Math.atan2(particle.vy, particle.vx) + Math.PI;
+                                    var speed = particle.attack.returnSpeed || Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+                                    setVelocity(particle, speed, angle);
+                                }
+                                break;
                         }
-                        break;
-                }
-            }
+                    }
+                    break;
 
+                case AttackType.FromBottom:
+                    console.log(particle.vy);
+                    if (particle.y - particle.regY + particle.image.height < stage.height) {
+
+                        console.log("h: " + particle.image.height);
+                        var angle = Math.PI / 2;
+                        var speed = particle.attack.returnSpeed || Math.abs(particle.vy);
+                        setVelocity(particle, speed, angle);
+                    } else if (particle.y - particle.regY > stage.height) {
+                        particle.destoryTime = currentTime;
+                    }
+                    break;
+            }
             if (particle.destoryTime && currentTime >= particle.destoryTime) {
+                console.log("destroy " + particle.imageDef.id);
                 particle.parent.removeChild(particle);
                 particles.splice(i, 1);
                 --i;
@@ -169,12 +194,19 @@
         // TODO: move player
         // TODO: run hit tests
         stage.update();
-    });
+    }
+    var prevTickTime = new Date().getTime();
 
-    // Test code (remove sometime)
-    fireAttackGroup(champions["103"], 200);
-    fireAttackGroup(champions["22"], 200);
-    fireAttackGroup(champions["42"], 100);
-    fireAttackGroup(champions["201"], 100);
-    fireAttackGroup(champions["84"], 100);
+    $(document).ready(function() {
+        // Events
+        Ticker.framerate = 60;
+        Ticker.addEventListener("tick", onTick);
+
+        // Test code (remove sometime)
+        fireAttackGroup(champions["432"], 200);
+        fireAttackGroup(champions["63"], 200);
+        fireAttackGroup(champions["31"], 100);
+        fireAttackGroup(champions["42"], 100);
+        fireAttackGroup(champions["122"], 100);
+    });
 })();
