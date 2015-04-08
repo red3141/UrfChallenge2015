@@ -19,9 +19,11 @@ Properties:
   - flipIfBackward: flip the image horizontally if travelling from right to left (true/false)
     * If flipped, rotation and rotationSpeed are applied in the opposite
       direction
+- attackAngle: direction of the attack
 - attacks: attacks to fire when the champion gets a kill
   - type: attack type
   - speed: particle speed
+  - accel: particle acceleration
   - returnSpeed: particle return speed
   - offset: offset perpendicular to the direction of movement
   - imageAngle: the angle at which the image is pointing
@@ -316,7 +318,12 @@ champions = {
         ]
     },
     "59": {
-        name: "Jarvan IV", image: "jarvaniv"
+        name: "Jarvan IV",
+        image: { id: "jarvan" },
+        attackAngle: 90,
+        attacks: [
+            { type: AttackType.Bullet, speed: 200, accel: 500 }
+        ]
     },
     "24": {
         name: "Jax", image: "jax"

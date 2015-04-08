@@ -36,34 +36,41 @@
         }
         
         // Determine target point. 
+        var margin = 25;
         var targetPoint = { x: 0, y: 0 };
-        var availableWidth = stage.width / 2;
-        var availableHeight = stage.height;
+        var availableWidth = stage.width / 2 - margin;
+        var availableHeight = stage.height - margin * 2;
         if (targeted) {
             targetPoint.x = player.x + player.regX;
             targetPoint.y = player.y + player.regY;
         } else {
-            targetPoint.x = Math.random() * availableWidth;
-            targetPoint.y = Math.random() * availableHeight; // TODO: make random y position favour the bottom more?
+            targetPoint.x = Math.random() * availableWidth + margin;
+            targetPoint.y = Math.random() * availableHeight + margin; // TODO: make random y position favour the bottom more?
             if (team == Team.Two)
                 targetPoint.x = stage.width - targetPoint.x;
         }
-        targetPoint.x = Math.max(5, Math.min(targetPoint.x, stage.width - 5));
-        targetPoint.y = Math.max(5, targetPoint.y);
 
-        // Determine spawn point. The attack will leave from this point and go through the target point.
-        availableWidth -= 20; // Make it clear which side the bullet is coming from.
-        availableHeight = targetPoint.y; // Don't shoot from below the target location.
-        var spawnPos = Math.random() * (availableWidth + availableHeight);
         var spawnPoint = { x: 0, y: 0 };
-        if (spawnPos <= availableWidth) {
-            spawnPoint.x = spawnPos;
+        if (champion.attackAngle === undefined) {
+            // Determine a random spawn point. The attack will leave from this point and go through the target point.
+            availableWidth -= 20; // Make it clear which side the bullet is coming from.
+            availableHeight = targetPoint.y; // Don't shoot from below the target location.
+            var spawnPos = Math.random() * (availableWidth + availableHeight);
+            if (spawnPos <= availableWidth) {
+                spawnPoint.x = spawnPos;
+            } else {
+                spawnPoint.y = spawnPos - availableWidth;
+            }
+            if (team == Team.Two)
+                spawnPoint.x = stage.width - spawnPoint.x;
         } else {
-            spawnPoint.y = spawnPos - availableWidth;
+            // Angle has been set already. Calculate the spawn point.
+            var angle = champion.attackAngle;
+            if ((team == Team.Two && Math.abs(angle) > 180) || (team == Team.One && Math.abs(angle) < 180))
+                angle = 180 - angle;
+            angle += 180;
+            spawnPoint = getEdgePoint(targetPoint, angle * Math.PI / 180);
         }
-        if (team == Team.Two)
-            spawnPoint.x = stage.width - spawnPoint.x;
-
         $.each(champion.attacks, function(i, attack) {
             var attackFunction = function() { fireAttack(champion, team, attack, spawnPoint, targetPoint); };
             if (attack.delay)
@@ -157,6 +164,23 @@
         particles.push(particle);
     }
 
+    function getEdgePoint(point, angleInRadians) {
+        angleInRadians = angleInRadians % (2 * Math.PI);
+        if (angleInRadians > Math.PI)
+            angleInRadians -= 2 * Math.PI;
+        else if (angleInRadians < -Math.PI)
+            angleInRadians += 2 * Math.PI;
+        var unitX = Math.cos(angleInRadians);
+        var unitY = Math.sin(angleInRadians);
+        var targetX = Math.abs(angleInRadians) > Math.PI / 2 ? 0 : stage.width;
+        var targetY = angleInRadians < 0 ? 0 : stage.height;
+        var destinationX = point.x + unitX * (targetY - point.y) / unitY;
+        if (destinationX >= 0 && destinationX <= stage.width)
+            return { x: destinationX, y: targetY };
+        var destinationY = point.y + unitY * (targetX - point.x) / unitX;
+        return { x: targetX, y: destinationY };
+    }
+
     function setVelocity(particle, speed, angleInRadians) {
 
         particle.vx = speed * Math.cos(angleInRadians);
@@ -196,6 +220,13 @@
                 particle.x += particle.vx * elapsedSeconds;
             if (particle.vy)
                 particle.y += particle.vy * elapsedSeconds;
+            if (particle.attack.accel) {
+                var speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+                if (speed > 0) {
+                    particle.vx += particle.attack.accel * elapsedSeconds * particle.vx / speed;
+                    particle.vy += particle.attack.accel * elapsedSeconds * particle.vy / speed;
+                }
+            }
             if (particle.attack.rotationSpeed)
                 particle.rotation += particle.attack.rotationSpeed * elapsedSeconds * particle.flipDirection;
             if (particle.scaleSpeed) {
@@ -281,7 +312,7 @@
         Ticker.addEventListener("tick", onTick);
 
         // Test code (remove sometime)
-        //fireAttackGroup(champions["104"], 100);
+        fireAttackGroup(champions["59"], 100);
         fireAttackGroup(champions["39"], 100);
         //fireAttackGroup(champions["74"], 200);
         //fireAttackGroup(champions["39"], 100);
