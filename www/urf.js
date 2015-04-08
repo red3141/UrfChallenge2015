@@ -5,6 +5,18 @@
     Stage = createjs.Stage;
     Ticker = createjs.Ticker;
 
+    // Download game data
+    var game = {};
+    $.ajax({
+        url: "http://localhost:57644/games/random",
+        dataType: 'json'
+    }).done(function(data) {
+        game = data;
+        // TODO: use game.events in the onTick event.
+    }).fail(function(promise, text, error) {
+        console.warn("Failed to get game data.");
+    });
+
     // Stage setup
     var stage = new Stage("canvas");
     stage.width = stage.canvas.width;
@@ -332,7 +344,7 @@
 		if(keyPressed[Key.Right]) {
 			dx += speed;
 		}
-		// Make diagonal movements the same speed as horizontal/verticl movements.
+		// Make diagonal movements the same speed as horizontal/vertical movements.
 		if(dx != 0 && dy != 0) {
 			dx /= 1.41421356;
 			dy /= 1.41421356;

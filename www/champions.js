@@ -326,25 +326,50 @@ champions = {
         ]
     },
     "24": {
-        name: "Jax", image: "jax"
+        name: "Jax",
+        image: { id: "jax" },
+        attacks: [
+            { type: AttackType.Bullet, speed: 300 }
+        ]
     },
     "126": {
-        name: "Jayce", image: "jayce"
+        name: "Jayce",
+        image: { id: "jayce" },
+        attacks: [
+            { type: AttackType.Bullet, speed: 300, rotationSpeed: 720 }
+        ]
     },
     "222": {
-        name: "Jinx", image: "jinx"
+        name: "Jinx",
+        image: { id: "jinx", pointAngle: 40, flipIfBackward: true },
+        attacks: [
+            { type: AttackType.Bullet, speed: 250 }
+        ]
     },
     "429": {
-        name: "Kalista", image: "kalista"
+        name: "Kalista",
+        image: { id: "kalista", pointAngle: 135 },
+        attacks: [
+            { type: AttackType.Bullet, speed: 250 }
+        ]
     },
     "43": {
-        name: "Karma", image: "karma"
+        name: "Karma",
+        image: { id: "karma", pointAngle: 135 },
+        attacks: [
+            { type: AttackType.Bullet, speed: 250 }
+        ]
     },
     "30": {
-        name: "Karthus", image: "karthus"
+        name: "Karthus",
+        image: { id: "karthus" }
     },
     "38": {
-        name: "Kassadin", image: "kassadin"
+        name: "Kassadin",
+        image: { id: "kassadin", pointAngle: -45 },
+        attacks: [
+            { type: AttackType.Bullet, speed: 200 }
+        ]
     },
     "55": {
         name: "Katarina", image: "katarina"
