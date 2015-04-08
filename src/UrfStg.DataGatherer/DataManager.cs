@@ -62,7 +62,7 @@ namespace UrfStg.DataGatherer
                 Console.WriteLine("Finished saving champion data.");
             }
             Console.WriteLine("Starting to download games...");
-            timer.Start();
+            //timer.Start();
             await DownloadLatestGames();
         }
 
@@ -71,43 +71,48 @@ namespace UrfStg.DataGatherer
         /// </summary>
         public async Task DownloadLatestGames()
         {
-            try
+            int gameCount = 0;
+            while (gameCount < 500)
             {
-                // Use a start date of 2 hours ago. Hopefully all games that started then are over by now.
-                var nearest5Minutes = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day,
-                    DateTime.UtcNow.Hour, (DateTime.UtcNow.Minute / 5) * 5, 0, DateTimeKind.Utc);
-                var beginDate = new DateTimeOffset(nearest5Minutes - TimeSpan.FromHours(2), TimeSpan.Zero);
-                var matchIds = await lolClient.RetrieveUrfIds(region, beginDate);
-                if (matchIds == null)
+                try
                 {
-                    Console.WriteLine("Failed to get match IDs.");
-                    return;
+                    // Use a start date of 2 hours ago. Hopefully all games that started then are over by now.
+                    var nearest5Minutes = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day,
+                        DateTime.UtcNow.Hour, (DateTime.UtcNow.Minute / 5) * 5, 0, DateTimeKind.Utc);
+                    var beginDate = new DateTimeOffset(nearest5Minutes - TimeSpan.FromHours(2), TimeSpan.Zero);
+                    var matchIds = await lolClient.RetrieveUrfIds(region, beginDate);
+                    if (matchIds == null)
+                    {
+                        Console.WriteLine("Failed to get match IDs.");
+                        return;
+                    }
+                    if (matchIds.Count == 0)
+                    {
+                        Console.WriteLine("Got 0 match IDs.");
+                        return;
+                    }
+                    int current = 1;
+                    foreach (var matchId in matchIds)
+                    {
+                        if (dataContext.Matches.Any(m => m.Id == matchId))
+                            continue;
+                        var matchDetail = await lolClient.RetrieveMatch(region, matchId, true);
+                        if (matchDetail == null)
+                            continue;
+                        var match = new Match(matchDetail);
+                        if (match.Events == null || match.Events.Count == 0)
+                            continue;
+                        dataContext.Matches.Add(match);
+                        dataContext.SaveChanges();
+                        Console.WriteLine("Saved game {0}/{1}: {2}", current, matchIds.Count, matchId);
+                        ++current;
+                    }
                 }
-                if (matchIds.Count == 0)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Got 0 match IDs.");
-                    return;
+                    Console.WriteLine("Failed to get match IDs: " + ex);
                 }
-                int current = 1;
-                foreach (var matchId in matchIds)
-                {
-                    if (dataContext.Matches.Any(m => m.Id == matchId))
-                        continue;
-                    var matchDetail = await lolClient.RetrieveMatch(region, matchId, true);
-                    if (matchDetail == null)
-                        continue;
-                    var match = new Match(matchDetail);
-                    if (match.Events == null || match.Events.Count == 0)
-                        continue;
-                    dataContext.Matches.Add(match);
-                    dataContext.SaveChanges();
-                    Console.WriteLine("Saved game {0}/{1}: {2}", current, matchIds.Count, matchId);
-                    ++current;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to get match IDs: " + ex);
+                await Task.Delay(60000);
             }
         }
 

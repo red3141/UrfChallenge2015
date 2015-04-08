@@ -60,7 +60,6 @@ namespace UrfStg.Web.Controllers
 
             Console.WriteLine("Getting match...");
             var match = dataContext.Matches
-                //.Include(m => m.Events.Select(e => e.AssistingParticipants))
                 .Include(m => m.Participants)
                 .Include(m => m.Teams.Select(t => t.Bans))
                 .FirstOrDefault(m => m.Id == selectedId);
@@ -75,6 +74,7 @@ namespace UrfStg.Web.Controllers
 
             Console.WriteLine("Done accessing database.");
 
+            HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "http://localhost");
             return JsonNet(match, JsonRequestBehavior.AllowGet);
         }
     }
