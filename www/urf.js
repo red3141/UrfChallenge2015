@@ -18,11 +18,15 @@
     
     // The player should appear over all bullet layers (so they appear over the Akali shroud)
     var player = new Bitmap(document.getElementById("urf"));
+	player.regX = player.image.width / 2;
+	player.regY = player.image.height / 2;
     stage.addChild(player);
     player.x = stage.width / 2;
     player.y = stage.height - 100;
 
     var particles = [];
+	// Keep track of which arrow keys are pressed.
+	var keyPressed = [false, false, false, false];
 
     // Methods
 
@@ -268,14 +272,80 @@
 
             // TODO: check if the particle has left the screen or its duration has completed.
         }
-        // TODO: move player
+
+		var dx = 0;
+		var dy = 0;
+		var speed = 10;
+		
+		if(keyPressed[Key.Up]) {
+			dy -= speed;
+		}
+		if(keyPressed[Key.Down]) {
+			dy += speed;
+		}
+		if(keyPressed[Key.Left]) {
+			dx -= speed;
+		}
+		if(keyPressed[Key.Right]) {
+			dx += speed;
+		}
+		// Make diagonal movements the same speed as horizontal/verticl movements.
+		if(dx != 0 && dy != 0) {
+			dx /= 1.41421356;
+			dy /= 1.41421356;
+		}
+		
+		player.x += dx;
+		player.y += dy;
+		
+		// Keep the player in bounds.
+		player.x = Math.max(0, Math.min(stage.width, player.x));
+		player.y = Math.max(0, Math.min(stage.height, player.y));
+		
         // TODO: run hit tests
         stage.update();
     }
     var prevTickTime = new Date().getTime();
 
+	function keyDown(e) {
+		if(e.keyCode < 37 || e.keyCode > 40) return;
+		e.preventDefault();
+		switch (e.keyCode) {
+			case 37:
+				keyPressed[Key.Left] = true;
+				break;
+			case 38:
+				keyPressed[Key.Up] = true;
+				break;
+			case 39:
+				keyPressed[Key.Right] = true;
+				break;
+			case 40:
+				keyPressed[Key.Down] = true;
+		}
+	}
+	
+	function keyUp(e) {
+		if(e.keyCode < 37 || e.keyCode > 40) return;
+		e.preventDefault();
+		switch (e.keyCode) {
+			case 37:
+				keyPressed[Key.Left] = false;
+				break;
+			case 38:
+				keyPressed[Key.Up] = false;
+				break;
+			case 39:
+				keyPressed[Key.Right] = false;
+				break;
+			case 40:
+				keyPressed[Key.Down] = false;
+		}
+	}
+	
+	
     $(document).ready(function() {
-        // Events
+		// Events
         Ticker.framerate = 60;
         Ticker.addEventListener("tick", onTick);
 
@@ -286,11 +356,11 @@
 		var delay = 0;
 		var teamOne = true;
 		for(championId in champions) {
-			var champion = champions[championId];
+			var champion = champions[74];
 			if(champion.attacks === undefined) {continue;}
 			doSetTimeout(champion, teamOne ? Team.One : Team.Two, delay);
 			teamOne = !teamOne;
-			delay += 1000;
+			delay += 500;
 		}
         //fireAttackGroup(champions["104"], 100);
         //fireAttackGroup(champions["39"], 100);
