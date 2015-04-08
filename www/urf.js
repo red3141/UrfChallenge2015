@@ -128,7 +128,7 @@
         if (attack.scaleSpeed)
             particle.scaleSpeed = attack.scaleSpeed;
         if (attack.duration)
-            particle.destoryTime = new Date().getTime() + attack.duration * 1000;
+            particle.destroyTime = new Date().getTime() + attack.duration * 1000;
         switch (attack.type) {
             case AttackType.Bullet:
                 if (attack.focusOnTarget)
@@ -223,8 +223,8 @@
             if (particle.isInStasis) {
                 // If the particle is in stasis, don't let it move.
                 // Also delay the destroy time if there is one.
-                if (particle.destoryTime)
-                    particle.destoryTime += elapsedMilliseconds;
+                if (particle.destroyTime)
+                    particle.destroyTime += elapsedMilliseconds;
                 continue;
             }
             if (particle.vx)
@@ -243,7 +243,7 @@
             if (particle.scaleSpeed) {
                 if (particle.scaleSpeed < 0 && particle.scaleY < -particle.scaleSpeed * elapsedSeconds) {
                     // Particle is too small now and should be destroyed
-                    particle.destoryTime = currentTime;
+                    particle.destroyTime = currentTime;
                 } else {
                     particle.scaleX += particle.scaleSpeed * elapsedSeconds * particle.flipDirection;
                     particle.scaleY += particle.scaleSpeed * elapsedSeconds;
@@ -254,22 +254,22 @@
             }
 
             // Handle destroying particles
-            if (!particle.destoryTime) {
+            if (!particle.destroyTime) {
                 switch (particle.attack.type) {
                     case AttackType.Bullet:
                         if (particle.x > stage.width || particle.x < 0 || particle.y > stage.height || particle.y < 0) {
                             switch (particle.attack.finished) {
                                 case FinishedAction.None:
                                     // Wait for the particle to move fully off the screen, then destroy it.
-                                    particle.destoryTime = currentTime + 1000;
+                                    particle.destroyTime = currentTime + 1000;
                                     break;
                                 case FinishedAction.Disappear:
-                                    particle.destoryTime = currentTime;
+                                    particle.destroyTime = currentTime;
                                     break;
                                 case FinishedAction.Return:
                                     if (particle.isReturning) {
                                         // Particle has already returned to its origin. Desroy it.
-                                        particle.destoryTime = currentTime + 1000;
+                                        particle.destroyTime = currentTime + 1000;
                                     } else {
                                         particle.isReturning = true;
                                         // Back up the particle so it is not outside the boundaries on the next iteration
@@ -292,24 +292,28 @@
                             var speed = particle.attack.returnSpeed || Math.abs(particle.vy);
                             setVelocity(particle, speed, angle);
                         } else if (particle.y - particle.regY > stage.height) {
-                            particle.destoryTime = currentTime;
+                            particle.destroyTime = currentTime;
                         }
                         break;
 
                     case AttackType.FromSide:
                         if (Math.abs(particle.rotation - (particle.attack.rotation || 0) * particle.flipDirection) > 180) {
-                            particle.destoryTime = currentTime + 150000 / particle.attack.rotationSpeed;
+                            particle.destroyTime = currentTime + 150000 / particle.attack.rotationSpeed;
                         }
                         break;
                 }
             }
-            if (particle.destoryTime && currentTime >= particle.destoryTime) {
+			
+			// Check if Urf has taken tons of damage.
+			if (ndgmr.checkPixelCollision(hitbox, particle)) {
+				console.log("YOU SUNK MY URFTLESHIP!");
+			}
+			
+            if (particle.destroyTime && currentTime >= particle.destroyTime) {
                 destroyParticle(particle);
                 particles.splice(i, 1);
                 --i;
             }
-
-            // TODO: check if the particle has left the screen or its duration has completed.
         }
 
 		var dx = 0;
@@ -399,7 +403,7 @@
 		var delay = 0;
 		var teamOne = true;
 		for(championId in champions) {
-			var champion = champions[74];
+			var champion = champions[championId];
 			if(champion.attacks === undefined) {continue;}
 			doSetTimeout(champion, teamOne ? Team.One : Team.Two, delay);
 			teamOne = !teamOne;
