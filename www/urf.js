@@ -16,13 +16,21 @@
     stage.addChild(mainLayer);
     stage.addChild(topLayer);
     
-    // The player should appear over all bullet layers (so they appear over the Akali shroud)
+	// The hitbox should appear above the player.
+	var hitbox = new Bitmap(document.getElementById("hitbox"));
+	hitbox.regX = hitbox.image.width / 2;
+	hitbox.regY = hitbox.image.height / 2;
+	hitbox.x = stage.width / 2;
+	hitbox.y = stage.height - 100;
+    // The player should appear over all bullet layers (so they appear over the Akali shroud).
     var player = new Bitmap(document.getElementById("urf"));
 	player.regX = player.image.width / 2;
 	player.regY = player.image.height / 2;
-    stage.addChild(player);
-    player.x = stage.width / 2;
-    player.y = stage.height - 100;
+    player.x = hitbox.x;
+    player.y = hitbox.y;
+	
+	stage.addChild(player);
+	stage.addChild(hitbox);
 
     var particles = [];
 	// Keep track of which arrow keys are pressed.
@@ -295,12 +303,14 @@
 			dy /= 1.41421356;
 		}
 		
-		player.x += dx;
-		player.y += dy;
+		hitbox.x += dx;
+		hitbox.y += dy;
 		
 		// Keep the player in bounds.
-		player.x = Math.max(0, Math.min(stage.width, player.x));
-		player.y = Math.max(0, Math.min(stage.height, player.y));
+		hitbox.x = Math.max(0, Math.min(stage.width, hitbox.x));
+		hitbox.y = Math.max(0, Math.min(stage.height, hitbox.y));
+		player.x = hitbox.x;
+		player.y = hitbox.y;
 		
         // TODO: run hit tests
         stage.update();
@@ -343,6 +353,8 @@
 		}
 	}
 	
+	$(document).keydown(keyDown);
+	$(document).keyup(keyUp);
 	
     $(document).ready(function() {
 		// Events
