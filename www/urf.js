@@ -16,13 +16,25 @@
     stage.addChild(mainLayer);
     stage.addChild(topLayer);
     
-    // The player should appear over all bullet layers (so they appear overtop of the Akali shoud)
-    var player = new Bitmap();
-    stage.addChild(player);
-    player.x = stage.width / 2;
-    player.y = stage.height - 100;
+	// The hitbox should appear above the player.
+	var hitbox = new Bitmap(document.getElementById("hitbox"));
+	hitbox.regX = hitbox.image.width / 2;
+	hitbox.regY = hitbox.image.height / 2;
+	hitbox.x = stage.width / 2;
+	hitbox.y = stage.height - 100;
+    // The player should appear over all bullet layers (so they appear over the Akali shroud).
+    var player = new Bitmap(document.getElementById("urf"));
+	player.regX = player.image.width / 2;
+	player.regY = player.image.height / 2;
+    player.x = hitbox.x;
+    player.y = hitbox.y;
+	
+	stage.addChild(player);
+	stage.addChild(hitbox);
 
     var particles = [];
+	// Keep track of which arrow keys are pressed.
+	var keyPressed = [false, false, false, false];
 
     // Methods
 
@@ -182,7 +194,6 @@
     }
 
     function setVelocity(particle, speed, angleInRadians) {
-
         particle.vx = speed * Math.cos(angleInRadians);
         particle.vy = speed * Math.sin(angleInRadians);
         if (particle.imageDef.pointAngle !== undefined) {
@@ -300,20 +311,102 @@
 
             // TODO: check if the particle has left the screen or its duration has completed.
         }
-        // TODO: move player
+
+		var dx = 0;
+		var dy = 0;
+		var speed = 10;
+		
+		if(keyPressed[Key.Up]) {
+			dy -= speed;
+		}
+		if(keyPressed[Key.Down]) {
+			dy += speed;
+		}
+		if(keyPressed[Key.Left]) {
+			dx -= speed;
+		}
+		if(keyPressed[Key.Right]) {
+			dx += speed;
+		}
+		// Make diagonal movements the same speed as horizontal/verticl movements.
+		if(dx != 0 && dy != 0) {
+			dx /= 1.41421356;
+			dy /= 1.41421356;
+		}
+		
+		hitbox.x += dx;
+		hitbox.y += dy;
+		
+		// Keep the player in bounds.
+		hitbox.x = Math.max(0, Math.min(stage.width, hitbox.x));
+		hitbox.y = Math.max(0, Math.min(stage.height, hitbox.y));
+		player.x = hitbox.x;
+		player.y = hitbox.y;
+		
         // TODO: run hit tests
         stage.update();
     }
     var prevTickTime = new Date().getTime();
 
+	function keyDown(e) {
+		if(e.keyCode < 37 || e.keyCode > 40) return;
+		e.preventDefault();
+		switch (e.keyCode) {
+			case 37:
+				keyPressed[Key.Left] = true;
+				break;
+			case 38:
+				keyPressed[Key.Up] = true;
+				break;
+			case 39:
+				keyPressed[Key.Right] = true;
+				break;
+			case 40:
+				keyPressed[Key.Down] = true;
+		}
+	}
+	
+	function keyUp(e) {
+		if(e.keyCode < 37 || e.keyCode > 40) return;
+		e.preventDefault();
+		switch (e.keyCode) {
+			case 37:
+				keyPressed[Key.Left] = false;
+				break;
+			case 38:
+				keyPressed[Key.Up] = false;
+				break;
+			case 39:
+				keyPressed[Key.Right] = false;
+				break;
+			case 40:
+				keyPressed[Key.Down] = false;
+		}
+	}
+	
+	$(document).keydown(keyDown);
+	$(document).keyup(keyUp);
+	
     $(document).ready(function() {
-        // Events
+		// Events
         Ticker.framerate = 60;
         Ticker.addEventListener("tick", onTick);
 
         // Test code (remove sometime)
-        fireAttackGroup(champions["59"], 100);
-        fireAttackGroup(champions["39"], 100);
+		function doSetTimeout(champion, team, delay) {
+			setTimeout(function() {fireAttackGroup(champion, team)}, delay);
+		}
+		var delay = 0;
+		var teamOne = true;
+		for(championId in champions) {
+			var champion = champions[74];
+			if(champion.attacks === undefined) {continue;}
+			doSetTimeout(champion, teamOne ? Team.One : Team.Two, delay);
+			teamOne = !teamOne;
+			delay += 500;
+		}
+        //fireAttackGroup(champions["104"], 100);
+        //fireAttackGroup(champions["39"], 100);
         //fireAttackGroup(champions["74"], 200);
         //fireAttackGroup(champions["39"], 100);
         //fireAttackGroup(champions["40"], 200);

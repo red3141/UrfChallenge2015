@@ -43,20 +43,6 @@ namespace UrfStg.DataGatherer
                 Console.WriteLine("No Riot API key found. Please specify a RiotApiKey in the appSettings section in App.config.");
             lolClient = new CreepScore(apiKey);
             region = CreepScore.Region.NA;
-
-            var sb = new StringBuilder();
-            foreach (var champ in dataContext.Champions.OrderBy(c => c.Name))
-            {
-                sb.Append("    \"")
-                    .Append(champ.Id)
-                    .Append("\": { name: \"")
-                    .Append(champ.Name)
-                    .Append("\", image: \"")
-                    .Append(champ.Name.Replace(" ", "").ToLower())
-                    .Append("\" },")
-                    .AppendLine();
-            }
-            var s = sb.ToString();
         }
 
         /// <summary>

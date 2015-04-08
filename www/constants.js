@@ -24,3 +24,10 @@ Team = {
     One: 100,
     Two: 200
 };
+
+Key = {
+	Up: 0,
+	Down: 1,
+	Left: 2,
+	Right: 3
+};
