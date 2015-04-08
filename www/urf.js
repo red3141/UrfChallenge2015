@@ -281,8 +281,20 @@
         Ticker.addEventListener("tick", onTick);
 
         // Test code (remove sometime)
+		function doSetTimeout(champion, team, delay) {
+			setTimeout(function() {fireAttackGroup(champion, team)}, delay);
+		}
+		var delay = 0;
+		var teamOne = true;
+		for(championId in champions) {
+			var champion = champions[championId];
+			if(champion.attacks === undefined) {continue;}
+			doSetTimeout(champion, teamOne ? Team.One : Team.Two, delay);
+			teamOne = !teamOne;
+			delay += 1000;
+		}
         //fireAttackGroup(champions["104"], 100);
-        fireAttackGroup(champions["39"], 100);
+        //fireAttackGroup(champions["39"], 100);
         //fireAttackGroup(champions["74"], 200);
         //fireAttackGroup(champions["39"], 100);
         //fireAttackGroup(champions["40"], 200);
