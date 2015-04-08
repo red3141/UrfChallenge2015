@@ -16,8 +16,8 @@
     stage.addChild(mainLayer);
     stage.addChild(topLayer);
     
-    // The player should appear over all bullet layers (so they appear overtop of the Akali shoud)
-    var player = new Bitmap();
+    // The player should appear over all bullet layers (so they appear over the Akali shroud)
+    var player = new Bitmap(document.getElementById("urf"));
     stage.addChild(player);
     player.x = stage.width / 2;
     player.y = stage.height - 100;
@@ -158,7 +158,6 @@
     }
 
     function setVelocity(particle, speed, angleInRadians) {
-
         particle.vx = speed * Math.cos(angleInRadians);
         particle.vy = speed * Math.sin(angleInRadians);
         if (particle.imageDef.pointAngle !== undefined) {
