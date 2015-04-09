@@ -118,7 +118,7 @@ champions = {
     },
     "53": {
         name: "Blitzcrank",
-        image: { id: "blitzcrank", pointAngle: -30, flipIfBackward: true, regXRatio: 1, regYRatio: 0 },
+        image: { id: "blitzcrank", pointAngle: 0, flipIfBackward: true, regXRatio: 1, regYRatio: 0 },
         attacks: [
             { type: AttackType.Bullet, speed: 450, finished: FinishedAction.Disappear }
         ]
