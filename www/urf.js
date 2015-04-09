@@ -60,13 +60,13 @@
         }
         
         // Determine target point. 
-        var margin = 25;
+        var margin = 60;
         var targetPoint = { x: 0, y: 0 };
         var availableWidth = stage.width / 2 - margin;
         var availableHeight = stage.height - margin * 2;
         if (targeted) {
-            targetPoint.x = player.x + player.regX;
-            targetPoint.y = player.y + player.regY;
+            targetPoint.x = hitbox.x;
+            targetPoint.y = hitbox.y;
         } else {
             targetPoint.x = Math.random() * availableWidth + margin;
             targetPoint.y = Math.random() * availableHeight + margin; // TODO: make random y position favour the bottom more?
@@ -77,7 +77,6 @@
         var spawnPoint = { x: 0, y: 0 };
         if (champion.attackAngle === undefined) {
             // Determine a random spawn point. The attack will leave from this point and go through the target point.
-            availableWidth -= 20; // Make it clear which side the bullet is coming from.
             availableHeight = targetPoint.y; // Don't shoot from below the target location.
             var spawnPos = Math.random() * (availableWidth + availableHeight);
             if (spawnPos <= availableWidth) {
