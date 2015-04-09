@@ -156,7 +156,7 @@
                 setVelocity(particle, attack.speed, angle);
                 break;
             case AttackType.FromSide:
-                particle.x = team == Team.One ? 0 : stage.width;
+                particle.x = team == Team.One ? -30 : stage.width + 30;
                 particle.y = targetPoint.y;
                 break;
             case AttackType.Still:
@@ -280,7 +280,7 @@
                                     break;
                                 case FinishedAction.Return:
                                     if (particle.isReturning) {
-                                        // Particle has already returned to its origin. Desroy it.
+                                        // Particle has already returned to its origin. Destroy it.
                                         particle.destroyTime = currentTime + 1000;
                                     } else {
                                         particle.isReturning = true;
@@ -310,7 +310,7 @@
 
                     case AttackType.FromSide:
                         if (Math.abs(particle.rotation - (particle.attack.rotation || 0) * particle.flipDirection) > 180) {
-                            particle.destroyTime = currentTime + 150000 / particle.attack.rotationSpeed;
+                            particle.destroyTime = currentTime + 150000 / Math.abs(particle.attack.rotationSpeed);
                         }
                         break;
                 }
