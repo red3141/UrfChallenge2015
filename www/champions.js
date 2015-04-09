@@ -74,7 +74,7 @@ champions = {
         name: "Amumu",
         image: { id: "amumu", regXRatio: 1, pointAngle: 0 },
         attacks: [
-            { type: AttackType.Bullet, speed: 250 }
+            { type: AttackType.Bullet, speed: 250, finished: FinishedAction.Disappear }
         ]
     },
     "34": {
