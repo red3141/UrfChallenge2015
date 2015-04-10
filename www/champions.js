@@ -110,7 +110,7 @@ champions = {
     },
     "53": {
         name: "Blitzcrank",
-        images: [{ id: "blitzcrank", pointAngle: 0, flipIfBackward: true, regXRatio: 1, regYRatio: 0 }],
+        images: [{ id: "blitzcrank", pointAngle: 0, flipIfBackward: true, regXRatio: 1 }],
         attacks: [{ type: AttackType.Bullet, speed: 450, finished: FinishedAction.Disappear }]
     },
     "63": {
@@ -367,18 +367,14 @@ champions = {
         name: "Lucian",
         images: [{ id: "lucian", pointAngle: -15 }],
         attacks: [
-            { type: AttackType.Bullet, speed: 300, offset: -77, delay: 0 },
-            { type: AttackType.Bullet, speed: 300, offset: -63, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: -49, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: -35, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: -21, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: -7, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: 7, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: 21, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: 35, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: 49, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: 63, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: 77, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: -25 },
+            { type: AttackType.Bullet, speed: 300, offset: 25, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: -25, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: 25, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: -25, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: 25, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: -25, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: 25, delay: 0.2 },
         ]
     },
     "117": {
@@ -393,11 +389,11 @@ champions = {
         name: "Lux",
         images: [
             { id: "lux_preattack", pointAngle: 0 },
-            { id: "lux", pointAngle: 0 }
+            { id: "lux", pointAngle: 0, flipIfBackward: true }
         ],
         attacks: [
-            { type: AttackType.Still, speed: 400, scaleX: 0.1, isDamaging: false },
-            { type: AttackType.Still, speed: 400, delay: 0.7, removePrevious: true, imageIndex: 1 }
+            { type: AttackType.Still, isDamaging: false },
+            { type: AttackType.Still, delay: 0.7, removePrevious: true, imageIndex: 1 }
         ]
     },
     "54": {
