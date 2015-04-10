@@ -140,6 +140,15 @@
             particle.scaleSpeed = attack.scaleSpeed;
         if (attack.duration)
             particle.destroyTime = new Date().getTime() + attack.duration * 1000;
+
+        particle.isDamaging = true;
+        if (attack.damageDelay) {
+            particle.isDamaging = false;
+            particle.damagingTime = new Date().getTime() + attack.damageDelay * 1000;
+        } else if (attack.isDamaging === false) {
+            particle.isDamaging = false;
+        } 
+
         switch (attack.type) {
             case AttackType.Bullet:
                 if (attack.focusOnTarget)
@@ -232,7 +241,7 @@
         for (var i = 0; i < particles.length; ++i) {
             var particle = particles[i];
             if (particle.isInStasis) {
-                // If the particle is in stasis, don't let it move.
+                // If the particle is in stasis, don't let it move or cause damage.
                 // Also delay the destroy time if there is one.
                 if (particle.destroyTime)
                     particle.destroyTime += elapsedMilliseconds;
@@ -262,6 +271,9 @@
                         particle.scaleSpeed *= -1;
                     }
                 }
+            }
+            if (particle.damagingTime < currentTime) {
+                particle.isDamaging = true;
             }
 
             // Handle destroying particles
@@ -315,10 +327,10 @@
                 }
             }
 			
-			// Check if Urf has taken tons of damage.
-			if (ndgmr.checkPixelCollision(hitbox, particle)) {
-				console.log("YOU SUNK MY URFTLESHIP!");
-			}
+            // Check if Urf has taken tons of damage.
+            if (particle.isDamaging && ndgmr.checkPixelCollision(hitbox, particle)) {
+                console.log("YOU SUNK MY URFTLESHIP!");
+            }
 			
             if (particle.destroyTime && currentTime >= particle.destroyTime) {
                 destroyParticle(particle);
@@ -358,7 +370,6 @@
 		player.x = hitbox.x;
 		player.y = hitbox.y;
 		
-        // TODO: run hit tests
         stage.update();
     }
     var prevTickTime = new Date().getTime();
@@ -413,17 +424,20 @@
 		}
 		var delay = 0;
 		var teamOne = true;
-		for(championId in champions) {
+		/*for(championId in champions) {
 			var champion = champions[championId];
 			if(champion.attacks === undefined) {continue;}
 			doSetTimeout(champion, teamOne ? Team.One : Team.Two, delay);
 			teamOne = !teamOne;
 			delay += 500;
-		}
-        //fireAttackGroup(champions["104"], 100);
-        //fireAttackGroup(champions["39"], 100);
-        //fireAttackGroup(champions["74"], 200);
-        //fireAttackGroup(champions["39"], 100);
-        //fireAttackGroup(champions["40"], 200);
+		}*/
+        fireAttackGroup(champions["127"], 100);
+        fireAttackGroup(champions["236"], 100);
+        fireAttackGroup(champions["117"], 200);
+        fireAttackGroup(champions["99"], 100);
+        fireAttackGroup(champions["54"], 200);
+        fireAttackGroup(champions["90"], 200);
+        fireAttackGroup(champions["57"], 100);
+        fireAttackGroup(champions["11"], 200);
     });
 })();
