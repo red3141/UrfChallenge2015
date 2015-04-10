@@ -468,9 +468,9 @@ champions = {
     },
     "99": {
         name: "Lux",
-        image: { id: "lux", pointAngle: 0 },
+        image: { id: "lux", pointAngle: 0, flipIfBackward: true, regXRatio: 1, regYRatio: 0 },
         attacks: [
-            { type: AttackType.Bullet, speed: 400 }
+            { type: AttackType.Bullet, speed: 600 }
         ]
     },
     "54": {
