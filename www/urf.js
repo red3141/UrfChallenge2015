@@ -109,9 +109,10 @@
 
         var attackFunction = function() {
             // Remove previous attack (if necessary)
-            if (attack.removePrevious) {
+            if (attack.removePrevious && prevParticle) {
                 var index = particles.indexOf(prevParticle);
                 if (index >= 0) {
+                    destroyParticle(prevParticle);
                     particles.splice(index, 1);
                 }
             }
@@ -198,6 +199,9 @@
             case AttackType.Still:
                 particle.x = targetPoint.x;
                 particle.y = targetPoint.y;
+                // Set the velocity even though the speed is 0.
+                // This is relevant if the image has a point angle (e.g. Lux ult).
+                setVelocity(particle, 0, angle);
                 break;
         }
         switch (attack.layer) {

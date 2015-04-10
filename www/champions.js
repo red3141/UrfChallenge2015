@@ -393,7 +393,7 @@ champions = {
         ],
         attacks: [
             { type: AttackType.Still, isDamaging: false },
-            { type: AttackType.Still, delay: 0.7, removePrevious: true, imageIndex: 1 }
+            { type: AttackType.Still, delay: 0.7, removePrevious: true, imageIndex: 1, duration: 0.5 }
         ]
     },
     "54": {
