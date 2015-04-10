@@ -24,9 +24,6 @@
     var bottomLayer = new Container();
     var mainLayer = new Container();
     var topLayer = new Container();
-    stage.addChild(bottomLayer);
-    stage.addChild(mainLayer);
-    stage.addChild(topLayer);
     
 	// The hitbox should appear above the player.
 	var hitbox = new Bitmap(document.getElementById("hitbox"));
@@ -47,11 +44,14 @@
 	var maxPlayerY = stage.height - minPlayerY;
 	
 	stage.addChild(player);
+	stage.addChild(bottomLayer);
+	stage.addChild(mainLayer);
+	stage.addChild(topLayer);
 	stage.addChild(hitbox);
 
     var particles = [];
 	// Keep track of which arrow keys are pressed.
-	var keyPressed = [false, false, false, false];
+    var keyPressed = [false, false, false, false, false];
 
     // Methods
 
@@ -266,10 +266,11 @@
             particle.parent.removeChild(particle);
     }
 	
-	function movePlayer() {
+    function movePlayer(elapsedSeconds) {
 		var dx = 0;
 		var dy = 0;
-		var speed = 10;
+		var speed = keyPressed[Key.Shift] ? 100 : 450;
+		speed *= elapsedSeconds;
 		
 		if(keyPressed[Key.Up]) {
 			dy -= speed;
@@ -305,7 +306,7 @@
         var elapsedSeconds = elapsedMilliseconds / 1000;
         prevTickTime = currentTime;
 		
-		movePlayer();
+        movePlayer(elapsedSeconds);
 		
         for (var i = 0; i < particles.length; ++i) {
             var particle = particles[i];
@@ -412,8 +413,6 @@
     var prevTickTime = new Date().getTime();
 
 	function keyDown(e) {
-		if(e.keyCode < 37 || e.keyCode > 40) return;
-		e.preventDefault();
 		switch (e.keyCode) {
 			case 37:
 				keyPressed[Key.Left] = true;
@@ -425,13 +424,18 @@
 				keyPressed[Key.Right] = true;
 				break;
 			case 40:
-				keyPressed[Key.Down] = true;
+			    keyPressed[Key.Down] = true;
+			    break;
+            case 16:
+                keyPressed[Key.Shift] = true;
+                break;
+		    default:
+		        return;
 		}
+		e.preventDefault();
 	}
 	
 	function keyUp(e) {
-		if(e.keyCode < 37 || e.keyCode > 40) return;
-		e.preventDefault();
 		switch (e.keyCode) {
 			case 37:
 				keyPressed[Key.Left] = false;
@@ -443,17 +447,24 @@
 				keyPressed[Key.Right] = false;
 				break;
 			case 40:
-				keyPressed[Key.Down] = false;
+			    keyPressed[Key.Down] = false;
+			    break;
+            case 16:
+                keyPressed[Key.Shift] = false;
+                break;
+            default:
+                return;
 		}
+		e.preventDefault();
 	}
-	
-	$(document).keydown(keyDown);
-	$(document).keyup(keyUp);
 	
     $(document).ready(function() {
 		// Events
         Ticker.framerate = 60;
         Ticker.addEventListener("tick", onTick);
+
+        $(document).keydown(keyDown);
+        $(document).keyup(keyUp);
 
         // Test code (remove sometime)
         setTimeout(function() {
@@ -472,8 +483,8 @@
             //fireAttackGroup(champions["127"], 100);
             //fireAttackGroup(champions["236"], 100);
             //fireAttackGroup(champions["117"], 200);
-            fireAttackGroup(champions["99"], 100);
-            //fireAttackGroup(champions["54"], 200);
+            fireAttackGroup(champions["7"], 100);
+            fireAttackGroup(champions["84"], 200);
             //fireAttackGroup(champions["90"], 200);
             //fireAttackGroup(champions["57"], 100);
             //fireAttackGroup(champions["11"], 200);

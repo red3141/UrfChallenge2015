@@ -306,7 +306,10 @@ champions = {
     "30": {
         name: "Karthus",
         images: [{ id: "karthus" }],
-        attacks: []
+        attacks: [
+            { type: AttackType.Still, alpha: 0.1, isDamaging: false },
+            { type: AttackType.Still, removePrevious: true, delay: 2, duration: 2 },
+        ]
     },
     "38": {
         name: "Kassadin",
@@ -346,7 +349,7 @@ champions = {
     "7": {
         name: "LeBlanc",
         images: [{ id: "leblanc" }],
-        attacks: [{ type: AttackType.Bullet, speed: 350, rotationSpeed: 1080 }]
+        attacks: [{ type: AttackType.Bullet, speed: 450 }]
     },
     "64": {
         name: "Lee Sin",
