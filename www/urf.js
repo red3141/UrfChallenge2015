@@ -50,7 +50,9 @@
 
     // Methods
 
-    function fireAttackGroup(champion, team) {
+	function fireAttackGroup(champion, team) {
+	    if (!champion || !champion.attacks || !champion.attacks.length) return;
+
         var targeted = false;
         for (var i = 0; i < champion.attacks.length; ++i) {
             if (champion.attacks[i].targeted) {
@@ -94,17 +96,38 @@
             angle += 180;
             spawnPoint = getEdgePoint(targetPoint, angle * Math.PI / 180);
         }
-        $.each(champion.attacks, function(i, attack) {
-            var attackFunction = function() { fireAttack(champion, team, attack, spawnPoint, targetPoint); };
-            if (attack.delay)
-                setTimeout(attackFunction, attack.delay * 1000);
-            else
-                attackFunction();
-        });
+        fireAttackWithDelay(champion, 0, team, spawnPoint, targetPoint, null);
     }
 
-    function fireAttack(champion, team, attack, spawnPoint, targetPoint) {
-        var imageDef = champion.image;
+	function fireAttackWithDelay(champion, attackIndex, team, spawnPoint, targetPoint, prevParticle) {
+	    var attack = champion.attacks[attackIndex];
+
+        var attackFunction = function() {
+            // Remove previous attack (if necessary)
+            if (attack.removePrevious) {
+                var index = particles.indexOf(prevParticle);
+                if (index >= 0) {
+                    particles.splice(index, 1);
+                }
+            }
+            // Fire the current attack now
+            var particle = fireAttack(champion, attackIndex, team, spawnPoint, targetPoint);
+            // Fire the next attack
+            if (attackIndex + 1 < champion.attacks.length)
+                fireAttackWithDelay(champion, attackIndex + 1, team, spawnPoint, targetPoint, particle);
+        };
+        if (attack.delay)
+            setTimeout(attackFunction, attack.delay * 1000);
+        else
+            attackFunction();
+    }
+
+    function fireAttack(champion, attackIndex, team, spawnPoint, targetPoint) {
+        if (!champion.images || !champion.images.length) return;
+
+        var attack = champion.attacks[attackIndex];
+        var imageIndex = attack.imageIndex === undefined ? (attackIndex % champion.images.length) : attack.imageIndex;
+        var imageDef = champion.images[imageIndex];
         var particle = new Bitmap(document.getElementById(imageDef.id));
         particle.imageDef = imageDef;
         particle.attack = attack;
@@ -136,18 +159,18 @@
             particle.scaleX *= attack.scale;
             particle.scaleY *= attack.scale;
         }
+        if (attack.scaleX)
+            particle.scaleX *= attack.scale;
+        if (attack.scaleX)
+            particle.scaleY *= attack.scale;
         if (attack.scaleSpeed)
             particle.scaleSpeed = attack.scaleSpeed;
         if (attack.duration)
             particle.destroyTime = new Date().getTime() + attack.duration * 1000;
+        if (attack.alpha !== undefined)
+            particle.alpha = attack.alpha;
 
-        particle.isDamaging = true;
-        if (attack.damageDelay) {
-            particle.isDamaging = false;
-            particle.damagingTime = new Date().getTime() + attack.damageDelay * 1000;
-        } else if (attack.isDamaging === false) {
-            particle.isDamaging = false;
-        } 
+        particle.isDamaging = (attack.isDamaging !== false);
 
         switch (attack.type) {
             case AttackType.Bullet:
@@ -194,6 +217,7 @@
             }
         }
         particles.push(particle);
+        return particle;
     }
 
     function getEdgePoint(point, angleInRadians) {
@@ -271,9 +295,6 @@
                         particle.scaleSpeed *= -1;
                     }
                 }
-            }
-            if (particle.damagingTime < currentTime) {
-                particle.isDamaging = true;
             }
 
             // Handle destroying particles

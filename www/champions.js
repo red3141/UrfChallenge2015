@@ -6,7 +6,7 @@ Units:
 
 Properties:
 - name: champion name
-- image: details about the particle image
+- images: array of image properties
   - id: DOM element ID
   - regXRatio: X-position of the "origin" of the image from 0-1 (default is .5).
           0 = left edge; 1 = right edge.
@@ -25,15 +25,20 @@ Properties:
   - speed: particle speed
   - accel: particle acceleration
   - returnSpeed: particle return speed
+  - scale: particle image scale (default is 1)
+  - scaleX: particle image horizontal scale (before rotation; default is 1)
+  - scaleY: particle image vertical scale (before rotation; default is 1)
+  - scaleSpeed: speed that the scale increases
   - offset: offset perpendicular to the direction of movement
-  - imageAngle: the angle at which the image is pointing
   - angleOffset: angular offset relative to the attack group's movement
                  direction
-  - delay: delay until the attack is fired
+  - delay: delay until the attack is fired (relative to when the previous
+           attack in the attack group was fired)
   - duration: duration for still attacks
   - layer: the LayerType on which the particle should appear
   - rotation: the initial rotation of the particle
   - rotationSpeed: the speed at which the particle rotates
+  - alpha: alpha transparency of particle (0-1)
   - finished: the FinishedAction to do when the particle reaches the edge of
               the screen
   - targeted: should fire directly at the player initially (true/false)
@@ -41,62 +46,50 @@ Properties:
                    Useful if offset is <> 0.
   - isDamaging: should the attack particle cause damage on contact
                 (true/false; default is true)
-  - damageDelay: delay until the particle becomes damaging
+  - imageIndex: index of the image to use. Default is (attackIndex % images.length)
+  - removePrevious: remove the previous attack in the same attack group then
+                    this attack spawns (true/false)
 */
 
 champions = {
     "266": {
         name: "Aatrox",
-        image: { id: "aatrox" },
-        attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: -60 }
-        ]
+        images: [{ id: "aatrox" }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: -60 }]
     },
     "103": {
         name: "Ahri",
-        image: { id: "ahri" },
-        attacks: [
-            { type: AttackType.Bullet, finished: FinishedAction.Return, speed: 350, returnSpeed: 180 }
-        ]
+        images: [{ id: "ahri" }],
+        attacks: [{ type: AttackType.Bullet, finished: FinishedAction.Return, speed: 350, returnSpeed: 180 }]
     },
     "84": {
         name: "Akali",
-        image: { id: "akali" },
-        attacks: [
-            { type: AttackType.Still, layer: LayerType.AboveAll, duration: 5, isDamaging: false }
-        ]
+        images: [{ id: "akali" }],
+        attacks: [{ type: AttackType.Still, layer: LayerType.AboveAll, duration: 5, isDamaging: false }]
     },
     "12": {
         name: "Alistar",
-        image: { id: "alistar", flipIfBackward: true, pointAngle: 0 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 300 }
-        ]
+        images: [{ id: "alistar", flipIfBackward: true, pointAngle: 0 }],
+        attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "32": {
         name: "Amumu",
-        image: { id: "amumu", regXRatio: 1, pointAngle: 0 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250, finished: FinishedAction.Disappear }
-        ]
+        images: [{ id: "amumu", regXRatio: 1, pointAngle: 0 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, finished: FinishedAction.Disappear }]
     },
     "34": {
         name: "Anivia",
-        image: { id: "anivia" },
-        attacks: [
-            { type: AttackType.Bullet, speed: 100, rotationSpeed: 180 }
-        ]
+        images: [{ id: "anivia" }],
+        attacks: [ { type: AttackType.Bullet, speed: 100, rotationSpeed: 180 }]
     },
     "1": {
         name: "Annie",
-        image: { id: "annie" },
-        attacks: [
-            { type: AttackType.Bullet, speed: 200, rotationSpeed: -90 }
-        ]
+        images: [{ id: "annie" }],
+        attacks: [{ type: AttackType.Bullet, speed: 200, rotationSpeed: -90 }]
     },
     "22": {
         name: "Ashe",
-        image: { id: "ashe", pointAngle: 45 },
+        images: [{ id: "ashe", pointAngle: 45 }],
         attacks: [
             { type: AttackType.Bullet, speed: 175, angleOffset: -20 },
             { type: AttackType.Bullet, speed: 175, angleOffset: -10 },
@@ -107,49 +100,37 @@ champions = {
     },
     "268": {
         name: "Azir",
-        image: { id: "azir" },
-        attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 60 }
-        ]
+        images: [{ id: "azir" }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 60 }]
     },
     "432": {
         name: "Bard",
-        image: { id: "bard" },
-        attacks: [
-            { type: AttackType.Still, layer: LayerType.BelowAll, effect: Effect.Stasis, duration: 2.5, delay: 1.5, isDamaging: false }
-        ]
+        images: [{ id: "bard" }],
+        attacks: [{ type: AttackType.Still, layer: LayerType.BelowAll, effect: Effect.Stasis, duration: 2.5, delay: 1.5, isDamaging: false }]
     },
     "53": {
         name: "Blitzcrank",
-        image: { id: "blitzcrank", pointAngle: 0, flipIfBackward: true, regXRatio: 1, regYRatio: 0 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 450, finished: FinishedAction.Disappear }
-        ]
+        images: [{ id: "blitzcrank", pointAngle: 0, flipIfBackward: true, regXRatio: 1, regYRatio: 0 }],
+        attacks: [{ type: AttackType.Bullet, speed: 450, finished: FinishedAction.Disappear }]
     },
     "63": {
         name: "Brand",
-        image: { id: "brand", pointAngle: 150 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 200 }
-        ]
+        images: [{ id: "brand", pointAngle: 150 }],
+        attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "201": {
         name: "Braum",
-        image: { id: "braum", pointAngle: 40, flipIfBackward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 200 }
-        ]
+        images: [{ id: "braum", pointAngle: 40, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "51": {
         name: "Caitlyn",
-        image: { id: "caitlyn", pointAngle: 135, flipIfForward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 300 }
-        ]
+        images: [{ id: "caitlyn", pointAngle: 135, flipIfForward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "69": {
         name: "Cassiopeia",
-        image: { id: "cassiopeia", pointAngle: 100, flipIfForward: true },
+        images: [{ id: "cassiopeia", pointAngle: 100, flipIfForward: true }],
         attacks: [
             { type: AttackType.Bullet, speed: 250, offset: -9, rotationSpeed: -10 },
             { type: AttackType.Bullet, speed: 250, offset: 9, rotationSpeed: -10 },
@@ -157,28 +138,22 @@ champions = {
     },
     "31": {
         name: "Cho'Gath",
-        image: { id: "chogath" },
-        attacks: [
-            { type: AttackType.FromBottom, speed: 100 }
-        ]
+        images: [{ id: "chogath" }],
+        attacks: [{ type: AttackType.FromBottom, speed: 100 }]
     },
     "42": {
         name: "Corki",
-        image: { id: "corki", pointAngle: 150, flipIfForward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250 }
-        ]
+        images: [{ id: "corki", pointAngle: 150, flipIfForward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "122": {
         name: "Darius",
-        image: { id: "darius", flipIfForward: true, regXRatio: 1, regYRatio: 0.9 },
-        attacks: [
-            { type: AttackType.FromSide, rotationSpeed: -250, rotation: 90 }
-        ]
+        images: [{ id: "darius", flipIfForward: true, regXRatio: 1, regYRatio: 0.9 }],
+        attacks: [{ type: AttackType.FromSide, rotationSpeed: -250, rotation: 90 }]
     },
     "131": {
         name: "Diana",
-        image: { id: "diana", regXRatio: -1 },
+        images: [{ id: "diana", regXRatio: -1 }],
         attacks: [
             { type: AttackType.Bullet, speed: 125, rotationSpeed: 120, rotation: 0 },
             { type: AttackType.Bullet, speed: 125, rotationSpeed: 120, rotation: 120 },
@@ -187,98 +162,77 @@ champions = {
     },
     "119": {
         name: "Draven",
-        image: { id: "draven" },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250, rotationSpeed: 500 }
-        ]
+        images: [{ id: "draven" }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 500 }]
     },
     "36": {
         name: "Dr. Mundo",
-        image: { id: "drmundo", flipIfBackward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 250, rotation: -60 }
-        ]
+        images: [{ id: "drmundo", flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 250, rotation: -60 }]
     },
     "60": {
         name: "Elise",
-        image: { id: "elise", pointAngle: -90 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 175 }
-        ]
+        images: [{ id: "elise", pointAngle: -90 }],
+        attacks: [{ type: AttackType.Bullet, speed: 175 }]
     },
     "28": {
         name: "Evelynn",
-        image: { id: "evelynn" },
+        images: [{ id: "evelynn" }],
         attacks: [
             // TODO
         ]
     },
     "81": {
         name: "Ezreal",
-        image: { id: "ezreal", pointAngle: 45, flipIfBackward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 225 }
-        ]
+        images: [{ id: "ezreal", pointAngle: 45, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 225 }]
     },
     "9": {
         name: "Fiddlesticks",
-        image: { id: "fiddlesticks", pointAngle: -90 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250, rotationSpeed: 300 }
-        ]
+        images: [{ id: "fiddlesticks", pointAngle: -90 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 300 }]
     },
     "114": {
         name: "Fiora",
-        image: { id: "fiora", pointAngle: -30, flipIfBackward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250, rotationSpeed: 5, rotation: -5 }
-        ]
+        images: [{ id: "fiora", pointAngle: -30, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 5, rotation: -5 }]
     },
     "105": {
         name: "Fizz",
-        image: { id: "fizz" },
+        images: [{ id: "fizz" }],
         attacks: [
-            { type: AttackType.Still, scale: 0.1, scaleSpeed: 3, maxScale: 3, damageDelay: 0.5 }
+            { type: AttackType.Still, scale: 0.5, alpha: 0.5, isDamaging: false },
+            { type: AttackType.Still, scale: 0.5, delay: 0.5, scaleSpeed: 3, maxScale: 3, removePrevious: true }
         ]
     },
     "3": {
         name: "Galio",
-        image: { id: "galio", pointAngle: -35 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250 }
-        ]
+        images: [{ id: "galio", pointAngle: -35 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "41": {
         name: "Gangplank",
-        image: { id: "gangplank", flipIfBackward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 150, rotationSpeed: 70 }
-        ]
+        images: [{ id: "gangplank", flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 150, rotationSpeed: 70 }]
     },
     "86": {
         name: "Garen",
-        image: { id: "garen", regXRatio: 0 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250, rotationSpeed: 360 }
-        ]
+        images: [{ id: "garen", regXRatio: 0 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 360 }]
     },
     "150": {
         name: "Gnar",
-        image: { id: "gnar", pointAngle: -35 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 225 }
-        ]
+        images: [{ id: "gnar", pointAngle: -35 }],
+        attacks: [{ type: AttackType.Bullet, speed: 225 }]
     },
     "79": {
         name: "Gragas",
-        image: { id: "gragas", flipIfBackward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 100 }
-        ]
+        images: [{ id: "gragas", flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 100 }]
     },
     "104": {
         name: "Graves",
-        image: { id: "graves", pointAngle: 45 },
+        images: [{ id: "graves", pointAngle: 45 }],
         attacks: [
             { type: AttackType.Bullet, speed: 300, angleOffset: -30 },
             { type: AttackType.Bullet, speed: 300, angleOffset: 0 },
@@ -287,14 +241,14 @@ champions = {
     },
     "120": {
         name: "Hecarim",
-        image: { id: "hecarim", regXRatio: 0, regYRatio: 1, flipIfBackward: true },
+        images: [{ id: "hecarim", regXRatio: 0, regYRatio: 1, flipIfBackward: true }],
         attacks: [
             { type: AttackType.FromSide, rotationSpeed: 350, rotation: -60 }
         ]
     },
     "74": {
         name: "Heimerdinger",
-        image: { id: "heimerdinger", pointAngle: 160 },
+        images: [{ id: "heimerdinger", pointAngle: 160 }],
         attacks: [
             { type: AttackType.Bullet, speed: 400, offset: -120, targeted: true, focusOnTarget: true },
             { type: AttackType.Bullet, speed: 400, offset: -60, targeted: true, focusOnTarget: true },
@@ -305,99 +259,78 @@ champions = {
     },
     "39": {
         name: "Irelia",
-        image: { id: "irelia", pointAngle: 45 },
+        images: [{ id: "irelia", pointAngle: 45 }],
         attacks: [
             { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: -15 },
             { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: -5, delay: 0.5 },
-            { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: 5, delay: 1.0 },
-            { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: 15, delay: 1.5 },
+            { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: 5, delay: 0.5 },
+            { type: AttackType.Bullet, speed: 400, rotationSpeed: 1080, angleOffset: 15, delay: 0.5 },
         ]
     },
     "40": {
         name: "Janna",
-        image: { id: "janna", flipIfBackward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: -300 }
-        ]
+        images: [{ id: "janna", flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: -300 }]
     },
     "59": {
         name: "Jarvan IV",
-        image: { id: "jarvan" },
+        images: [{ id: "jarvan" }],
         attackAngle: 90,
-        attacks: [
-            { type: AttackType.Bullet, speed: 200, accel: 500 }
-        ]
+        attacks: [{ type: AttackType.Bullet, speed: 200, accel: 500 }]
     },
     "24": {
         name: "Jax",
-        image: { id: "jax" },
-        attacks: [
-            { type: AttackType.Bullet, speed: 300 }
-        ]
+        images: [{ id: "jax" }],
+        attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "126": {
         name: "Jayce",
-        image: { id: "jayce" },
-        attacks: [
-            { type: AttackType.Bullet, speed: 300, rotationSpeed: 720 }
-        ]
+        images: [{ id: "jayce" }],
+        attacks: [{ type: AttackType.Bullet, speed: 300, rotationSpeed: 720 }]
     },
     "222": {
         name: "Jinx",
-        image: { id: "jinx", pointAngle: 40, flipIfBackward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250 }
-        ]
+        images: [{ id: "jinx", pointAngle: 40, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "429": {
         name: "Kalista",
-        image: { id: "kalista", pointAngle: 135 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250 }
-        ]
+        images: [{ id: "kalista", pointAngle: 135 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "43": {
         name: "Karma",
-        image: { id: "karma", pointAngle: 135 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250 }
-        ]
+        images: [{ id: "karma", pointAngle: 135 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "30": {
         name: "Karthus",
-        image: { id: "karthus" }
+        images: [{ id: "karthus" }],
+        attacks: []
     },
     "38": {
         name: "Kassadin",
-        image: { id: "kassadin", pointAngle: -45 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 200 }
-        ]
+        images: [{ id: "kassadin", pointAngle: -45 }],
+        attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "55": {
         name: "Katarina",
-        image: { id: "katarina", regYRatio: 0.8 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250, rotationSpeed: -1080 }
-        ]
+        images: [{ id: "katarina", regYRatio: 0.8 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: -1080 }]
     },
     "10": {
         name: "Kayle",
-        image: { id: "kayle", pointAngle: 40 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 175 }
-        ]
+        images: [{ id: "kayle", pointAngle: 40 }],
+        attacks: [{ type: AttackType.Bullet, speed: 175 }]
     },
     "85": {
         name: "Kennen",
-        image: { id: "kennen", pointAngle: 40 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 250 }
-        ]
+        images: [{ id: "kennen", pointAngle: 40 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "121": {
         name: "Kha'Zix",
-        image: { id: "khazix", pointAngle: 130 },
+        images: [{ id: "khazix", pointAngle: 130 }],
         attacks: [
             { type: AttackType.Bullet, speed: 200, angleOffset: -30 },
             { type: AttackType.Bullet, speed: 200, angleOffset: 0 },
@@ -406,61 +339,51 @@ champions = {
     },
     "96": {
         name: "Kog'Maw",
-        image: { id: "kogmaw" },
+        images: [{ id: "kogmaw" }],
         attackAngle: 90,
-        attacks: [
-            { type: AttackType.Bullet, speed: 250, accel: 500 }
-        ]
+        attacks: [{ type: AttackType.Bullet, speed: 250, accel: 500 }]
     },
     "7": {
         name: "LeBlanc",
-        image: { id: "leblanc" },
-        attacks: [
-            { type: AttackType.Bullet, speed: 350, rotationSpeed: 1080 }
-        ]
+        images: [{ id: "leblanc" }],
+        attacks: [{ type: AttackType.Bullet, speed: 350, rotationSpeed: 1080 }]
     },
     "64": {
         name: "Lee Sin",
-        image: { id: "leesin", pointAngle: -45 },
-        attacks: [
-            { type: AttackType.Bullet, speed: 300, targeted: true }
-        ]
+        images: [{ id: "leesin", pointAngle: -45 }],
+        attacks: [{ type: AttackType.Bullet, speed: 300, targeted: true }]
     },
     "89": {
         name: "Leona",
-        image: { id: "leona" },
-        attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 360 }
-        ]
+        images: [{ id: "leona" }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 360 }]
     },
     "127": {
         name: "Lissandra",
-        image: { id: "lissandra", pointAngle: 0, flipIfBackward: true },
-        attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 20 }
-        ]
+        images: [{ id: "lissandra", pointAngle: 0, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 20 }]
     },
     "236": {
         name: "Lucian",
-        image: { id: "lucian", pointAngle: -15 },
+        images: [{ id: "lucian", pointAngle: -15 }],
         attacks: [
             { type: AttackType.Bullet, speed: 300, offset: -77, delay: 0 },
             { type: AttackType.Bullet, speed: 300, offset: -63, delay: 0.2 },
-            { type: AttackType.Bullet, speed: 300, offset: -49, delay: 0.4 },
-            { type: AttackType.Bullet, speed: 300, offset: -35, delay: 0.6 },
-            { type: AttackType.Bullet, speed: 300, offset: -21, delay: 0.8 },
-            { type: AttackType.Bullet, speed: 300, offset: -7, delay: 1.0 },
-            { type: AttackType.Bullet, speed: 300, offset: 7, delay: 1.2 },
-            { type: AttackType.Bullet, speed: 300, offset: 21, delay: 1.4 },
-            { type: AttackType.Bullet, speed: 300, offset: 35, delay: 1.6 },
-            { type: AttackType.Bullet, speed: 300, offset: 49, delay: 1.8 },
-            { type: AttackType.Bullet, speed: 300, offset: 63, delay: 2.0 },
-            { type: AttackType.Bullet, speed: 300, offset: 77, delay: 2.2 },
+            { type: AttackType.Bullet, speed: 300, offset: -49, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: -35, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: -21, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: -7, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: 7, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: 21, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: 35, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: 49, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: 63, delay: 0.2 },
+            { type: AttackType.Bullet, speed: 300, offset: 77, delay: 0.2 },
         ]
     },
     "117": {
         name: "Lulu",
-        image: { id: "lulu", pointAngle: -35 },
+        images: [{ id: "lulu", pointAngle: -35 }],
         attacks: [
             { type: AttackType.Bullet, speed: 225 },
             { type: AttackType.Bullet, speed: 225, offset: 10, delay: 0.05 },
@@ -468,14 +391,18 @@ champions = {
     },
     "99": {
         name: "Lux",
-        image: { id: "lux", pointAngle: 0 },
+        images: [
+            { id: "lux_preattack", pointAngle: 0 },
+            { id: "lux", pointAngle: 0 }
+        ],
         attacks: [
-            { type: AttackType.Bullet, speed: 400 }
+            { type: AttackType.Still, speed: 400, scaleX: 0.1, isDamaging: false },
+            { type: AttackType.Still, speed: 400, delay: 0.7, removePrevious: true, imageIndex: 1 }
         ]
     },
     "54": {
         name: "Malphite",
-        image: { id: "malphite" },
+        images: [{ id: "malphite" }],
         attacks: []
     },
     "90": {
