@@ -237,12 +237,48 @@
         if (particle.parent)
             particle.parent.removeChild(particle);
     }
+	
+	function movePlayer() {
+		var dx = 0;
+		var dy = 0;
+		var speed = 10;
+		
+		if(keyPressed[Key.Up]) {
+			dy -= speed;
+		}
+		if(keyPressed[Key.Down]) {
+			dy += speed;
+		}
+		if(keyPressed[Key.Left]) {
+			dx -= speed;
+		}
+		if(keyPressed[Key.Right]) {
+			dx += speed;
+		}
+		// Make diagonal movements the same speed as horizontal/vertical movements.
+		if(dx != 0 && dy != 0) {
+			dx /= 1.41421356;
+			dy /= 1.41421356;
+		}
+		
+		hitbox.x += dx;
+		hitbox.y += dy;
+		
+		// Keep the player in bounds.
+		hitbox.x = Math.max(minPlayerX, Math.min(maxPlayerX, hitbox.x));
+		hitbox.y = Math.max(minPlayerY, Math.min(maxPlayerY, hitbox.y));
+		player.x = hitbox.x;
+		player.y = hitbox.y;
+	}
 
     function onTick(e) {
         var currentTime = new Date().getTime();
         var elapsedMilliseconds = currentTime - prevTickTime;
         var elapsedSeconds = elapsedMilliseconds / 1000;
         prevTickTime = currentTime;
+		
+		movePlayer();
+		
         for (var i = 0; i < particles.length; ++i) {
             var particle = particles[i];
             if (particle.isInStasis) {
@@ -334,6 +370,8 @@
 			
             // Check if Urf has taken tons of damage.
             if (particle.isDamaging && ndgmr.checkPixelCollision(hitbox, particle)) {
+				// Only allow a particle to deal damage once.
+				particle.isDamaging = false;
                 console.log("YOU SUNK MY URFTLESHIP!");
             }
 			
@@ -343,37 +381,6 @@
                 --i;
             }
         }
-
-		var dx = 0;
-		var dy = 0;
-		var speed = 10;
-		
-		if(keyPressed[Key.Up]) {
-			dy -= speed;
-		}
-		if(keyPressed[Key.Down]) {
-			dy += speed;
-		}
-		if(keyPressed[Key.Left]) {
-			dx -= speed;
-		}
-		if(keyPressed[Key.Right]) {
-			dx += speed;
-		}
-		// Make diagonal movements the same speed as horizontal/vertical movements.
-		if(dx != 0 && dy != 0) {
-			dx /= 1.41421356;
-			dy /= 1.41421356;
-		}
-		
-		hitbox.x += dx;
-		hitbox.y += dy;
-		
-		// Keep the player in bounds.
-		hitbox.x = Math.max(minPlayerX, Math.min(maxPlayerX, hitbox.x));
-		hitbox.y = Math.max(minPlayerY, Math.min(maxPlayerY, hitbox.y));
-		player.x = hitbox.x;
-		player.y = hitbox.y;
 		
         stage.update();
     }
