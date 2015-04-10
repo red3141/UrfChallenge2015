@@ -41,6 +41,11 @@
     player.x = hitbox.x;
     player.y = hitbox.y;
 	
+	var minPlayerX = 0.5 * hitbox.image.width;
+	var maxPlayerX = stage.width - minPlayerX;
+	var minPlayerY = 0.5 * hitbox.image.height;
+	var maxPlayerY = stage.height - minPlayerY;
+	
 	stage.addChild(player);
 	stage.addChild(hitbox);
 
@@ -365,8 +370,8 @@
 		hitbox.y += dy;
 		
 		// Keep the player in bounds.
-		hitbox.x = Math.max(0, Math.min(stage.width, hitbox.x));
-		hitbox.y = Math.max(0, Math.min(stage.height, hitbox.y));
+		hitbox.x = Math.max(minPlayerX, Math.min(maxPlayerX, hitbox.x));
+		hitbox.y = Math.max(minPlayerY, Math.min(maxPlayerY, hitbox.y));
 		player.x = hitbox.x;
 		player.y = hitbox.y;
 		
