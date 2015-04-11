@@ -58,13 +58,7 @@
     // Methods
 
     function fireAttackGroup(champion, team) {
-        if (!champion ||
-            !champion.attacks ||
-            !champion.attacks.length ||
-            !champion.images ||
-            !champion.images.length) {
-            return;
-        }
+        if (!champion || !champion.attacks || !champion.attacks.length) return;
 
         var minOffset = 0, maxOffset = 0, minAngleOffset = 0, maxAngleOffset = 0;
         var targeted = false;
@@ -85,7 +79,7 @@
                 isSpawnPointRequired = true;
             }
         });
-        if (!isSpawnPointRequired) {
+        if (!isSpawnPointRequired && champion.images) {
             $.each(champion.images, function(i, image) {
                 if (image.pointAngle !== undefined) {
                     isSpawnPointRequired = true;
@@ -161,6 +155,11 @@
             }
             // Fire the current attack now
             var particle = fireAttack(champion, attackIndex, team, spawnPoint, targetPoint);
+            // alhpaModifier should propagate to the next attack
+            if (prevParticle && prevParticle.alphaModifier !== undefined) {
+                particle.alphaModifier = prevParticle.alphaModifier;
+                particle.alpha *= prevParticle.alphaModifier;
+            }
             // Fire the next attack
             if (attackIndex + 1 < champion.attacks.length)
                 fireAttackWithDelay(champion, attackIndex + 1, team, spawnPoint, targetPoint, particle);
@@ -172,11 +171,24 @@
     }
 
     function fireAttack(champion, attackIndex, team, spawnPoint, targetPoint) {
-        if (!champion.images || !champion.images.length) return;
 
         var currentTime = new Date().getTime();
-
         var attack = champion.attacks[attackIndex];
+
+        if (attack.type == AttackType.IncreaseTransparency) {
+            $.each(particles, function(i, particle) {
+                if ((team == Team.One && particle.x > stage.width / 2) ||
+                    (team == Team.Two && particle.x <= stage.width / 2)) {
+                    return;
+                }
+                particle.alphaModifier = (particle.alphaModifier || 1) * 0.3;
+                particle.alpha *= 0.3;
+            });
+            return;
+        }
+
+        if (!champion.images || !champion.images.length) return;
+
         var imageIndex = attack.imageIndex === undefined ? (attackIndex % champion.images.length) : attack.imageIndex;
         var imageDef = champion.images[imageIndex];
         var particle = new Bitmap(document.getElementById(imageDef.id));
@@ -392,10 +404,10 @@
         return { x: targetX, y: destinationY };
     }
 
-    function setVelocity(particle, speed, angleInRadians) {
+    function setVelocity(particle, speed, angleInRadians, rotateParticle) {
         particle.vx = speed * Math.cos(angleInRadians);
         particle.vy = speed * Math.sin(angleInRadians);
-        if (particle.imageDef.pointAngle !== undefined) {
+        if (particle.imageDef.pointAngle !== undefined && rotateParticle !== false) {
             particle.rotation = angleInRadians * 180 / Math.PI - particle.imageDef.pointAngle;
             if (particle.flipDirection == -1)
                 particle.rotation += 2 * particle.imageDef.pointAngle - 180;
@@ -648,6 +660,9 @@
             fireAttackGroup(champions["254"], 200);
             fireAttackGroup(champions["5"], 100);
             fireAttackGroup(champions["5"], 200);
+            fireAttackGroup(champions["432"], 200);
+            fireAttackGroup(champions["28"], 200);
+            fireAttackGroup(champions["412"], 200);
             /*fireAttackGroup(champions["8"], 100);
             fireAttackGroup(champions["106"], 100);
             fireAttackGroup(champions["62"], 200);

@@ -180,10 +180,7 @@ champions = {
     },
     "28": {
         name: "Evelynn",
-        images: [{ id: "evelynn" }],
-        attacks: [
-            // TODO
-        ]
+        attacks: [{ type: AttackType.IncreaseTransparency }]
     },
     "81": {
         name: "Ezreal",
@@ -611,7 +608,7 @@ champions = {
     "412": {
         name: "Thresh",
         images: [{ id: "thresh", pointAngle: 0, regXRatio: 1 }],
-        attacks: [{ type: AttackType.Bullet, speed: 400, finished: FinishedAction.Disappear }]
+        attacks: [{ type: AttackType.Bullet, speed: 400, finished: FinishedAction.Return, returnSpeed: 700 }]
     },
     "18": {
         name: "Tristana",

@@ -4,8 +4,9 @@
     FromSide: 2,   // Poke a paricle our from the side, then retract it
     Swing: 3,      // Swing particle across the side, e.g. Darius axe
     Still: 4,      // Particle appears in a static location
-    GlobalFocus: 5 // No particle; make all bullets on the current half of the
+    GlobalFocus: 5,// No particle; make all bullets on the current half of the
                    // screen focus the player
+    IncreaseTransparency: 6 // Increase the transparency of existing attacks
 };
 LayerType = {
     Normal: 0,
