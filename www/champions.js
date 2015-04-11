@@ -152,7 +152,7 @@ champions = {
     "122": {
         name: "Darius",
         images: [{ id: "darius", flipIfForward: true, regXRatio: 1, regYRatio: 0.9 }],
-        attacks: [{ type: AttackType.FromSide, rotationSpeed: -250, rotation: 90 }]
+        attacks: [{ type: AttackType.Swing, rotationSpeed: -250, rotation: 90 }]
     },
     "131": {
         name: "Diana",
@@ -246,7 +246,7 @@ champions = {
         name: "Hecarim",
         images: [{ id: "hecarim", regXRatio: 0, regYRatio: 1, flipIfBackward: true }],
         attacks: [
-            { type: AttackType.FromSide, rotationSpeed: 350, rotation: -60 }
+            { type: AttackType.Swing, rotationSpeed: 350, rotation: -60 }
         ]
     },
     "74": {
@@ -445,7 +445,7 @@ champions = {
     "75": {
         name: "Nasus",
         images: [{ id: "nasus", flipIfBackward: true, regXRatio: 0, regYRatio: 0.9 }],
-        attacks: [{ type: AttackType.FromSide, speed: 175, rotationSpeed: 350, rotation: -90 }]
+        attacks: [{ type: AttackType.Swing, speed: 175, rotationSpeed: 350, rotation: -90 }]
     },
     "111": {
         name: "Nautilus",
@@ -489,8 +489,8 @@ champions = {
     },
     "133": {
         name: "Quinn",
-        images: [{ id: "quinn" }],
-        attacks: [/* TODO: new attack type */]
+        images: [{ id: "quinn", flipIfForward: true }],
+        attacks: [{ type: AttackType.FromSide, speed: 150 }]
     },
     "33": {
         name: "Rammus",
@@ -499,13 +499,13 @@ champions = {
     },
     "421": {
         name: "Rek'Sai",
-        images: [{ id: "reksai", pointAngle: 45, flipIfBackward: true }],
+        images: [{ id: "reksai", pointAngle: 45, flipIfForward: true }],
         attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "58": {
         name: "Renekton",
         images: [{ id: "renekton", flipIfForward: true, regXRatio: 1, regYRatio: 0.1 }],
-        attacks: [{ type: AttackType.FromSide, rotationSpeed: -350, rotation: 130 }]
+        attacks: [{ type: AttackType.Swing, rotationSpeed: -350, rotation: 130 }]
     },
     "107": {
         name: "Rengar",
@@ -515,7 +515,7 @@ champions = {
     "92": {
         name: "Riven",
         images: [{ id: "riven", flipIfForward: true, regXRatio: 1, regYRatio: 1 }],
-        attacks: [{ type: AttackType.FromSide, rotationSpeed: -350, rotation: 45 }]
+        attacks: [{ type: AttackType.Swing, rotationSpeed: -350, rotation: 45 }]
     },
     "68": {
         name: "Rumble",
@@ -680,7 +680,7 @@ champions = {
     "254": {
         name: "Vi",
         images: [{ id: "vi", flipIfBackward: true }],
-        attacks: [/* TODO: new attack type (same as quinn) */]
+        attacks: [{ type: AttackType.FromSide, speed: 150 }]
     },
     "112": {
         name: "Viktor",
@@ -703,7 +703,7 @@ champions = {
     },
     "19": {
         name: "Warwick",
-        attacks: [{ type: AttackType.Buff }]// TODO: implement buff
+        attacks: [{ type: AttackType.GlobalFocus }]// TODO: implement attack type
     },
     "62": {
         name: "Wukong",
@@ -717,8 +717,8 @@ champions = {
     },
     "5": {
         name: "Xin Zhao",
-        images: [{ id: "xinzhao", pointAngle: 35 }],
-        attacks: [/* TODO: new attack tpye (same as Quinn) */]
+        images: [{ id: "xinzhao", flipIfBackward: true }],
+        attacks: [{ type: AttackType.FromSide, speed: 150 }]
     },
     "157": {
         name: "Yasuo",

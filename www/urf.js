@@ -174,12 +174,15 @@
     function fireAttack(champion, attackIndex, team, spawnPoint, targetPoint) {
         if (!champion.images || !champion.images.length) return;
 
+        var currentTime = new Date().getTime();
+
         var attack = champion.attacks[attackIndex];
         var imageIndex = attack.imageIndex === undefined ? (attackIndex % champion.images.length) : attack.imageIndex;
         var imageDef = champion.images[imageIndex];
         var particle = new Bitmap(document.getElementById(imageDef.id));
         particle.imageDef = imageDef;
         particle.attack = attack;
+        particle.team = team;
         if (particle.image.width == 0) {
             console.warn("image width is 0: " + imageDef.id);
         }
@@ -211,17 +214,17 @@
         if (attack.rotation)
             particle.rotation = attack.rotation * particle.flipDirection;
         if (attack.scale) {
-            particle.scaleX *= attack.scale;
-            particle.scaleY *= attack.scale;
+            particle.scaleX = attack.scale * particle.flipDirection;
+            particle.scaleY = attack.scale;
         }
         if (attack.scaleX)
-            particle.scaleX *= attack.scale;
+            particle.scaleX = attack.scaleX * particle.flipDirection;
         if (attack.scaleX)
-            particle.scaleY *= attack.scale;
+            particle.scaleY = attack.scaleY;
         if (attack.scaleSpeed)
             particle.scaleSpeed = attack.scaleSpeed;
         if (attack.duration)
-            particle.destroyTime = new Date().getTime() + attack.duration * 1000;
+            particle.destroyTime = currentTime + attack.duration * 1000;
         if (attack.alpha !== undefined)
             particle.alpha = attack.alpha;
 
@@ -242,7 +245,15 @@
                 setVelocity(particle, attack.speed, angle);
                 break;
             case AttackType.FromSide:
+                // Note: angle should already be set to 0 or -Math.PI from before.
+                particle.x = team == Team.One ? particle.regX - particle.image.width : stage.width + particle.regX;
+                particle.y = Math.max(particle.regY, Math.min(particle.y, stage.height - particle.image.height + particle.regY));
+                setVelocity(particle, attack.speed, angle);
+                break;
+            case AttackType.Swing:
                 particle.x = team == Team.One ? -30 : stage.width + 30;
+                // Destroy the particle once it has swung around for ~330 degrees.
+                particle.destroyTime = currentTime + 330000 / Math.abs(particle.attack.rotationSpeed);
                 break;
             case AttackType.Still:
                 // Set the velocity even though the speed is 0.
@@ -265,6 +276,10 @@
             particle.affectedParticles = [];
             for (var i = 0; i < particles.length; ++i) {
                 var otherParticle = particles[i];
+                if (otherParticle.imageDef.id == "bard") {
+                    // Bard ult should not affect bard ult.
+                    continue;
+                }
                 if (ndgmr.checkPixelCollision(particle, otherParticle)) {
                     otherParticle.isInStasis = true;
                     particle.affectedParticles.push(otherParticle);
@@ -291,6 +306,10 @@
     
     function getAngle(p1, p2) {
         return Math.atan2(p2.y - p1.y, p2.x - p1.x);
+    }
+
+    function getAngle(vector) {
+        return Math.atan2(vector.y, vector.x);
     }
 
     function getRandomSpawnPoint(targetPoint, minAngleOffset, maxAngleOffset, team) {
@@ -508,7 +527,7 @@
                         break;
 
                     case AttackType.FromBottom:
-                        if (particle.y - particle.regY + particle.image.height < stage.height) {
+                        if (particle.y - particle.regY + particle.image.height <= stage.height) {
                             var angle = Math.PI / 2;
                             var speed = particle.attack.returnSpeed || Math.abs(particle.vy);
                             setVelocity(particle, speed, angle);
@@ -518,8 +537,24 @@
                         break;
 
                     case AttackType.FromSide:
-                        if (Math.abs(particle.rotation - (particle.attack.rotation || 0) * particle.flipDirection) > 180) {
-                            particle.destroyTime = currentTime + 150000 / Math.abs(particle.attack.rotationSpeed);
+                        if (particle.team == Team.One) {
+                            if (particle.x - particle.regX >= 0) {
+                                var angle = -Math.PI;
+                                var speed = particle.attack.returnSpeed || Math.abs(particle.vx);
+                                // DON'T use setVelocity here because we don't want to flip the particle on the way back.
+                                particle.vx = -speed;
+                            } else if (particle.x - particle.regX + particle.width < 0) {
+                                particle.destroyTime = currentTime;
+                            }
+                        } else {
+                            if (particle.x - particle.regX + particle.image.width <= stage.width) {
+                                var angle = 0;
+                                var speed = particle.attack.returnSpeed || Math.abs(particle.vx);
+                                // DON'T use setVelocity here because we don't want to flip the particle on the way back.
+                                particle.vx = speed;
+                            } else if (particle.x - particle.regX > stage.width) {
+                                particle.destroyTime = currentTime;
+                            }
                         }
                         break;
                 }
@@ -611,11 +646,17 @@
                 teamOne = !teamOne;
                 delay += 500;
             }*/
-            fireAttackGroup(champions["8"], 100);
+            fireAttackGroup(champions["133"], 100);
+            fireAttackGroup(champions["133"], 200);
+            fireAttackGroup(champions["254"], 100);
+            fireAttackGroup(champions["254"], 200);
+            fireAttackGroup(champions["5"], 100);
+            fireAttackGroup(champions["5"], 200);
+            /*fireAttackGroup(champions["8"], 100);
             fireAttackGroup(champions["106"], 100);
             fireAttackGroup(champions["62"], 200);
             fireAttackGroup(champions["101"], 100);
-            fireAttackGroup(champions["157"], 200);
+            fireAttackGroup(champions["157"], 200);*/
         }, 1000);
     });
 })();

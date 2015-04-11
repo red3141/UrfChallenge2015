@@ -1,9 +1,11 @@
 ﻿AttackType = {
     Bullet: 0,     // Fire a bullet from the edge
     FromBottom: 1, // Raise particle up from the bottom, then lower it
-    FromSide: 2,   // Swing particle across the side, e.g. Darius axe
-    Still: 3,      // Particle appears in a static location
-    Buff: 4        // No particle; just buff other bullets
+    FromSide: 2,   // Poke a paricle our from the side, then retract it
+    Swing: 3,      // Swing particle across the side, e.g. Darius axe
+    Still: 4,      // Particle appears in a static location
+    GlobalFocus: 5 // No particle; make all bullets on the current half of the
+                   // screen focus the player
 };
 LayerType = {
     Normal: 0,
