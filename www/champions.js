@@ -491,7 +491,7 @@ champions = {
     },
     "33": {
         name: "Rammus",
-        images: [{ id: "rammus", pointAngle: 30 }],
+        images: [{ id: "rammus", pointAngle: 30, flipIfBackward: true }],
         attacks: [{ type: AttackType.Bullet, speed: 50, accel: 450 }]
     },
     "421": {
