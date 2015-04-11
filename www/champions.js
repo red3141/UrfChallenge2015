@@ -487,7 +487,7 @@ champions = {
     "133": {
         name: "Quinn",
         images: [{ id: "quinn", flipIfForward: true }],
-        attacks: [{ type: AttackType.FromSide, speed: 150 }]
+        attacks: [{ type: AttackType.FromSide, speed: 250 }]
     },
     "33": {
         name: "Rammus",
@@ -677,7 +677,7 @@ champions = {
     "254": {
         name: "Vi",
         images: [{ id: "vi", flipIfBackward: true }],
-        attacks: [{ type: AttackType.FromSide, speed: 150 }]
+        attacks: [{ type: AttackType.FromSide, speed: 300 }]
     },
     "112": {
         name: "Viktor",
@@ -715,7 +715,7 @@ champions = {
     "5": {
         name: "Xin Zhao",
         images: [{ id: "xinzhao", flipIfBackward: true }],
-        attacks: [{ type: AttackType.FromSide, speed: 150 }]
+        attacks: [{ type: AttackType.FromSide, speed: 350 }]
     },
     "157": {
         name: "Yasuo",
