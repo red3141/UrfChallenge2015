@@ -430,7 +430,7 @@ champions = {
     "82": {
         name: "Mordekaiser",
         images: [{ id: "mordekaiser" }],
-        attacks: [{ type: AttackType.FromBottom, speed: 200 }]
+        attacks: [{ type: AttackType.FromBottom, speed: 400 }]
     },
     "25": {
         name: "Morgana",
