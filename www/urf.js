@@ -230,6 +230,7 @@
                 spawnPoint = offsetPoint(spawnPoint, attack.offset, angle - Math.PI / 2);
             particle.x = spawnPoint.x;
             particle.y = spawnPoint.y;
+            particle.spawnPoint = spawnPoint;
         } else {
             particle.x = targetPoint.x;
             particle.y = targetPoint.y;
@@ -253,10 +254,10 @@
             particle.scaleY = attack.scaleY;
         if (attack.scaleSpeed)
             particle.scaleSpeed = attack.scaleSpeed;
-        if (attack.duration)
-            particle.destroyTime = currentTime + attack.duration * 1000;
         if (attack.alpha !== undefined)
             particle.alpha = attack.alpha;
+        if (attack.alphaSpeed)
+            particle.alphaSpeed = attack.alphaSpeed;
 
         particle.isDamaging = (attack.isDamaging !== false);
 
@@ -518,40 +519,73 @@
                     }
                 }
             }
+            if (particle.alphaSpeed) {
+                particle.alpha += particle.alphaSpeed * elapsedSeconds;
+                if (particle.alpha >= 1) {
+                    particle.alpha = 1;
+                    particle.alphaSpeed = 0;
+                }
+            }
+            if (particle.attack.type == AttackType.Follow) {
+                particle.x = player.x;
+                particle.y = player.y;
+            }
 
             // Handle destroying particles
             if (!particle.destroyTime) {
-                switch (particle.attack.type) {
-                    case AttackType.Bullet:
-                        if (currentTime > particle.spawnTime + 1000 && (particle.x > stage.width || particle.x < 0 || particle.y > stage.height || particle.y < 0)) {
-                            switch (particle.attack.finished) {
-                                case FinishedAction.Disappear:
-                                    particle.destroyTime = currentTime;
-                                    break;
-                                case FinishedAction.Return:
-                                    if (particle.isReturning) {
-                                        // Particle has already returned to its origin. Destroy it.
-                                        particle.destroyTime = currentTime + 1000;
-                                    } else {
-                                        particle.isReturning = true;
-                                        // Back up the particle so it is not outside the boundaries on the next iteration
-                                        // (otherwise it will get destroyed)
-                                        particle.x -= particle.vx * elapsedSeconds;
-                                        particle.y -= particle.vy * elapsedSeconds;
+                var isFinished = false;
+                if (particle.attack.finishCondition && particle.attack.finishCondition.reachTarget) {
+                    var currentDirection = Math.atan2(particle.vy, particle.vx);
+                    var currentAngle = getAngle(particle, targetPoint);
+                    if (Math.abs(currentAngle - currentDirection) > Math.PI / 2) {
+                        isFinished = true;
+                    }
+                }
+                if (!isFinished && particle.attack.finishCondition && particle.attack.finishCondition.duration !== undefined) {
+                    if (currentTime > particle.spawnTime + particle.attack.finishCondition.duration * 1000) {
+                        isFinished = true;
+                    }
+                }
+                if (!isFinished && particle.attack.finishCondition && particle.attack.finishCondition.distance !== undefined) {
+                    var travelDistance = getDistance(particle, particle.spawnPoint);
+                    if (travelDistance > particle.attack.finishCondition.distance) {
+                        isFinished = true;
+                    }
+                }
+                if (!isFinished && currentTime > particle.spawnTime + 1000 && (particle.x > stage.width || particle.x < 0 || particle.y > stage.height || particle.y < 0)) {
+                    isFinished = true;
+                }
+                if (isFinished) {
+                    switch (particle.attack.finished) {
+                        case FinishedAction.Disappear:
+                            particle.destroyTime = currentTime;
+                            break;
+                        case FinishedAction.Fade:
+                            particle.alphaSpeed = -2;
+                            break;
+                        case FinishedAction.Return:
+                            if (particle.isReturning) {
+                                // Particle has already returned to its origin. Destroy it.
+                                particle.destroyTime = currentTime;
+                            } else {
+                                particle.isReturning = true;
+                                // Back up the particle so it is not outside the boundaries on the next iteration
+                                // (otherwise it will get destroyed)
+                                particle.x -= particle.vx * elapsedSeconds;
+                                particle.y -= particle.vy * elapsedSeconds;
 
-                                        var angle = Math.atan2(particle.vy, particle.vx) + Math.PI;
-                                        var speed = particle.attack.returnSpeed || Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
-                                        setVelocity(particle, speed, angle, false);
-                                    }
-                                    break;
-                                default:
-                                    // Wait for the particle to move fully off the screen, then destroy it.
-                                    particle.destroyTime = currentTime + 1000;
-                                    break;
+                                var angle = Math.atan2(particle.vy, particle.vx) + Math.PI;
+                                var speed = particle.attack.returnSpeed || Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+                                setVelocity(particle, speed, angle, false);
                             }
-                        }
-                        break;
-
+                            break;
+                        default:
+                            // Wait for the particle to move fully off the screen, then destroy it.
+                            particle.destroyTime = currentTime + 1000;
+                            break;
+                    }
+                }
+                switch (particle.attack.type) {
                     case AttackType.FromBottom:
                         if (particle.y - particle.regY + particle.image.height <= stage.height) {
                             var angle = Math.PI / 2;
@@ -663,22 +697,20 @@
             }
             var delay = 0;
             var teamOne = true;
-            for(championId in champions) {
+            /*for(championId in champions) {
                 var champion = champions[championId];
                 if(champion.attacks === undefined) {continue;}
                 doSetTimeout(champion, Team.One, delay);
                 doSetTimeout(champion, Team.Two, delay);
                 teamOne = !teamOne;
                 delay += 500;
-            }
-            /*fireAttackGroup(champions["157"], 100);
-            fireAttackGroup(champions["157"], 200);
-            fireAttackGroup(champions["236"], 100);
-            fireAttackGroup(champions["22"], 200);
+            }*/
             fireAttackGroup(champions["22"], 100);
             fireAttackGroup(champions["22"], 200);
             fireAttackGroup(champions["22"], 100);
-            doSetTimeout(champions["19"], 100, 1000);
+            fireAttackGroup(champions["22"], 200);
+            fireAttackGroup(champions["56"], 100);
+            /*doSetTimeout(champions["19"], 100, 1000);
             doSetTimeout(champions["19"], 200, 1000);
             fireAttackGroup(champions["432"], 200);
             fireAttackGroup(champions["28"], 200);

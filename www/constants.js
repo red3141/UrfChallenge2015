@@ -21,6 +21,7 @@ FinishedAction = {
     None: 0,      // Continue moving off the screen
     Disappear: 1, // Disappear immediately
     Return: 2,    // Return to the original location
+    Fade: 3,      // Fade out
 };
 // These numbers line up with the team IDs from the Riot API.
 Team = { 

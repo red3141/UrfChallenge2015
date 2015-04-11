@@ -32,18 +32,22 @@ Properties:
   - offset: offset perpendicular to the direction of movement
   - angleOffset: angular offset relative to the attack group's movement
                  direction
+  - distance: the distance between the target point and spawn point
   - delay: delay until the attack is fired (relative to when the previous
            attack in the attack group was fired)
-  - duration: duration for still attacks
   - layer: the LayerType on which the particle should appear
   - rotation: the initial rotation of the particle
   - rotationSpeed: the speed at which the particle rotates
   - alpha: alpha transparency of particle (0-1)
-  - finished: the FinishedAction to do when the particle reaches the edge of
-              the screen
-  - targeted: should fire directly at the player initially (true/false)
-  - focusOnTarget: should fire directly at the target regardless of the attack group's angle (true/false)
-                   Useful if offset is <> 0.
+  - alphaSpeed: rate of change of alpha (useful for fade-in effect)
+  - finishCondition: how to determine that the attack is "finished"
+    - duration: finished after the specified number of seconds
+    - distance: finished after travelling the specified distance
+    - reachTarget: finished after reaching the target point (true/false)
+  - finished: the FinishedAction to do when the attack is "finished"
+  - targeted: should fire directly at the player (true/false)
+  - focusOnTarget: should fire directly at the target regardless of the attack
+                   group's angle (true/false). Useful if offset is <> 0.
   - isDamaging: should the attack particle cause damage on contact
                 (true/false; default is true)
   - imageIndex: index of the image to use. Default is (attackIndex % images.length)
@@ -65,7 +69,7 @@ champions = {
     "84": {
         name: "Akali",
         images: [{ id: "akali" }],
-        attacks: [{ type: AttackType.Still, layer: LayerType.AboveAll, duration: 5, isDamaging: false }]
+        attacks: [{ type: AttackType.Still, layer: LayerType.AboveAll, finishCondition: { duration: 5 }, finished: FinishedAction.Disappear, isDamaging: false }]
     },
     "12": {
         name: "Alistar",
@@ -108,7 +112,16 @@ champions = {
         images: [{ id: "bard" }],
         attacks: [
             { type: AttackType.Still, layer: LayerType.BelowAll, isDamaging: false, alpha: 0.2 },
-            { type: AttackType.Still, layer: LayerType.BelowAll, effect: Effect.Stasis, delay: 1, duration: 2.5, isDamaging: false, removePrevious: true },
+            {
+                type: AttackType.Still,
+                layer: LayerType.BelowAll,
+                effect: Effect.Stasis,
+                delay: 1,
+                finishCondition: { duration: 2.5 },
+                finished: FinishedAction.Disappear,
+                isDamaging: false,
+                removePrevious: true
+            },
         ]
     },
     "53": {
@@ -242,9 +255,7 @@ champions = {
     "120": {
         name: "Hecarim",
         images: [{ id: "hecarim", regXRatio: 0, regYRatio: 1, flipIfBackward: true }],
-        attacks: [
-            { type: AttackType.Swing, rotationSpeed: 350, rotation: -60 }
-        ]
+        attacks: [{ type: AttackType.Swing, rotationSpeed: 350, rotation: -60 }]
     },
     "74": {
         name: "Heimerdinger",
@@ -308,7 +319,7 @@ champions = {
         images: [{ id: "karthus" }],
         attacks: [
             { type: AttackType.Still, alpha: 0.1, isDamaging: false },
-            { type: AttackType.Still, removePrevious: true, delay: 2, duration: 2 },
+            { type: AttackType.Still, removePrevious: true, delay: 2, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
         ]
     },
     "38": {
@@ -395,8 +406,8 @@ champions = {
             { id: "lux", pointAngle: 0, flipIfBackward: true }
         ],
         attacks: [
-            { type: AttackType.Still, isDamaging: false },
-            { type: AttackType.Still, delay: 0.7, removePrevious: true, imageIndex: 1, duration: 0.5 }
+            { type: AttackType.Still, isDamaging: false, targeted: true },
+            { type: AttackType.Still, delay: 0.7, removePrevious: true, imageIndex: 1, finishCondition: { duration: 0.5 }, finished: FinishedAction.Disappear }
         ]
     },
     "54": {
@@ -451,13 +462,19 @@ champions = {
     },
     "76": {
         name: "Nidalee",
-        images: [{ id: "nidalee", pointAngle: 45 }],
+        images: [{ id: "nidalee", pointAngle: 45, regXRatio: 0.8, regYRatio: 0.8 }],
         attacks: [{ type: AttackType.Bullet, speed: 225 }]
     },
     "56": {
         name: "Nocturne",
-        images: [{ id: "nocturne" }],
-        attacks: [ /* TODO */ ]
+        images: [
+            { id: "nocturne" },
+            { id: "nocturne_darkness" },
+        ],
+        attacks: [
+            { type: AttackType.Bullet, speed: 300, targeted: true },
+            { type: AttackType.Follow, alpha: 0, alphaSpeed: 3, finishCondition: { duration: 3 }, finished: FinishedAction.Fade },
+        ]
     },
     "20": {
         name: "Nunu",
@@ -558,7 +575,7 @@ champions = {
     "14": {
         name: "Sion",
         images: [{ id: "sion", pointAngle: 30, flipIfBackward: true }],
-        attacks: [{ type: AttackType.Bullet, speed: 500 }]
+        attacks: [{ type: AttackType.Bullet, speed: 200, accel: 400 }]
     },
     "15": {
         name: "Sivir",
@@ -593,7 +610,11 @@ champions = {
     "91": {
         name: "Talon",
         images: [{ id: "talon" }],
-        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 400 }]
+        attacks: [
+            { type: AttackType.Bullet, speed: 400, rotationSpeed: -400, angleOffset: -30, finishCondition: { distance: 350 }, finished: FinishedAction.Return },
+            { type: AttackType.Bullet, speed: 400, rotationSpeed: -400, angleOffset: 0, finishCondition: { distance: 350 }, finished: FinishedAction.Return },
+            { type: AttackType.Bullet, speed: 400, rotationSpeed: -400, angleOffset: 30, finishCondition: { distance: 350 }, finished: FinishedAction.Return },
+        ]
     },
     "44": {
         name: "Taric",
@@ -668,7 +689,7 @@ champions = {
         name: "Vel'Koz",
         images: [{ id: "vel'koz", pointAngle: 45 }],
         attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 45 },
+            { type: AttackType.Bullet, speed: 175, rotationSpeed: 45, finishCondition: { reachTarget: true } },
             // TODO: add special properties to make these appear at the target when the previous attack reaches the target
             { type: AttackType.Bullet, speed: 175, rotationSpeed: 45, angleOffset: -90 },
             { type: AttackType.Bullet, speed: 175, rotationSpeed: 45, angleOffset: 90 }
