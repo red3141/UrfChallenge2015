@@ -308,10 +308,6 @@
         return Math.atan2(p2.y - p1.y, p2.x - p1.x);
     }
 
-    function getAngle(vector) {
-        return Math.atan2(vector.y, vector.x);
-    }
-
     function getRandomSpawnPoint(targetPoint, minAngleOffset, maxAngleOffset, team) {
         // Generate a random spawn point. The attack will leave from this point and go through the target point.
         // There are boundaries on the allowable spawn points. The spawn point must be:
@@ -499,10 +495,6 @@
                     case AttackType.Bullet:
                         if (particle.x > stage.width || particle.x < 0 || particle.y > stage.height || particle.y < 0) {
                             switch (particle.attack.finished) {
-                                case FinishedAction.None:
-                                    // Wait for the particle to move fully off the screen, then destroy it.
-                                    particle.destroyTime = currentTime + 1000;
-                                    break;
                                 case FinishedAction.Disappear:
                                     particle.destroyTime = currentTime;
                                     break;
@@ -521,6 +513,10 @@
                                         var speed = particle.attack.returnSpeed || Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
                                         setVelocity(particle, speed, angle);
                                     }
+                                    break;
+                                default:
+                                    // Wait for the particle to move fully off the screen, then destroy it.
+                                    particle.destroyTime = currentTime + 1000;
                                     break;
                             }
                         }
@@ -543,7 +539,7 @@
                                 var speed = particle.attack.returnSpeed || Math.abs(particle.vx);
                                 // DON'T use setVelocity here because we don't want to flip the particle on the way back.
                                 particle.vx = -speed;
-                            } else if (particle.x - particle.regX + particle.width < 0) {
+                            } else if (particle.x - particle.regX + particle.image.width < 0) {
                                 particle.destroyTime = currentTime;
                             }
                         } else {
