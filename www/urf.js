@@ -184,14 +184,9 @@
         particle.regX = particle.image.width * imageDef.regXRatio;
         particle.regY = particle.image.height * imageDef.regYRatio;
 
+        var angle;
         if (spawnPoint) {
             var angle = getAngle(spawnPoint, targetPoint);
-            particle.flipDirection = 1;
-            if ((imageDef.flipIfForward && (attack.speed ? Math.abs(angle) < Math.PI / 2 : team == Team.One))
-                || (imageDef.flipIfBackward && (attack.speed ? Math.abs(angle) > Math.PI / 2 : team == Team.Two))) {
-                particle.scaleX = -1;
-                particle.flipDirection = -1;
-            }
             if (attack.offset)
                 spawnPoint = offsetPoint(spawnPoint, attack.offset, angle - Math.PI / 2);
             particle.x = spawnPoint.x;
@@ -199,6 +194,13 @@
         } else {
             particle.x = targetPoint.x;
             particle.y = targetPoint.y;
+            angle = team == Team.One ? 0 : -Math.PI;
+        }
+        particle.flipDirection = 1;
+        if ((imageDef.flipIfForward && Math.abs(angle) < Math.PI / 2)
+            || (imageDef.flipIfBackward && Math.abs(angle) > Math.PI / 2)) {
+            particle.scaleX = -1;
+            particle.flipDirection = -1;
         }
         if (attack.rotation)
             particle.rotation = attack.rotation * particle.flipDirection;
@@ -603,10 +605,9 @@
                 teamOne = !teamOne;
                 delay += 500;
             }*/
-            fireAttackGroup(champions["82"], 100);
-            //fireAttackGroup(champions["75"], 200);
-            /*fireAttackGroup(champions["111"], 100);
-            fireAttackGroup(champions["76"], 100);
+            fireAttackGroup(champions["122"], 200);
+            fireAttackGroup(champions["75"], 200);
+            /*fireAttackGroup(champions["76"], 100);
             fireAttackGroup(champions["56"], 200);
             fireAttackGroup(champions["20"], 100);
             fireAttackGroup(champions["2"], 200);
