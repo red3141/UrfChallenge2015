@@ -332,7 +332,7 @@ champions = {
     "85": {
         name: "Kennen",
         images: [{ id: "kennen", pointAngle: 40 }],
-        attacks: [{ type: AttackType.Bullet, speed: 250 }]
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 400 }]
     },
     "121": {
         name: "Kha'Zix",
