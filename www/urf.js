@@ -27,13 +27,13 @@
     var mainLayer = new Container();
     var topLayer = new Container();
     
-    // The hitbox should appear above the player.
+    // The hitbox should appear above all bullets.
     var hitbox = new Bitmap(document.getElementById("hitbox"));
     hitbox.regX = hitbox.image.width / 2;
     hitbox.regY = hitbox.image.height / 2;
     hitbox.x = stage.width / 2;
     hitbox.y = stage.height - 100;
-    // The player should appear over all bullet layers (so they appear over the Akali shroud).
+    // The player should appear below all bullets (except the bottom layer, e.g. Bard ult)
     var player = new Bitmap(document.getElementById("urf"));
     player.regX = player.image.width / 2;
     player.regY = player.image.height / 2;
@@ -111,7 +111,7 @@
             }
         }
 
-        var spawnPoint;
+        var spawnPoint = null;
         if (isSpawnPointRequired) {
             if (champion.attackAngle === undefined) {
                 spawnPoint = getRandomSpawnPoint(targetPoint, minAngleOffset, maxAngleOffset, team);
@@ -137,8 +137,6 @@
                     spawnPoint = offsetPoint(spawnPoint, backupDistance, angle + Math.PI);
                 }
             }
-        } else {
-            spawnPoint = { x: 0, y: 0 };
         }
         fireAttackWithDelay(champion, 0, team, spawnPoint, targetPoint, null);
     }
@@ -176,13 +174,6 @@
         var particle = new Bitmap(document.getElementById(imageDef.id));
         particle.imageDef = imageDef;
         particle.attack = attack;
-        var angle = getAngle(spawnPoint, targetPoint);
-        particle.flipDirection = 1;
-        if ((imageDef.flipIfForward && (attack.speed ? Math.abs(angle) < Math.PI / 2 : team == Team.One))
-            || (imageDef.flipIfBackward && (attack.speed ? Math.abs(angle) > Math.PI / 2 : team == Team.Two))) {
-            particle.scaleX = -1;
-            particle.flipDirection = -1;
-        }
         if (particle.image.width == 0) {
             console.warn("image width is 0: " + imageDef.id);
         }
@@ -192,10 +183,23 @@
             imageDef.regYRatio = 0.5;
         particle.regX = particle.image.width * imageDef.regXRatio;
         particle.regY = particle.image.height * imageDef.regYRatio;
-        if (attack.offset)
-            spawnPoint = offsetPoint(spawnPoint, attack.offset, angle - Math.PI / 2);
-        particle.x = spawnPoint.x;
-        particle.y = spawnPoint.y;
+
+        if (spawnPoint) {
+            var angle = getAngle(spawnPoint, targetPoint);
+            particle.flipDirection = 1;
+            if ((imageDef.flipIfForward && (attack.speed ? Math.abs(angle) < Math.PI / 2 : team == Team.One))
+                || (imageDef.flipIfBackward && (attack.speed ? Math.abs(angle) > Math.PI / 2 : team == Team.Two))) {
+                particle.scaleX = -1;
+                particle.flipDirection = -1;
+            }
+            if (attack.offset)
+                spawnPoint = offsetPoint(spawnPoint, attack.offset, angle - Math.PI / 2);
+            particle.x = spawnPoint.x;
+            particle.y = spawnPoint.y;
+        } else {
+            particle.x = targetPoint.x;
+            particle.y = targetPoint.y;
+        }
         if (attack.rotation)
             particle.rotation = attack.rotation * particle.flipDirection;
         if (attack.scale) {
@@ -231,11 +235,8 @@
                 break;
             case AttackType.FromSide:
                 particle.x = team == Team.One ? -30 : stage.width + 30;
-                particle.y = targetPoint.y;
                 break;
             case AttackType.Still:
-                particle.x = targetPoint.x;
-                particle.y = targetPoint.y;
                 // Set the velocity even though the speed is 0.
                 // This is relevant if the image has a point angle (e.g. Lux ult).
                 setVelocity(particle, 0, angle);
@@ -602,22 +603,14 @@
                 teamOne = !teamOne;
                 delay += 500;
             }*/
-            /*fireAttackGroup(champions["22"], 100);*/
-            fireAttackGroup(champions["22"], 200);
-            fireAttackGroup(champions["432"], 100);
-            fireAttackGroup(champions["30"], 200);
-            fireAttackGroup(champions["74"], 100);
-            fireAttackGroup(champions["74"], 200);
-            /*fireAttackGroup(champions["59"], 100);
-            fireAttackGroup(champions["59"], 200);
-            fireAttackGroup(champions["99"], 100);
-            fireAttackGroup(champions["99"], 200);
             fireAttackGroup(champions["82"], 100);
-            fireAttackGroup(champions["90"], 100);
-            fireAttackGroup(champions["57"], 200);
-            fireAttackGroup(champions["11"], 100);
-            fireAttackGroup(champions["21"], 200);
-            fireAttackGroup(champions["25"], 100);*/
+            //fireAttackGroup(champions["75"], 200);
+            /*fireAttackGroup(champions["111"], 100);
+            fireAttackGroup(champions["76"], 100);
+            fireAttackGroup(champions["56"], 200);
+            fireAttackGroup(champions["20"], 100);
+            fireAttackGroup(champions["2"], 200);
+            fireAttackGroup(champions["61"], 100);*/
         }, 1000);
     });
 })();

@@ -434,34 +434,43 @@ champions = {
     },
     "25": {
         name: "Morgana",
-        images: [{ id: "morgana", pointAngle: 45 }],
+        images: [{ id: "morgana", pointAngle: 45, regXRatio: 0.75, regYRatio: 0.75 }],
         attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "267": {
         name: "Nami",
-        image: [{ id: "nami" }],
-        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 70 }]
+        images: [{ id: "nami" }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: -70 }]
     },
     "75": {
-        name: "Nasus", image: "nasus"
+        name: "Nasus",
+        images: [{ id: "nasus", flipIfBackward: true, regXRatio: 0, regYRatio: 0.9 }],
+        attacks: [{ type: AttackType.FromSide, speed: 175, rotationSpeed: 350, rotation: -90 }]
     },
     "111": {
-        name: "Nautilus", image: "nautilus"
+        name: "Nautilus",
+        images: [{ id: "nautilus", pointAngle: 0, regXRatio: 1 }],
+        attacks: [{ type: AttackType.Bullet, speed: 450, finished: FinishedAction.Disappear }]
     },
     "76": {
-        name: "Nidalee", image: "nidalee"
+        name: "Nidalee",
+        images: "nidalee"
     },
     "56": {
-        name: "Nocturne", image: "nocturne"
+        name: "Nocturne",
+        images: "nocturne"
     },
     "20": {
-        name: "Nunu", image: "nunu"
+        name: "Nunu",
+        images: "nunu"
     },
     "2": {
-        name: "Olaf", image: "olaf"
+        name: "Olaf",
+        images: "olaf"
     },
     "61": {
-        name: "Orianna", image: "orianna"
+        name: "Orianna",
+        images: "orianna"
     },
     "80": {
         name: "Pantheon", image: "pantheon"
