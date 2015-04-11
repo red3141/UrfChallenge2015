@@ -305,6 +305,47 @@
                 // This is relevant if the image has a point angle (e.g. Lux ult).
                 setVelocity(particle, 0, angle);
                 break;
+            case AttackType.AcrossEdge:
+                // 0=top, 1=right, 2=bottom, 3=left
+                var edgeId = Math.floor(Math.random() * 4);
+                if (edgeId % 2 == 1) {
+                    edgeId = team == Team.One ? 3 : 1;
+                    angle = Math.random() > 0.5 ? (Math.PI / 2) : (-Math.PI / 2);
+                } else {
+                    angle = team == Team.One ? 0 : Math.PI;
+                }
+                var isForward = true;
+                switch (edgeId) {
+                    case 0:
+                        isForward = Math.abs(angle - Math.PI) < 1e-5;
+                        particle.x = isForward ? stage.width : 0;
+                        particle.y = 0;
+                        break;
+                    case 1:
+                        isForward = Math.abs(angle + Math.PI / 2) < 1e-5;
+                        particle.x = stage.width;
+                        particle.y = isForward ? stage.height : 0;
+                        break;
+                    case 2:
+                        isForward = Math.abs(angle) < 1e-5;
+                        particle.x = isForward ? 0 : stage.width;
+                        particle.y = stage.height;
+                        break;
+                    case 3:
+                        isForward = Math.abs(angle - Math.PI / 2) < 1e-5;
+                        particle.x = 0;
+                        particle.y = isForward ? 0 : stage.height;
+                        break;
+                }
+                if ((isForward && imageDef.flipIfForward) || (!isForward && imageDef.flipIfBackward)) {
+                    particle.scaleX = -1;
+                    particle.flipDirection = -1;
+                } else {
+                    particle.scaleX = 1;
+                    particle.flipDirection = 1;
+                }
+                setVelocity(particle, attack.speed, angle);
+                break;
         }
         switch (attack.layer) {
             case LayerType.AboveAll:
@@ -492,6 +533,7 @@
 	}
 
     function onTick(e) {
+        // TODO: use e.runTime and e.delta instead of new Date().getTime()
         var currentTime = new Date().getTime();
         var elapsedMilliseconds = currentTime - prevTickTime;
         var elapsedSeconds = elapsedMilliseconds / 1000;
@@ -720,8 +762,10 @@
                 teamOne = !teamOne;
                 delay += 500;
             }*/
-            fireAttackGroup(champions["161"], 100);
-            fireAttackGroup(champions["161"], 200);
+            fireAttackGroup(champions["77"], 100);
+            fireAttackGroup(champions["77"], 200);
+            fireAttackGroup(champions["112"], 100);
+            fireAttackGroup(champions["112"], 200);
         }, 1000);
     });
 })();

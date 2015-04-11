@@ -6,7 +6,8 @@
     Still: 4,      // Particle appears in a static location
     GlobalFocus: 5,// No particle; make all bullets on the current half of the
                    // screen focus the player
-    IncreaseTransparency: 6 // Increase the transparency of existing attacks
+    IncreaseTransparency: 6, // Increase the transparency of existing attacks
+    AcrossEdge: 7, // Slide across one of the edges
 };
 LayerType = {
     Normal: 0,

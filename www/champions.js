@@ -664,8 +664,8 @@ champions = {
     },
     "77": {
         name: "Udyr",
-        images: [{ id: "udyr", pointAngle: 180, flipIfBackward: true }],
-        attacks: [ /* TODO: new attack type */ ]
+        images: [{ id: "udyr", pointAngle: 180, flipIfForward: true, regXRatio: 0, regYRatio: 1 }],
+        attacks: [{ type: AttackType.AcrossEdge, speed: 400 }]
     },
     "6": {
         name: "Urgot",
@@ -703,8 +703,8 @@ champions = {
     },
     "112": {
         name: "Viktor",
-        images: [{ id: "viktor", flipIfBackward: true }],
-        attacks: [/* TODO: new attack tpye (AcrossTop?) */]
+        images: [{ id: "viktor", pointAngle: 180, flipIfForward: true, regXRatio: 0, regYRatio: 1 }],
+        attacks: [{ type: AttackType.AcrossEdge, speed: 300 }]
     },
     "8": {
         name: "Vladimir",
