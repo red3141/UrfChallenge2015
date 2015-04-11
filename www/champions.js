@@ -368,7 +368,7 @@ champions = {
     },
     "236": {
         name: "Lucian",
-        images: [{ id: "lucian", pointAngle: -15 }],
+        images: [{ id: "lucian", pointAngle: -20, regXRatio: 0.9, regYRatio: 0.1 }],
         attacks: [
             { type: AttackType.Bullet, speed: 300, offset: -25 },
             { type: AttackType.Bullet, speed: 300, offset: 25, delay: 0.2 },
@@ -700,7 +700,7 @@ champions = {
     },
     "19": {
         name: "Warwick",
-        attacks: [{ type: AttackType.GlobalFocus }]// TODO: implement attack type
+        attacks: [{ type: AttackType.GlobalFocus }]
     },
     "62": {
         name: "Wukong",
@@ -719,9 +719,9 @@ champions = {
     },
     "157": {
         name: "Yasuo",
-        images: [{ id: "yasuo", flipIfBackward: true }],
+        images: [{ id: "yasuo", flipIfBackward: true, regXRatio: 1 }],
         attackAngle: 0,
-        attacks: [{ type: AttackType.Bullet, speed: 200 }]
+        attacks: [{ type: AttackType.Bullet, speed: 350, accel: -90 }]
     },
     "83": {
         name: "Yorick",
