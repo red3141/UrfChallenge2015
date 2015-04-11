@@ -621,7 +621,7 @@ champions = {
     "48": {
         name: "Trundle",
         images: [{ id: "trundle" }],
-        attacks: [{ type: AttackType.FromBottom, speed: 400 }]
+        attacks: [{ type: AttackType.FromBottom, speed: 150 }]
     },
     "23": {
         name: "Tryndamere",
