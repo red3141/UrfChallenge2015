@@ -106,7 +106,10 @@ champions = {
     "432": {
         name: "Bard",
         images: [{ id: "bard" }],
-        attacks: [{ type: AttackType.Still, layer: LayerType.BelowAll, effect: Effect.Stasis, duration: 2.5, delay: 1.5, isDamaging: false }]
+        attacks: [
+            { type: AttackType.Still, layer: LayerType.BelowAll, isDamaging: false, alpha: 0.2 },
+            { type: AttackType.Still, layer: LayerType.BelowAll, effect: Effect.Stasis, delay: 1, duration: 2.5, isDamaging: false, removePrevious: true },
+        ]
     },
     "53": {
         name: "Blitzcrank",
@@ -401,32 +404,43 @@ champions = {
     },
     "54": {
         name: "Malphite",
-        images: [{ id: "malphite" }],
-        attacks: []
+        images: [{ id: "malphite", pointAngle: -90 }],
+        attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "90": {
-        name: "Malzahar", image: "malzahar",
-        attacks: [ ]
+        name: "Malzahar",
+        images: [{ id: "malzahar", pointAngle: 135, flipIfForward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 175 }]
     },
     "57": {
-        name: "Maokai", image: "maokai",
-        attacks: []
+        name: "Maokai",
+        images: [{ id: "maokai", pointAngle: 45, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 225 }]
     },
     "11": {
-        name: "Master Yi", image: "masteryi",
-        attacks: []
+        name: "Master Yi",
+        images: [{ id: "masteryi", pointAngle: 110, regXRatio: 0, regYRatio: 1, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 200, rotationSpeed: 25 }]
     },
     "21": {
-        name: "Miss Fortune", image: "missfortune"
+        name: "Miss Fortune",
+        images: [{ id: "missfortune" }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "82": {
-        name: "Mordekaiser", image: "mordekaiser"
+        name: "Mordekaiser",
+        images: [{ id: "mordekaiser" }],
+        attacks: [{ type: AttackType.FromBottom, speed: 200 }]
     },
     "25": {
-        name: "Morgana", image: "morgana"
+        name: "Morgana",
+        images: [{ id: "morgana", pointAngle: 45 }],
+        attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "267": {
-        name: "Nami", image: "nami"
+        name: "Nami",
+        image: [{ id: "nami" }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 70 }]
     },
     "75": {
         name: "Nasus", image: "nasus"
