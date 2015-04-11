@@ -155,7 +155,7 @@ champions = {
     "31": {
         name: "Cho'Gath",
         images: [{ id: "chogath" }],
-        attacks: [{ type: AttackType.FromBottom, speed: 100 }]
+        attacks: [{ type: AttackType.FromBottom, speed: 250 }]
     },
     "42": {
         name: "Corki",
@@ -504,11 +504,11 @@ champions = {
     "133": {
         name: "Quinn",
         images: [{ id: "quinn", flipIfForward: true }],
-        attacks: [{ type: AttackType.FromSide, speed: 150 }]
+        attacks: [{ type: AttackType.FromSide, speed: 250 }]
     },
     "33": {
         name: "Rammus",
-        images: [{ id: "rammus", pointAngle: 30 }],
+        images: [{ id: "rammus", pointAngle: 30, flipIfBackward: true }],
         attacks: [{ type: AttackType.Bullet, speed: 50, accel: 450 }]
     },
     "421": {
@@ -698,7 +698,7 @@ champions = {
     "254": {
         name: "Vi",
         images: [{ id: "vi", flipIfBackward: true }],
-        attacks: [{ type: AttackType.FromSide, speed: 150 }]
+        attacks: [{ type: AttackType.FromSide, speed: 300 }]
     },
     "112": {
         name: "Viktor",
@@ -736,7 +736,7 @@ champions = {
     "5": {
         name: "Xin Zhao",
         images: [{ id: "xinzhao", flipIfBackward: true }],
-        attacks: [{ type: AttackType.FromSide, speed: 150 }]
+        attacks: [{ type: AttackType.FromSide, speed: 350 }]
     },
     "157": {
         name: "Yasuo",
