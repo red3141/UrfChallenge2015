@@ -58,7 +58,13 @@
     // Methods
 
     function fireAttackGroup(champion, team) {
-        if (!champion || !champion.attacks || !champion.attacks.length) return;
+        if (!champion ||
+            !champion.attacks ||
+            !champion.attacks.length ||
+            !champion.images ||
+            !champion.images.length) {
+            return;
+        }
 
         var minOffset = 0, maxOffset = 0, minAngleOffset = 0, maxAngleOffset = 0;
         var targeted = false;
@@ -605,13 +611,11 @@
                 teamOne = !teamOne;
                 delay += 500;
             }*/
-            fireAttackGroup(champions["122"], 200);
-            fireAttackGroup(champions["75"], 200);
-            /*fireAttackGroup(champions["76"], 100);
-            fireAttackGroup(champions["56"], 200);
-            fireAttackGroup(champions["20"], 100);
-            fireAttackGroup(champions["2"], 200);
-            fireAttackGroup(champions["61"], 100);*/
+            fireAttackGroup(champions["8"], 100);
+            fireAttackGroup(champions["106"], 100);
+            fireAttackGroup(champions["62"], 200);
+            fireAttackGroup(champions["101"], 100);
+            fireAttackGroup(champions["157"], 200);
         }, 1000);
     });
 })();

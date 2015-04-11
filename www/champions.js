@@ -454,170 +454,292 @@ champions = {
     },
     "76": {
         name: "Nidalee",
-        images: "nidalee"
+        images: [{ id: "nidalee", pointAngle: 45 }],
+        attacks: [{ type: AttackType.Bullet, speed: 225 }]
     },
     "56": {
         name: "Nocturne",
-        images: "nocturne"
+        images: [{ id: "nocturne" }],
+        attacks: [ /* TODO */ ]
     },
     "20": {
         name: "Nunu",
-        images: "nunu"
+        images: [{ id: "nunu" }],
+        attacks: [{ type: AttackType.Bullet, speed: 150, rotationSpeed: 30 }]
     },
     "2": {
         name: "Olaf",
-        images: "olaf"
+        images: [{ id: "olaf", flipIfBackward: true, regYRatio: 0.6 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 540 }]
     },
     "61": {
         name: "Orianna",
-        images: "orianna"
+        images: [{ id: "orianna", pointAngle: 100, flipIfForward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 335 }]
     },
     "80": {
-        name: "Pantheon", image: "pantheon"
+        name: "Pantheon",
+        images: [{ id: "pantheon", pointAngle: -155 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "78": {
-        name: "Poppy", image: "poppy"
+        name: "Poppy",
+        images: [{ id: "poppy", flipIfForward: true, regXRatio: 0.85, regYRatio: 1 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: -360 }]
     },
     "133": {
-        name: "Quinn", image: "quinn"
+        name: "Quinn",
+        images: [{ id: "quinn" }],
+        attacks: [/* TODO: new attack type */]
     },
     "33": {
-        name: "Rammus", image: "rammus"
+        name: "Rammus",
+        images: [{ id: "rammus", pointAngle: 30 }],
+        attacks: [{ type: AttackType.Bullet, speed: 50, accel: 450 }]
     },
     "421": {
-        name: "Rek'Sai", image: "rek'sai"
+        name: "Rek'Sai",
+        images: [{ id: "reksai", pointAngle: 45, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "58": {
-        name: "Renekton", image: "renekton"
+        name: "Renekton",
+        images: [{ id: "renekton", flipIfForward: true, regXRatio: 1, regYRatio: 0.1 }],
+        attacks: [{ type: AttackType.FromSide, rotationSpeed: -350, rotation: 130 }]
     },
     "107": {
-        name: "Rengar", image: "rengar"
+        name: "Rengar",
+        images: [{ id: "rengar", regXRatio: 0.55, regYRatio: 0.45, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 360 }]
     },
     "92": {
-        name: "Riven", image: "riven"
+        name: "Riven",
+        images: [{ id: "riven", flipIfForward: true, regXRatio: 1, regYRatio: 1 }],
+        attacks: [{ type: AttackType.FromSide, rotationSpeed: -350, rotation: 45 }]
     },
     "68": {
-        name: "Rumble", image: "rumble"
+        name: "Rumble",
+        images: [{ id: "rumble" }],
+        attackAngle: 90,
+        attacks: [
+            { type: AttackType.Bullet, speed: 300, offset: -75 },
+            { type: AttackType.Bullet, speed: 300, offset: -25, delay: 0.15 },
+            { type: AttackType.Bullet, speed: 300, offset: 25, delay: 0.15 },
+            { type: AttackType.Bullet, speed: 300, offset: 75, delay: 0.15 },
+        ]
     },
     "13": {
-        name: "Ryze", image: "ryze"
+        name: "Ryze",
+        images: [{ id: "ryze" }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "113": {
-        name: "Sejuani", image: "sejuani"
+        name: "Sejuani",
+        images: [{ id: "sejuani" }],
+        attacks: [{ type: AttackType.Bullet, speed: 200, rotationSpeed: -360 }]
     },
     "35": {
-        name: "Shaco", image: "shaco"
+        name: "Shaco",
+        images: [{ id: "shaco", flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "98": {
-        name: "Shen", image: "shen"
+        name: "Shen",
+        images: [{ id: "shen", pointAngle: 45 }],
+        attacks: [{ type: AttackType.Bullet, speed: 350 }]
     },
     "102": {
-        name: "Shyvana", image: "shyvana"
+        name: "Shyvana",
+        images: [{ id: "shyvana", pointAngle: 135 }],
+        attacks: [{ type: AttackType.Bullet, speed: 275 }]
     },
     "27": {
-        name: "Singed", image: "singed"
+        name: "Singed",
+        images: [{ id: "singed" }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 40 }]
     },
     "14": {
-        name: "Sion", image: "sion"
+        name: "Sion",
+        images: [{ id: "sion", pointAngle: 30, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 500 }]
     },
     "15": {
-        name: "Sivir", image: "sivir"
+        name: "Sivir",
+        images: [{ id: "sivir" }],
+        attacks: [{ type: AttackType.Bullet, speed: 350, rotationSpeed: 400, finished: FinishedAction.Return }]
     },
     "72": {
-        name: "Skarner", image: "skarner"
+        name: "Skarner",
+        images: [{ id: "skarner", pointAngle: 50 }],
+        attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "37": {
-        name: "Sona", image: "sona"
+        name: "Sona",
+        images: [{ id: "sona", pointAngle: 45 }],
+        attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "16": {
-        name: "Soraka", image: "soraka"
+        name: "Soraka",
+        images: [{ id: "soraka", regXRatio: 0.3, regYRatio: 0.7 }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 110 }]
     },
     "50": {
-        name: "Swain", image: "swain"
+        name: "Swain",
+        images: [{ id: "swain", pointAngle: 55, flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "134": {
-        name: "Syndra", image: "syndra"
+        name: "Syndra",
+        images: [{ id: "syndra" }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "91": {
-        name: "Talon", image: "talon"
+        name: "Talon",
+        images: [{ id: "talon" }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 400 }]
     },
     "44": {
-        name: "Taric", image: "taric"
+        name: "Taric",
+        images: [{ id: "taric" }],
+        attacks: [{ type: AttackType.Bullet, speed: 200, rotationSpeed: -20 }]
     },
     "17": {
-        name: "Teemo", image: "teemo"
+        name: "Teemo",
+        images: [{ id: "teemo" }],
+        attacks: [/* TODO: new attack type */]
     },
     "412": {
-        name: "Thresh", image: "thresh"
+        name: "Thresh",
+        images: [{ id: "thresh", pointAngle: 0, regXRatio: 1 }],
+        attacks: [{ type: AttackType.Bullet, speed: 400, finished: FinishedAction.Disappear }]
     },
     "18": {
-        name: "Tristana", image: "tristana"
+        name: "Tristana",
+        images: [{ id: "tristana" }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 40 }]
     },
     "48": {
-        name: "Trundle", image: "trundle"
+        name: "Trundle",
+        images: [{ id: "trundle" }],
+        attacks: [{ type: AttackType.FromBottom, speed: 400 }]
     },
     "23": {
-        name: "Tryndamere", image: "tryndamere"
+        name: "Tryndamere",
+        images: [{ id: "tryndamere" }],
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 45 }]
     },
     "4": {
-        name: "Twisted Fate", image: "twistedfate"
+        name: "Twisted Fate",
+        images: [{ id: "twistedfate", pointAngle: 5 }],
+        attacks: [
+            { type: AttackType.Bullet, speed: 250, angleOffset: -30 },
+            { type: AttackType.Bullet, speed: 250, angleOffset: 0 },
+            { type: AttackType.Bullet, speed: 250, angleOffset: 30 },
+        ]
     },
     "29": {
-        name: "Twitch", image: "twitch"
+        name: "Twitch",
+        images: [{ id: "twitch" }],
+        attacks: [{ type: AttackType.Bullet, speed: 200, rotationSpeed: 25 }]
     },
     "77": {
-        name: "Udyr", image: "udyr"
+        name: "Udyr",
+        images: [{ id: "udyr", pointAngle: 180, flipIfBackward: true }],
+        attacks: [ /* TODO: new attack type */ ]
     },
     "6": {
-        name: "Urgot", image: "urgot"
+        name: "Urgot",
+        images: [{ id: "urgot", pointAngle: 45 }],
+        attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "110": {
-        name: "Varus", image: "varus"
+        name: "Varus",
+        images: [{ id: "varus", pointAngle: -45 }],
+        attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "67": {
-        name: "Vayne", image: "vayne"
+        name: "Vayne",
+        images: [{ id: "vayne", pointAngle: -135 }],
+        attacks: [{ type: AttackType.Bullet, speed: 350 }]
     },
     "45": {
-        name: "Veigar", image: "veigar"
+        name: "Veigar",
+        images: [{ id: "veigar" }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 30 }]
     },
     "161": {
-        name: "Vel'Koz", image: "vel'koz"
+        name: "Vel'Koz",
+        images: [{ id: "vel'koz", pointAngle: 45 }],
+        attacks: [
+            { type: AttackType.Bullet, speed: 175, rotationSpeed: 45 },
+            // TODO: add special properties to make these appear at the target when the previous attack reaches the target
+            { type: AttackType.Bullet, speed: 175, rotationSpeed: 45, angleOffset: -90 },
+            { type: AttackType.Bullet, speed: 175, rotationSpeed: 45, angleOffset: 90 }
+        ]
     },
     "254": {
-        name: "Vi", image: "vi"
+        name: "Vi",
+        images: [{ id: "vi", flipIfBackward: true }],
+        attacks: [/* TODO: new attack type (same as quinn) */]
     },
     "112": {
-        name: "Viktor", image: "viktor"
+        name: "Viktor",
+        images: [{ id: "viktor", flipIfBackward: true }],
+        attacks: [/* TODO: new attack tpye (AcrossTop?) */]
     },
     "8": {
-        name: "Vladimir", image: "vladimir"
+        name: "Vladimir",
+        images: [{ id: "vladimir" }],
+        attacks: [
+            { type: AttackType.Bullet, speed: 350, angleOffset: -20 },
+            { type: AttackType.Bullet, speed: 350 },
+            { type: AttackType.Bullet, speed: 350, angleOffset: 20 },
+        ]
     },
     "106": {
-        name: "Volibear", image: "volibear"
+        name: "Volibear",
+        images: [{ id: "volibear", pointAngle: -90 }],
+        attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "19": {
-        name: "Warwick", image: "warwick"
+        name: "Warwick",
+        attacks: [{ type: AttackType.Buff }]// TODO: implement buff
     },
     "62": {
-        name: "Wukong", image: "wukong"
+        name: "Wukong",
+        images: [{ id: "wukong", regXRatio: 0, regYRatio: 0.9 }],
+        attacks: [{ type: AttackType.Bullet, speed: 200, accel: 100, rotationSpeed: 360 }]
     },
     "101": {
-        name: "Xerath", image: "xerath"
+        name: "Xerath",
+        images: [{ id: "xerath", pointAngle: 80 }],
+        attacks: [{ type: AttackType.Bullet, speed: 250 }]
     },
     "5": {
-        name: "Xin Zhao", image: "xinzhao"
+        name: "Xin Zhao",
+        images: [{ id: "xinzhao", pointAngle: 35 }],
+        attacks: [/* TODO: new attack tpye (same as Quinn) */]
     },
     "157": {
-        name: "Yasuo", image: "yasuo"
+        name: "Yasuo",
+        images: [{ id: "yasuo", flipIfBackward: true }],
+        attackAngle: 0,
+        attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "83": {
-        name: "Yorick", image: "yorick"
+        name: "Yorick",
+        images: [{ id: "yorick", flipIfForward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "154": {
-        name: "Zac", image: "zac"
+        name: "Zac",
+        images: [{ id: "zac", flipIfBackward: true }],
+        attacks: [{ type: AttackType.Bullet, speed: 200, rotationSpeed: 30 }]
     },
     "238": {
-        name: "Zed", image: "zed"
+        name: "Zed",
+        images: [{ id: "zed" }],
+        attacks: [{ type: AttackType.Bullet, speed: 350 }]
     },
     "115": {
         name: "Ziggs",
@@ -627,9 +749,13 @@ champions = {
         ]
     },
     "26": {
-        name: "Zilean", image: "zilean"
+        name: "Zilean",
+        images: [{ id: "zilean" }],
+        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: -15 }]
     },
     "143": {
-        name: "Zyra", image: "zyra"
+        name: "Zyra",
+        images: [{ id: "zyra" }],
+        attacks: [{ type: AttackType.Bullet, speed: 225, rotationSpeed: 25 }]
     },
 }
