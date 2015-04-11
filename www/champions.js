@@ -40,6 +40,8 @@ Properties:
   - rotationSpeed: the speed at which the particle rotates
   - alpha: alpha transparency of particle (0-1)
   - alphaSpeed: rate of change of alpha (useful for fade-in effect)
+  - spawnAfter: when to spawn the attack
+  - spawnFrom: where to spawn the attack from
   - finishCondition: how to determine that the attack is "finished"
     - duration: finished after the specified number of seconds
     - distance: finished after travelling the specified distance
@@ -687,12 +689,11 @@ champions = {
     },
     "161": {
         name: "Vel'Koz",
-        images: [{ id: "vel'koz", pointAngle: 45 }],
+        images: [{ id: "velkoz", pointAngle: 45 }],
         attacks: [
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 45, finishCondition: { reachTarget: true } },
-            // TODO: add special properties to make these appear at the target when the previous attack reaches the target
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 45, angleOffset: -90 },
-            { type: AttackType.Bullet, speed: 175, rotationSpeed: 45, angleOffset: 90 }
+            { type: AttackType.Bullet, speed: 250, finishCondition: { reachTarget: true }, finished: FinishedAction.Disappear },
+            { type: AttackType.Bullet, speed: 250, angleOffset: -90, spawnFrom: SpawnFrom.Target, spawnAfter: SpawnAfter.Previous },
+            { type: AttackType.Bullet, speed: 250, angleOffset: 90, spawnFrom: SpawnFrom.Target }
         ]
     },
     "254": {

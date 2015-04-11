@@ -17,6 +17,14 @@ Effect = {
     None: 0,
     Stasis: 1,
 };
+SpawnAfter = {
+    Nothing: 0,   // Spawn immediately
+    Previous: 1,  // Spawn after the previous attack is "finished"
+};
+SpawnFrom = {
+    Edge: 0,      // Spawn from the edge of the screen
+    Target: 1,    // Spawn at the target point
+};
 FinishedAction = {
     None: 0,      // Continue moving off the screen
     Disappear: 1, // Disappear immediately

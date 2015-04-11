@@ -64,6 +64,9 @@
         var targeted = false;
         var isSpawnPointRequired = false;
         $.each(champion.attacks, function(i, attack) {
+
+            if (attack.spawnAfter == SpawnAfter.Previous) return false;
+
             if (attack.targeted) {
                 targeted = true;
             }
@@ -138,10 +141,10 @@
                 }
             }
         }
-        fireAttackWithDelay(champion, 0, team, spawnPoint, targetPoint, null);
+        prepareToFireAttack(champion, 0, team, spawnPoint, targetPoint, null);
     }
 
-	function fireAttackWithDelay(champion, attackIndex, team, spawnPoint, targetPoint, prevParticle) {
+	function prepareToFireAttack(champion, attackIndex, team, spawnPoint, targetPoint, prevParticle) {
 	    var attack = champion.attacks[attackIndex];
 
         var attackFunction = function() {
@@ -161,8 +164,16 @@
                 particle.alpha *= prevParticle.alphaModifier;
             }
             // Fire the next attack
-            if (attackIndex + 1 < champion.attacks.length)
-                fireAttackWithDelay(champion, attackIndex + 1, team, spawnPoint, targetPoint, particle);
+            if (attackIndex + 1 < champion.attacks.length) {
+                var nextAttack = champion.attacks[attackIndex + 1];
+                if (nextAttack.spawnAfter == SpawnAfter.Previous) {
+                    particle.addEventListener("finish", function() {
+                        prepareToFireAttack(champion, attackIndex + 1, team, spawnPoint, targetPoint, particle);
+                    });
+                } else {
+                    prepareToFireAttack(champion, attackIndex + 1, team, spawnPoint, targetPoint, particle);
+                }
+            }
         };
         if (attack.delay)
             setTimeout(attackFunction, attack.delay * 1000);
@@ -213,6 +224,7 @@
         particle.attackAngle = champion.attackAngle;
         particle.team = team;
         particle.spawnTime = currentTime;
+        particle.targetPoint = targetPoint;
         if (particle.image.width == 0) {
             console.warn("image width is 0: " + imageDef.id);
         }
@@ -226,6 +238,8 @@
         var angle;
         if (spawnPoint) {
             var angle = getAngle(spawnPoint, targetPoint);
+            if (attack.spawnFrom == SpawnFrom.Target)
+                spawnPoint = targetPoint;
             if (attack.offset)
                 spawnPoint = offsetPoint(spawnPoint, attack.offset, angle - Math.PI / 2);
             particle.x = spawnPoint.x;
@@ -536,7 +550,7 @@
                 var isFinished = false;
                 if (particle.attack.finishCondition && particle.attack.finishCondition.reachTarget) {
                     var currentDirection = Math.atan2(particle.vy, particle.vx);
-                    var currentAngle = getAngle(particle, targetPoint);
+                    var currentAngle = getAngle(particle, particle.targetPoint);
                     if (Math.abs(currentAngle - currentDirection) > Math.PI / 2) {
                         isFinished = true;
                     }
@@ -584,6 +598,7 @@
                             particle.destroyTime = currentTime + 1000;
                             break;
                     }
+                    particle.dispatchEvent("finish");
                 }
                 switch (particle.attack.type) {
                     case AttackType.FromBottom:
@@ -705,21 +720,8 @@
                 teamOne = !teamOne;
                 delay += 500;
             }*/
-            fireAttackGroup(champions["22"], 100);
-            fireAttackGroup(champions["22"], 200);
-            fireAttackGroup(champions["22"], 100);
-            fireAttackGroup(champions["22"], 200);
-            fireAttackGroup(champions["56"], 100);
-            /*doSetTimeout(champions["19"], 100, 1000);
-            doSetTimeout(champions["19"], 200, 1000);
-            fireAttackGroup(champions["432"], 200);
-            fireAttackGroup(champions["28"], 200);
-            fireAttackGroup(champions["412"], 200);
-            fireAttackGroup(champions["8"], 100);
-            fireAttackGroup(champions["106"], 100);
-            fireAttackGroup(champions["62"], 200);
-            fireAttackGroup(champions["101"], 100);
-            fireAttackGroup(champions["157"], 200);*/
+            fireAttackGroup(champions["161"], 100);
+            fireAttackGroup(champions["161"], 200);
         }, 1000);
     });
 })();
