@@ -475,7 +475,7 @@ champions = {
         ],
         attacks: [
             { type: AttackType.Bullet, speed: 300, targeted: true },
-            { type: AttackType.Follow, alpha: 0, alphaSpeed: 3, finishCondition: { duration: 3 }, finished: FinishedAction.Fade },
+            { type: AttackType.Follow, alpha: 0, alphaSpeed: 3, finishCondition: { duration: 2 }, finished: FinishedAction.Fade, layer: LayerType.AboveAll },
         ]
     },
     "20": {
@@ -757,8 +757,15 @@ champions = {
     },
     "238": {
         name: "Zed",
-        images: [{ id: "zed" }],
-        attacks: [{ type: AttackType.Bullet, speed: 350 }]
+        images: [
+            // Make sure that the coloured Zed particle is drawn above the shadow particle.
+            { id: "zed_shadow", flipIfBackward: true },
+            { id: "zed", flipIfBackward: true },
+        ],
+        attacks: [
+            { type: AttackType.Bullet, speed: 350, offset: -100, focusOnTarget: true },
+            { type: AttackType.Bullet, speed: 350, offset: 100, focusOnTarget: true }
+        ]
     },
     "115": {
         name: "Ziggs",
