@@ -20,8 +20,6 @@
         
         var isFocused = keyboardManager.keyPressed[Key.Focus];
         var hitbox = isFocused ? hitboxSmall : hitboxLarge;
-        hitbox.x = stage.width / 2;
-        hitbox.y = stage.height - 100;
 
         var minPlayerX = 0.5 * hitbox.image.width;
         var maxPlayerX = stage.width - minPlayerX;
@@ -31,11 +29,20 @@
         var player = new Bitmap(document.getElementById("urf"));
         player.regX = player.image.width / 2;
         player.regY = player.image.height / 2;
-        player.x = hitbox.x;
-        player.y = hitbox.y;
+        
+        var health;
+        
+        resetPlayer();
 
-        var health = 2000;
-
+        function resetPlayer() {
+            health = 2000;
+            hitbox.x = player.x = stage.width / 2;
+            hitbox.y = player.y = stage.height - 100;
+            player.alpha = 1;
+            hitboxLarge.alpha = 1;
+            hitboxSmall.alpha = 1;
+        }
+        
         function movePlayer(elapsedMilliseconds) {
             var dx = 0;
             var dy = 0;
@@ -103,6 +110,7 @@
         this.hitbox = hitbox;
         this.player = player;
         this.health = health;
+        this.resetPlayer = resetPlayer;
         this.movePlayer = movePlayer;
         this.getPosition = getPosition;
         this.applyDamage = applyDamage;

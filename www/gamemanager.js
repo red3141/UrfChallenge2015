@@ -33,6 +33,10 @@
                 stage.addChild(newGameButton);
                 stage.update();
             });
+        newMatchButtonUnhover.addEventListener("click",
+            function() {
+               // TODO: start a new game. 
+            });
         newMatchButtonHover.addEventListener("mouseout",
             function() {
                 var alpha = newGameButton.alpha;
@@ -41,6 +45,10 @@
                 newGameButton.alpha = alpha;
                 stage.addChild(newGameButton);
                 stage.update();
+            });
+        newMatchButtonHover.addEventListener("click",
+            function() {
+               // TODO: start a new game. 
             });
         var retryMatchButtonUnhover = new Bitmap(document.getElementById("button_retry"));
         retryMatchButtonUnhover.addEventListener("mouseover",
@@ -52,6 +60,10 @@
                 stage.addChild(retryGameButton);
                 stage.update();
             });
+        retryMatchButtonUnhover.addEventListener("click",
+            function() {
+               retryGame(); 
+            });
         var retryMatchButtonHover = new Bitmap(document.getElementById("button_retry_hover"));
         retryMatchButtonHover.addEventListener("mouseout",
             function() {
@@ -61,6 +73,10 @@
                 retryGameButton.alpha = alpha;
                 stage.addChild(retryGameButton);
                 stage.update();
+            });
+        retryMatchButtonHover.addEventListener("click",
+            function() {
+               retryGame(); 
             });
 
         // The hitbox should appear above all bullets.
@@ -188,9 +204,29 @@
                 game = newGame;
             eventIndex = 0;
 
+            // Reset a number of things.
+            // Disable mouse over events.
+            stage.enableMouseOver(0);
+            playerManager.player.health = 2000;
+            if (endGameBanner) {
+                stage.removeChild(endGameBanner);
+            }
+            if (newGameButton) {
+                stage.removeChild(newGameButton);
+            }
+            if (retryGameButton) {
+                stage.removeChild(retryGameButton);
+            }
+            
+            playerManager.resetPlayer();
+            attackManager.destroyAllParticles();
+            
             // Events
+            Ticker.reset();
             Ticker.framerate = 60;
             Ticker.addEventListener("tick", onTick);
+            
+            gameState = GameState.Playing;
 
             // Test code (remove sometime)
             /*setTimeout(function() {
@@ -211,12 +247,12 @@
             }, 1000);*/
         }
 
-        function restartGame() {
+        function retryGame() {
             startGame(game);
         }
 
         // Expose public members
         this.startGame = startGame;
-        this.restartGame = restartGame;
+        this.retryGame = retryGame;
     };
 })();
