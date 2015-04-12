@@ -253,7 +253,7 @@
             particle.flipDirection = -1;
         }
 
-        if (attack.spawnFrom == SpawnFrom.Target || attack.type == AttackType.Still)
+        if (attack.spawnFrom == SpawnFrom.Target || attack.type == AttackType.Still || !spawnPoint)
             spawnPoint = targetPoint;
         if (attack.offset)
             spawnPoint = offsetPoint(spawnPoint, attack.offset * particle.flipDirection, angle - Math.PI / 2);
@@ -509,7 +509,7 @@
     function movePlayer(elapsedSeconds) {
 		var dx = 0;
 		var dy = 0;
-		var speed = keyPressed[Key.Shift] ? 100 : 450;
+		var speed = keyPressed[Key.Focus] ? 100 : 450;
 		speed *= elapsedSeconds;
 		
 		if(keyPressed[Key.Up]) {
@@ -758,8 +758,8 @@
 			case 40:
 			    keyPressed[Key.Down] = true;
 			    break;
-            case 16:
-                keyPressed[Key.Shift] = true;
+            case 82:
+                keyPressed[Key.Focus] = true;
                 break;
 		    default:
 		        return;
@@ -781,8 +781,8 @@
 			case 40:
 			    keyPressed[Key.Down] = false;
 			    break;
-            case 16:
-                keyPressed[Key.Shift] = false;
+            case 82:
+                keyPressed[Key.Focus] = false;
                 break;
             default:
                 return;
@@ -804,21 +804,13 @@
                 setTimeout(function() {fireAttackGroup(champion, team)}, delay);
             }
             var delay = 0;
-            var teamOne = true;
-
-            /*for(championId in champions) {
-                var champion = champions[27];
+            for(championId in champions) {
+                var champion = champions[championId];
                 if(champion.attacks === undefined) {continue;}
                 doSetTimeout(champion, Team.One, delay);
                 doSetTimeout(champion, Team.Two, delay);
-                teamOne = !teamOne;
                 delay += 500;
-            }*/
-
-            fireAttackGroup(champions["77"], 100);
-            fireAttackGroup(champions["77"], 200);
-            fireAttackGroup(champions["112"], 100);
-            fireAttackGroup(champions["112"], 200);
+            }
         }, 1000);
     });
 })();

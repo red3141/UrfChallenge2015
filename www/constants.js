@@ -44,7 +44,7 @@ Key = {
 	Down: 1,
 	Left: 2,
 	Right: 3,
-	Shift: 4
+	Focus: 4
 };
 
 GameState = {
