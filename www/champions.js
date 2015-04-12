@@ -318,8 +318,8 @@ champions = {
         name: "Karthus",
         images: [{ id: "karthus" }],
         attacks: [
-            { type: AttackType.Still, alpha: 0.1, isDamaging: false, finishCondition: { duration: 2 } },
-            { type: AttackType.Still, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0.1, isDamaging: false, finishCondition: { duration: 1 } },
+            { type: AttackType.Still, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 1 }, finished: FinishedAction.Disappear },
         ]
     },
     "38": {
@@ -564,7 +564,7 @@ champions = {
     },
     "102": {
         name: "Shyvana",
-        images: [{ id: "shyvana", pointAngle: 135 }],
+        images: [{ id: "shyvana", pointAngle: 135, regXRatio: 0.15, regYRatio: 0.85, flipIfForward: true }],
         attacks: [{ type: AttackType.Bullet, speed: 275 }]
     },
     "27": {
