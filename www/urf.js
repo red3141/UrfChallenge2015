@@ -39,6 +39,17 @@
     player.regY = player.image.height / 2;
     player.x = hitbox.x;
     player.y = hitbox.y;
+    
+    var health = 2000;
+    
+    var gameState = GameState.Playing;
+    var defeatBanner = new Bitmap(document.getElementById("defeat"));
+    defeatBanner.regX = defeatBanner.image.width / 2;
+    defeatBanner.regY = defeatBanner.image.height / 2;
+    var victoryBanner = new Bitmap(document.getElementById("victory"));
+    victoryBanner.regX = victoryBanner.image.width / 2;
+    victoryBanner.regY = victoryBanner.image.height / 2;
+    var endGameBanner;
 	
     var minPlayerX = 0.5 * hitbox.image.width;
     var maxPlayerX = stage.width - minPlayerX;
@@ -58,7 +69,7 @@
     // Methods
 
     function fireAttackGroup(champion, team) {
-        if (!champion || !champion.attacks || !champion.attacks.length) return;
+        if (!champion || !champion.attacks || !champion.attacks.length || gameState != GameState.Playing) return;
 
         var minOffset = 0, maxOffset = 0, minAngleOffset = 0, maxAngleOffset = 0;
         var targeted = false;
@@ -528,6 +539,17 @@
 		player.y = hitbox.y;
 	}
 
+    function endGame(victory) {
+        if(gameState != GameState.Playing) return;
+        
+        gameState = victory? GameState.Victory : GameState.Defeat;
+        endGameBanner = victory ? victoryBanner : defeatBanner;
+        stage.addChild(endGameBanner);
+        endGameBanner.x = endGameBanner.regX;
+        endGameBanner.y = endGameBanner.regY;
+        endGameBanner.alpha = 0;
+    }
+    
     function onTick(e) {
         // TODO: use e.runTime and e.delta instead of new Date().getTime()
         var currentTime = new Date().getTime();
@@ -586,8 +608,12 @@
             // Check if Urf has taken tons of damage.
             if (particle.isDamaging && ndgmr.checkPixelCollision(hitbox, particle)) {
                 // Only allow a particle to deal damage once.
+                health -= 500;
+                console.log(health);
                 particle.isDamaging = false;
-                console.log("YOU SUNK MY URFTLESHIP!");
+                if (health <= 0) {
+                    endGame(false);
+                }
             }
 
             // Handle destroying particles
@@ -688,6 +714,12 @@
             }
         }
 		
+        if (gameState != GameState.Playing && endGameBanner.alpha < 1) {
+            endGameBanner.alpha = Math.min(1, endGameBanner.alpha + e.delta / 1000);
+            player.alpha = Math.max(0, player.alpha - e.delta / 1000);
+            hitbox.alpha = Math.max(0, hitbox.alpha - e.delta / 1000);
+        }
+        
         stage.update();
     }
     var prevTickTime = new Date().getTime();
