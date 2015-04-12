@@ -468,12 +468,12 @@ champions = {
     "56": {
         name: "Nocturne",
         images: [
-            { id: "nocturne" },
+            { id: "nocturne", pointAngle: 0, flipIfBackward: true },
             { id: "nocturne_darkness" },
         ],
         attacks: [
             { type: AttackType.Bullet, speed: 300, targeted: true },
-            { type: AttackType.Follow, alpha: 0, alphaSpeed: 3, finishCondition: { duration: 2 }, finished: FinishedAction.Fade, layer: LayerType.AboveAll },
+            { type: AttackType.Follow, alpha: 0, alphaSpeed: 3, finishCondition: { duration: 2 }, finished: FinishedAction.Fade, layer: LayerType.Darkness },
         ]
     },
     "20": {

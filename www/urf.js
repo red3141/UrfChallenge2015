@@ -26,6 +26,7 @@
     var bottomLayer = new Container();
     var mainLayer = new Container();
     var topLayer = new Container();
+    var darknessLayer = new Container();
     
     // The hitbox should appear above all bullets.
     var hitbox = new Bitmap(document.getElementById("hitbox"));
@@ -60,6 +61,7 @@
     stage.addChild(player);
     stage.addChild(mainLayer);
     stage.addChild(topLayer);
+    stage.addChild(darknessLayer);
     stage.addChild(hitbox);
 
     var particles = [];
@@ -355,6 +357,9 @@
                 break;
         }
         switch (attack.layer) {
+            case LayerType.Darkness:
+                darknessLayer.addChild(particle);
+                break;
             case LayerType.AboveAll:
                 topLayer.addChild(particle);
                 break;
