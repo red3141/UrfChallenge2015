@@ -14,6 +14,49 @@
         var defeatBanner = new Bitmap(document.getElementById("defeat"));
         var victoryBanner = new Bitmap(document.getElementById("victory"));
         var endGameBanner;
+        
+        var newGameButton;
+        var retryGameButton;
+        var newMatchButtonUnhover = new Bitmap(document.getElementById("button_new"));
+        var newMatchButtonHover = new Bitmap(document.getElementById("button_new_hover"));
+        newMatchButtonUnhover.addEventListener("mouseover",
+            function() {
+                var alpha = newGameButton.alpha;
+                stage.removeChild(newGameButton);
+                newGameButton = newMatchButtonHover;
+                newGameButton.alpha = alpha;
+                stage.addChild(newGameButton);
+                stage.update();
+            });
+        newMatchButtonHover.addEventListener("mouseout",
+            function() {
+                var alpha = newGameButton.alpha;
+                stage.removeChild(newGameButton);
+                newGameButton = newMatchButtonUnhover;
+                newGameButton.alpha = alpha;
+                stage.addChild(newGameButton);
+                stage.update();
+            });
+        var retryMatchButtonUnhover = new Bitmap(document.getElementById("button_retry"));
+        retryMatchButtonUnhover.addEventListener("mouseover",
+            function() {
+                var alpha = newGameButton.alpha;
+                stage.removeChild(retryGameButton);
+                retryGameButton = retryMatchButtonHover;
+                retryGameButton.alpha = alpha;
+                stage.addChild(retryGameButton);
+                stage.update();
+            });
+        var retryMatchButtonHover = new Bitmap(document.getElementById("button_retry_hover"));
+        retryMatchButtonHover.addEventListener("mouseout",
+            function() {
+                var alpha = retryGameButton.alpha;
+                stage.removeChild(retryGameButton);
+                retryGameButton = retryMatchButtonUnhover;
+                retryGameButton.alpha = alpha;
+                stage.addChild(retryGameButton);
+                stage.update();
+            });
 
         // The hitbox should appear above all bullets.
         // The player should appear below all bullets (except the bottom layer, e.g. Bard ult)
@@ -41,6 +84,30 @@
             endGameBanner.x = stage.width / 2;
             endGameBanner.y = 250;
             endGameBanner.alpha = 0;
+            
+            newMatchButtonHover.regX = newMatchButtonHover.image.width / 2;
+            newMatchButtonHover.regY = newMatchButtonHover.image.height / 2;
+            newMatchButtonUnhover.regX = newMatchButtonUnhover.image.width / 2;
+            newMatchButtonUnhover.regY = newMatchButtonUnhover.image.height / 2;
+            retryMatchButtonHover.regX = retryMatchButtonHover.image.width / 2;
+            retryMatchButtonHover.regY = retryMatchButtonHover.image.height / 2;
+            retryMatchButtonUnhover.regX = retryMatchButtonUnhover.image.width / 2;
+            retryMatchButtonUnhover.regY = retryMatchButtonUnhover.image.height / 2;
+            
+            newMatchButtonHover.x = newMatchButtonUnhover.x = stage.width / 2;
+            newMatchButtonHover.y = newMatchButtonUnhover.y = 450;
+            retryMatchButtonHover.x = retryMatchButtonUnhover.x = stage.width / 2;
+            retryMatchButtonHover.y = retryMatchButtonUnhover.y = 500;
+            
+            newGameButton = newMatchButtonUnhover;
+            newGameButton.alpha = 0;
+            retryGameButton = retryMatchButtonUnhover;
+            retryGameButton.alpha = 0;
+            
+            stage.addChild(newGameButton);
+            stage.addChild(retryGameButton);
+            
+            stage.enableMouseOver();
         }
 
         function onTick(e) {
@@ -51,6 +118,8 @@
             if (gameState != GameState.Playing) {
                 if (endGameBanner.alpha < 1) {
                     endGameBanner.alpha = Math.min(1, endGameBanner.alpha + e.delta / 1000);
+                    newGameButton.alpha = Math.min(1, newGameButton.alpha + e.delta / 1000);
+                    retryGameButton.alpha = Math.min(1, retryGameButton.alpha + e.delta / 1000);
                     playerManager.player.alpha = Math.max(0, playerManager.player.alpha - e.delta / 1000);
                     playerManager.hitbox.alpha = Math.max(0, playerManager.hitbox.alpha - e.delta / 1000);
                 } else if (!attackManager.attacksOnStage()) {
