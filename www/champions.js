@@ -46,6 +46,7 @@ Properties:
     - duration: finished after the specified number of seconds
     - distance: finished after travelling the specified distance
     - reachTarget: finished after reaching the target point (true/false)
+    - hitPlayer: finished after dealing damage to the player (true/false)
   - finished: the FinishedAction to do when the attack is "finished"
   - targeted: should fire directly at the player (true/false)
   - focusOnTarget: should fire directly at the target regardless of the attack
@@ -53,8 +54,6 @@ Properties:
   - isDamaging: should the attack particle cause damage on contact
                 (true/false; default is true)
   - imageIndex: index of the image to use. Default is (attackIndex % images.length)
-  - removePrevious: remove the previous attack in the same attack group then
-                    this attack spawns (true/false)
 */
 
 champions = {
@@ -113,16 +112,15 @@ champions = {
         name: "Bard",
         images: [{ id: "bard" }],
         attacks: [
-            { type: AttackType.Still, layer: LayerType.BelowAll, isDamaging: false, alpha: 0.2 },
+            { type: AttackType.Still, layer: LayerType.BelowAll, isDamaging: false, alpha: 0.2, finishCondition: { duration: 1 } },
             {
                 type: AttackType.Still,
                 layer: LayerType.BelowAll,
                 effect: Effect.Stasis,
-                delay: 1,
-                finishCondition: { duration: 2.5 },
-                finished: FinishedAction.Disappear,
                 isDamaging: false,
-                removePrevious: true
+                spawnAfter: SpawnAfter.Previous,
+                finishCondition: { duration: 2.5 },
+                finished: FinishedAction.Disappear
             },
         ]
     },
@@ -216,8 +214,8 @@ champions = {
         name: "Fizz",
         images: [{ id: "fizz" }],
         attacks: [
-            { type: AttackType.Still, scale: 0.5, alpha: 0.5, isDamaging: false },
-            { type: AttackType.Still, scale: 0.5, delay: 0.5, scaleSpeed: 3, maxScale: 3, removePrevious: true }
+            { type: AttackType.Still, scale: 0.5, alpha: 0.5, isDamaging: false, finishCondition: { duration: 0.5 } },
+            { type: AttackType.Still, scale: 0.5, scaleSpeed: 3, maxScale: 3, spawnAfter: SpawnAfter.Previous }
         ]
     },
     "3": {
@@ -320,8 +318,8 @@ champions = {
         name: "Karthus",
         images: [{ id: "karthus" }],
         attacks: [
-            { type: AttackType.Still, alpha: 0.1, isDamaging: false },
-            { type: AttackType.Still, removePrevious: true, delay: 2, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0.1, isDamaging: false, finishCondition: { duration: 2 } },
+            { type: AttackType.Still, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
         ]
     },
     "38": {
@@ -408,8 +406,8 @@ champions = {
             { id: "lux", pointAngle: 0, flipIfBackward: true }
         ],
         attacks: [
-            { type: AttackType.Still, isDamaging: false, targeted: true },
-            { type: AttackType.Still, delay: 0.7, removePrevious: true, imageIndex: 1, finishCondition: { duration: 0.5 }, finished: FinishedAction.Disappear }
+            { type: AttackType.Still, isDamaging: false, targeted: true, finishCondition: { duration: 0.7 } },
+            { type: AttackType.Still, spawnAfter: SpawnAfter.Previous, imageIndex: 1, finishCondition: { duration: 0.5 }, finished: FinishedAction.Disappear }
         ]
     },
     "54": {
@@ -470,12 +468,12 @@ champions = {
     "56": {
         name: "Nocturne",
         images: [
-            { id: "nocturne" },
+            { id: "nocturne", pointAngle: 0, flipIfBackward: true },
             { id: "nocturne_darkness" },
         ],
         attacks: [
             { type: AttackType.Bullet, speed: 300, targeted: true },
-            { type: AttackType.Follow, alpha: 0, alphaSpeed: 3, finishCondition: { duration: 2 }, finished: FinishedAction.Fade, layer: LayerType.AboveAll },
+            { type: AttackType.Follow, alpha: 0, alphaSpeed: 3, finishCondition: { duration: 2 }, finished: FinishedAction.Fade, layer: LayerType.Darkness },
         ]
     },
     "20": {
@@ -571,8 +569,40 @@ champions = {
     },
     "27": {
         name: "Singed",
-        images: [{ id: "singed" }],
-        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 40 }]
+        images: [{ id: "singed", flipIfBackward: true }],
+        attackAngle: 90,
+        attacks: [
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: -260, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: -260, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: -220, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: -220, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: -180, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: -180, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: -140, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: -140, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: -100, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: -100, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: -60, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: -60, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: -20, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: -20, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: 20, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: 20, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: 60, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: 60, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: 100, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: 100, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: 140, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: 140, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: 180, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: 180, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: 220, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: 220, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: 260, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: 260, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 0, alphaSpeed: 2.5, offset: 300, isDamaging: false, finishCondition: { duration: 0.4 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -0.5, offset: 300, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 2 }, finished: FinishedAction.Disappear },
+        ]
     },
     "14": {
         name: "Sion",
@@ -626,7 +656,11 @@ champions = {
     "17": {
         name: "Teemo",
         images: [{ id: "teemo" }],
-        attacks: [/* TODO: new attack type */]
+        attacks: [
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -1, isDamaging: false, finishCondition: { duration: 1 }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, spawnAfter: SpawnAfter.Previous, alpha: 0, finishCondition: { hitPlayer: true }, finished: FinishedAction.Disappear },
+            { type: AttackType.Still, alpha: 1, alphaSpeed: -2, scaleSpeed: 1, isDamaging: false, spawnAfter: SpawnAfter.Previous, finishCondition: { duration: 0.5 }, finished: FinishedAction.Disappear },
+        ]
     },
     "412": {
         name: "Thresh",

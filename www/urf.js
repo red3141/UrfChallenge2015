@@ -26,6 +26,7 @@
     var bottomLayer = new Container();
     var mainLayer = new Container();
     var topLayer = new Container();
+    var darknessLayer = new Container();
     
     // The hitbox should appear above all bullets.
     var hitbox = new Bitmap(document.getElementById("hitbox"));
@@ -56,6 +57,7 @@
     stage.addChild(player);
     stage.addChild(mainLayer);
     stage.addChild(topLayer);
+    stage.addChild(darknessLayer);
     stage.addChild(hitbox);
 
     var particles = [];
@@ -69,7 +71,8 @@
 
         var minOffset = 0, maxOffset = 0, minAngleOffset = 0, maxAngleOffset = 0;
         var targeted = false;
-        var isSpawnPointRequired = false;
+        var isSpawnPointRequired = champion.attackAngle !== undefined;
+        var spawnOnTarget = true;
         $.each(champion.attacks, function(i, attack) {
 
             if (attack.spawnAfter == SpawnAfter.Previous) return false;
@@ -79,11 +82,14 @@
             }
             if (attack.offset) {
                 minOffset = Math.min(attack.offset, minOffset);
-                maxOffset = Math.min(attack.offset, maxOffset);
+                maxOffset = Math.max(attack.offset, maxOffset);
             }
             if (attack.angleOffset) {
                 minAngleOffset = Math.min(attack.angleOffset, minAngleOffset);
                 maxAngleOffset = Math.max(attack.angleOffset, maxAngleOffset);
+            }
+            if (attack.spawnFrom !== SpawnFrom.Target && attack.type !== AttackType.Still) {
+                spawnOnTarget = false;
             }
             if (attack.type == AttackType.Bullet) {
                 isSpawnPointRequired = true;
@@ -107,10 +113,10 @@
             targetPoint.x = hitbox.x;
             targetPoint.y = hitbox.y;
         } else {
-            if (!isSpawnPointRequired)
+            if (!isSpawnPointRequired || spawnOnTarget)
                 availableWidth -= maxOffset - minOffset + teamSeparationWidth / 2;
-            targetPoint.x = Math.random() * availableWidth + margin;
-            targetPoint.y = Math.random() * availableHeight + margin; // TODO: make random y position favour the bottom more?
+            targetPoint.x = availableWidth > 0 ? Math.random() * availableWidth + margin : -minOffset;
+            targetPoint.y = Math.random() * availableHeight + margin;
             if (team == Team.One) {
                 if (!isSpawnPointRequired)
                     targetPoint.x -= minOffset;
@@ -155,14 +161,6 @@
 	    var attack = champion.attacks[attackIndex];
 
         var attackFunction = function() {
-            // Remove previous attack (if necessary)
-            if (attack.removePrevious && prevParticle) {
-                var index = particles.indexOf(prevParticle);
-                if (index >= 0) {
-                    destroyParticle(prevParticle);
-                    particles.splice(index, 1);
-                }
-            }
             // Fire the current attack now
             var particle = fireAttack(champion, attackIndex, team, spawnPoint, targetPoint);
             // alhpaModifier should propagate to the next attack
@@ -243,26 +241,26 @@
         particle.regY = particle.image.height * imageDef.regYRatio;
 
         var angle;
-        if (spawnPoint) {
-            var angle = getAngle(spawnPoint, targetPoint);
-            if (attack.spawnFrom == SpawnFrom.Target)
-                spawnPoint = targetPoint;
-            if (attack.offset)
-                spawnPoint = offsetPoint(spawnPoint, attack.offset, angle - Math.PI / 2);
-            particle.x = spawnPoint.x;
-            particle.y = spawnPoint.y;
-            particle.spawnPoint = spawnPoint;
-        } else {
-            particle.x = targetPoint.x;
-            particle.y = targetPoint.y;
+        if (spawnPoint)
+            angle = getAngle(spawnPoint, targetPoint);
+        else
             angle = team == Team.One ? 0 : -Math.PI;
-        }
+        
         particle.flipDirection = 1;
-        if ((imageDef.flipIfForward && Math.abs(angle) < Math.PI / 2)
-            || (imageDef.flipIfBackward && Math.abs(angle) > Math.PI / 2)) {
+        if ((imageDef.flipIfForward && (Math.abs(angle) + 1e-4 < Math.PI / 2 || (Math.abs(Math.abs(angle) - Math.PI / 2) < 1e-4 && team == Team.One)))
+            || (imageDef.flipIfBackward && Math.abs(angle) - 1e-4 > Math.PI / 2 || (Math.abs(Math.abs(angle) - Math.PI / 2) < 1e-4 && team == Team.Two))) {
             particle.scaleX = -1;
             particle.flipDirection = -1;
         }
+
+        if (attack.spawnFrom == SpawnFrom.Target || attack.type == AttackType.Still)
+            spawnPoint = targetPoint;
+        if (attack.offset)
+            spawnPoint = offsetPoint(spawnPoint, attack.offset * particle.flipDirection, angle - Math.PI / 2);
+        particle.x = spawnPoint.x;
+        particle.y = spawnPoint.y;
+        particle.spawnPoint = spawnPoint;
+
         if (attack.rotation)
             particle.rotation = attack.rotation * particle.flipDirection;
         if (attack.scale) {
@@ -355,6 +353,9 @@
                 break;
         }
         switch (attack.layer) {
+            case LayerType.Darkness:
+                darknessLayer.addChild(particle);
+                break;
             case LayerType.AboveAll:
                 topLayer.addChild(particle);
                 break;
@@ -617,6 +618,17 @@
                 particle.y = player.y;
             }
 
+            // Check if Urf has taken tons of damage.
+            if (particle.isDamaging && ndgmr.checkPixelCollision(hitbox, particle)) {
+                // Only allow a particle to deal damage once.
+                health -= 500;
+                console.log(health);
+                particle.isDamaging = false;
+                if (health <= 0) {
+                    endGame(false);
+                }
+            }
+
             // Handle destroying particles
             if (!particle.destroyTime) {
                 var isFinished = false;
@@ -637,6 +649,9 @@
                     if (travelDistance > particle.attack.finishCondition.distance) {
                         isFinished = true;
                     }
+                }
+                if (!isFinished && particle.attack.finishCondition && particle.attack.finishCondition.hitPlayer && particle.isDamaging === false) {
+                    isFinished = true;
                 }
                 if (!isFinished && currentTime > particle.spawnTime + 1000 && (particle.x > stage.width || particle.x < 0 || particle.y > stage.height || particle.y < 0)) {
                     isFinished = true;
@@ -702,17 +717,6 @@
                             }
                         }
                         break;
-                }
-            }
-			
-            // Check if Urf has taken tons of damage.
-            if (particle.isDamaging && ndgmr.checkPixelCollision(hitbox, particle)) {
-				// Only allow a particle to deal damage once.
-                health -= 500;
-                console.log(health);
-				particle.isDamaging = false;
-                if (health <= 0) {
-                    endGame(false);
                 }
             }
 			
@@ -801,18 +805,20 @@
             }
             var delay = 0;
             var teamOne = true;
-            for(championId in champions) {
-                var champion = champions[56];
+
+            /*for(championId in champions) {
+                var champion = champions[27];
                 if(champion.attacks === undefined) {continue;}
                 doSetTimeout(champion, Team.One, delay);
                 doSetTimeout(champion, Team.Two, delay);
                 teamOne = !teamOne;
                 delay += 500;
-            }
-            /*fireAttackGroup(champions["77"], 100);
+            }*/
+
+            fireAttackGroup(champions["77"], 100);
             fireAttackGroup(champions["77"], 200);
             fireAttackGroup(champions["112"], 100);
-            fireAttackGroup(champions["112"], 200);*/
+            fireAttackGroup(champions["112"], 200);
         }, 1000);
     });
 })();

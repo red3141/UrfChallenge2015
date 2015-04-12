@@ -12,7 +12,8 @@
 LayerType = {
     Normal: 0,
     BelowAll: 1,
-    AboveAll: 2
+    AboveAll: 2,
+    Darkness: 3,
 };
 Effect = {
     None: 0,
