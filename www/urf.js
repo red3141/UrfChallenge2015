@@ -513,7 +513,7 @@
     function movePlayer(elapsedSeconds) {
 		var dx = 0;
 		var dy = 0;
-		var speed = keyPressed[Key.Shift] ? 100 : 450;
+		var speed = keyPressed[Key.Focus] ? 100 : 450;
 		speed *= elapsedSeconds;
 		
 		if(keyPressed[Key.Up]) {
@@ -743,8 +743,8 @@
 			case 40:
 			    keyPressed[Key.Down] = true;
 			    break;
-            case 16:
-                keyPressed[Key.Shift] = true;
+            case 82:
+                keyPressed[Key.Focus] = true;
                 break;
 		    default:
 		        return;
@@ -766,8 +766,8 @@
 			case 40:
 			    keyPressed[Key.Down] = false;
 			    break;
-            case 16:
-                keyPressed[Key.Shift] = false;
+            case 82:
+                keyPressed[Key.Focus] = false;
                 break;
             default:
                 return;
