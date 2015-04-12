@@ -56,10 +56,10 @@
                 } else if (!attackManager.attacksOnStage()) {
                     Ticker.reset();
                 }
-            } /*else if (!attackManager.attacksOnStage()) {
+            } else if (!attackManager.attacksOnStage()) {
                 // TODO: also check that there are no more attacks to be launched.
-                endGame(true);
-            }*/
+                //endGame(true);
+            }
 
             stage.update();
         }

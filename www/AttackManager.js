@@ -6,7 +6,7 @@
     Bitmap = createjs.Bitmap;
     Event = createjs.Event;
 
-    window.AttackManager = function(stage, pointGenerator, playerManager) {
+    window.AttackManager = function(stage, pointGenerator, playerManager, collisionDetector) {
 
         var particles = [];
 
@@ -139,7 +139,7 @@
                         (team == Team.Two && particle.x <= stage.width / 2)) {
                         return;
                     }
-                    var angle = getAngle(particle, playerManager.hitbox);
+                    var angle = getAngle(particle, playerManager.getPosition());
                     var speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
                     setVelocity(particle, speed, angle);
                 });
@@ -301,7 +301,7 @@
                         // Bard ult should not affect bard ult.
                         continue;
                     }
-                    if (ndgmr.checkPixelCollision(particle, otherParticle)) {
+                    if (collisionDetector.checkPixelCollision(particle, otherParticle)) {
                         otherParticle.isInStasis = true;
                         particle.affectedParticles.push(otherParticle);
                     }
@@ -357,13 +357,15 @@
                         particle.alphaSpeed = 0;
                     }
                 }
+
                 if (particle.attack.type == AttackType.Follow) {
-                    particle.x = playerManager.hitbox.x;
-                    particle.y = playerManager.hitbox.y;
+                    var playerPosition = playerManager.getPosition();
+                    particle.x = playerPosition.x;
+                    particle.y = playerPosition.y;
                 }
 
                 // Check if Urf has taken tons of damage.
-                if (particle.isDamaging && ndgmr.checkPixelCollision(playerManager.hitbox, particle)) {
+                if (particle.isDamaging && collisionDetector.checkPixelCollision(playerManager.hitbox, particle)) {
                     // Only allow a particle to deal damage once.
                     particle.isDamaging = false;
                     playerManager.applyDamage(500);
@@ -403,6 +405,7 @@
                                 break;
                             case FinishedAction.Fade:
                                 particle.alphaSpeed = -2;
+                                particle.destroyTime = currentTime + 500;
                                 break;
                             case FinishedAction.Return:
                                 if (particle.isReturning) {

@@ -23,8 +23,10 @@
     // Instantiate objects with dependencies
     var keyboardManager = new KeyboardManager();
     var playerManager = new PlayerManager(stage, keyboardManager);
-    var pointGenerator = new PointGenerator(stage);
-    var attackManager = new AttackManager(stage, pointGenerator, playerManager);
+    var pointGenerator = new PointGenerator(stage, playerManager);
+    var collisionDetector = ndgmr;
+    //var collisionDetector = { checkPixelCollision: function() { return false; } };
+    var attackManager = new AttackManager(stage, pointGenerator, playerManager, collisionDetector);
     var gameManager = new GameManager(stage, attackManager, playerManager);
     
     $(document).ready(function() {

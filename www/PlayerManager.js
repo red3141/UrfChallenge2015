@@ -64,6 +64,13 @@
             player.y = hitbox.y;
         }
 
+        function getPosition() {
+            return {
+                x: hitbox.x,
+                y: hitbox.y
+            };
+        }
+
         function applyDamage(damage) {
             health -= damage;
             console.log(health);
@@ -77,6 +84,7 @@
         this.player = player;
         this.health = health;
         this.movePlayer = movePlayer;
+        this.getPosition = getPosition;
         this.applyDamage = applyDamage;
     };
 

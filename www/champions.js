@@ -406,7 +406,7 @@ champions = {
             { id: "lux", pointAngle: 0, flipIfBackward: true }
         ],
         attacks: [
-            { type: AttackType.Still, isDamaging: false, targeted: true, finishCondition: { duration: 0.7 } },
+            { type: AttackType.Still, isDamaging: false, targeted: true, finishCondition: { duration: 0.7 }, finished: FinishedAction.Disappear },
             { type: AttackType.Still, spawnAfter: SpawnAfter.Previous, imageIndex: 1, finishCondition: { duration: 0.5 }, finished: FinishedAction.Disappear }
         ]
     },

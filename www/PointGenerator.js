@@ -2,7 +2,7 @@
     if (window.PointGenerator)
         return;
 
-    window.PointGenerator = function(stage) {
+    window.PointGenerator = function(stage, playerManager) {
         
         var teamSeparationWidth = 70;
 
@@ -81,14 +81,13 @@
         }
 
         function getRandomTargetPoint(team, isSpawnPointRequired, spawnOnTarget, minOffset, maxOffset, targeted) {
-            var margin = 60;
-            var targetPoint = { x: 0, y: 0 };
-            var availableWidth = stage.width / 2 - margin;
-            var availableHeight = stage.height - margin * 2;
             if (targeted) {
-                targetPoint.x = hitbox.x;
-                targetPoint.y = hitbox.y;
+                return playerManager.getPosition();
             } else {
+                var margin = 60;
+                var targetPoint = { x: 0, y: 0 };
+                var availableWidth = stage.width / 2 - margin;
+                var availableHeight = stage.height - margin * 2;
                 if (!isSpawnPointRequired || spawnOnTarget)
                     availableWidth -= maxOffset - minOffset + teamSeparationWidth / 2;
                 targetPoint.x = availableWidth > 0 ? Math.random() * availableWidth + margin : -minOffset;
@@ -101,8 +100,8 @@
                     if (!isSpawnPointRequired)
                         targetPoint.x -= maxOffset;
                 }
+                return targetPoint;
             }
-            return targetPoint;
         }
 
         function getEdgePoint(point, angleInRadians) {
