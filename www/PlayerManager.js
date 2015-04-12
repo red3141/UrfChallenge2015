@@ -11,9 +11,15 @@
         var fastSpeed = 450;
         var slowSpeed = 100;
 
-        var hitbox = new Bitmap(document.getElementById("hitbox"));
-        hitbox.regX = hitbox.image.width / 2;
-        hitbox.regY = hitbox.image.height / 2;
+        var hitboxLarge = new Bitmap(document.getElementById("hitbox"));
+        hitboxLarge.regX = hitboxLarge.image.width / 2;
+        hitboxLarge.regY = hitboxLarge.image.height / 2;
+        var hitboxSmall = new Bitmap(document.getElementById("hitbox_focus"));
+        hitboxSmall.regX = hitboxSmall.image.width / 2;
+        hitboxSmall.regY = hitboxSmall.image.height / 2;
+        
+        var isFocused = keyboardManager.keyPressed[Key.Focus];
+        var hitbox = isFocused ? hitboxSmall : hitboxLarge;
         hitbox.x = stage.width / 2;
         hitbox.y = stage.height - 100;
 
@@ -34,6 +40,20 @@
             var dx = 0;
             var dy = 0;
             var speed = keyboardManager.keyPressed[Key.Focus] ? slowSpeed : fastSpeed;
+            
+            // Change the hitbox if the player has pressed/unpressed the Focus key.
+            if (isFocused != keyboardManager.keyPressed[Key.Focus]) {
+                isFocused = keyboardManager.keyPressed[Key.Focus];
+                stage.removeChild(hitbox);
+                var hitboxAlpha = hitbox.alpha;
+                hitbox = isFocused ? hitboxSmall : hitboxLarge;
+                this.hitbox = hitbox;
+                hitbox.x = player.x;
+                hitbox.y = player.y;
+                hitbox.alpha = hitboxAlpha;
+                stage.addChild(hitbox);
+            }
+            
             var distance = speed * elapsedMilliseconds / 1000;
 
             if (keyboardManager.keyPressed[Key.Up]) {
@@ -75,7 +95,7 @@
             health -= damage;
             console.log(health);
             if (health <= 0) {
-                //this.dispatchEvent("dead");
+                this.dispatchEvent("dead");
             }
         }
 
