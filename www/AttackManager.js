@@ -18,6 +18,10 @@
         function fireAttackGroup(champion, team, currentTime) {
             if (!champion || !champion.attacks || !champion.attacks.length) return;
 
+            if (team != Team.One && team != Team.Two) {
+                console.warn("Invalid team ID: " + team + ". Champion: " + champion.name);
+            }
+
             var minOffset = 0, maxOffset = 0, minAngleOffset = 0, maxAngleOffset = 0;
             var targeted = false;
             var isSpawnPointRequired = champion.attackAngle !== undefined;

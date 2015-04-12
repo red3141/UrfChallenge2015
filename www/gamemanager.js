@@ -9,11 +9,16 @@
 
     window.GameManager = function(stage, attackManager, playerManager) {
 
+        // Number of times faster this game is than the source game.
+        var gameSpeed = 30;
+
         var gameState = GameState.Playing;
-        var gameId;
         var defeatBanner = new Bitmap(document.getElementById("defeat"));
         var victoryBanner = new Bitmap(document.getElementById("victory"));
         var endGameBanner;
+        
+        var game = {};
+        var eventIndex = 0;
         
         var newGameButton;
         var retryGameButton;
@@ -69,7 +74,7 @@
 
         playerManager.addEventListener("dead", function(e) {
             endGame(false);
-        })
+        });
 
         // Methods
 
@@ -110,12 +115,60 @@
             stage.enableMouseOver();
         }
 
+        function fireAttacks(event, currentTime) {
+            if (event.killerId == null) return null;
+            var participant = game.participants[event.killerId - 1];
+            if (!participant) {
+                console.warn("Could not find participant with ID " + event.killerId);
+                return null;
+            }
+            var champion = champions[participant.championId];
+            if (!champion) {
+                console.warn("Could not find champion with ID " + participant.championId);
+                return;
+            }
+            attackManager.fireAttackGroup(champion, participant.teamId, currentTime);
+            if (event.assistingParticipantIds) {
+                $.each(event.assistingParticipantIds, function(i, id) {
+                    var assistingParticipant = game.participants[id - 1];
+                    if (!assistingParticipant) {
+                        console.warn("Could not find participant with ID " + id);
+                        return;
+                    }
+                    var assistingChampion = champions[assistingParticipant.championId];
+                    if (!assistingChampion) {
+                        console.warn("Could not find champion with ID " + assistingParticipant.championId);
+                        return;
+                    }
+                    attackManager.fireAttackGroup(assistingChampion, assistingParticipant.teamId, currentTime);
+                });
+            }
+        }
+
         function onTick(e) {
 
             playerManager.movePlayer(e.delta);
             attackManager.moveParticles(e.delta, e.runTime);
 
-            if (gameState != GameState.Playing) {
+            if (gameState == GameState.Playing) {
+                while (eventIndex < game.events.length) {
+                    var event = game.events[eventIndex];
+                    if (!event) {
+                        ++eventIndex;
+                        continue;
+                    }
+                    if (event.timestamp / gameSpeed <= e.runTime) {
+                        fireAttacks(event, e.runTime);
+                        ++eventIndex;
+                    } else {
+                        break;
+                    }
+                }
+                if (eventIndex >= game.events.length && !attackManager.attacksOnStage()) {
+                    endGame(true);
+                }
+            } else {
+                // Game over. Show victory/defeat screen.
                 if (endGameBanner.alpha < 1) {
                     endGameBanner.alpha = Math.min(1, endGameBanner.alpha + e.delta / 1000);
                     newGameButton.alpha = Math.min(1, newGameButton.alpha + e.delta / 1000);
@@ -125,27 +178,22 @@
                 } else if (!attackManager.attacksOnStage()) {
                     Ticker.reset();
                 }
-            } else if (!attackManager.attacksOnStage()) {
-                // TODO: also check that there are no more attacks to be launched.
-                //endGame(true);
             }
 
             stage.update();
         }
+        
+        function startGame(newGame) {
+            if (newGame)
+                game = newGame;
+            eventIndex = 0;
 
-        function startGame(newGameId) {
-            if (!newGameId) {
-                // TODO: get random game
-            } else {
-                // TODO: get existing game
-                gameId = newGameId;
-            }
             // Events
             Ticker.framerate = 60;
             Ticker.addEventListener("tick", onTick);
 
             // Test code (remove sometime)
-            setTimeout(function() {
+            /*setTimeout(function() {
                 function doSetTimeout(champion, team, delay) {
                     setTimeout(function() {
                         if (gameState != GameState.Playing) return;
@@ -160,11 +208,11 @@
                     doSetTimeout(champion, Team.Two, delay);
                     delay += 500;
                 }
-            }, 1000);
+            }, 1000);*/
         }
 
         function restartGame() {
-            startGame(gameId);
+            startGame(game);
         }
 
         // Expose public members
