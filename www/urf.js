@@ -257,7 +257,7 @@
             particle.flipDirection = -1;
         }
 
-        if (attack.spawnFrom == SpawnFrom.Target || attack.type == AttackType.Still)
+        if (attack.spawnFrom == SpawnFrom.Target || attack.type == AttackType.Still || !spawnPoint)
             spawnPoint = targetPoint;
         if (attack.offset)
             spawnPoint = offsetPoint(spawnPoint, attack.offset * particle.flipDirection, angle - Math.PI / 2);
@@ -789,21 +789,13 @@
                 setTimeout(function() {fireAttackGroup(champion, team)}, delay);
             }
             var delay = 0;
-            var teamOne = true;
-            /*for(championId in champions) {
-                var champion = champions[27];
+            for(championId in champions) {
+                var champion = champions[championId];
                 if(champion.attacks === undefined) {continue;}
                 doSetTimeout(champion, Team.One, delay);
                 doSetTimeout(champion, Team.Two, delay);
-                teamOne = !teamOne;
                 delay += 500;
-            }*/
-            fireAttackGroup(champions["27"], 100);
-            fireAttackGroup(champions["27"], 200);
-            /*fireAttackGroup(champions["77"], 100);
-            fireAttackGroup(champions["77"], 200);
-            fireAttackGroup(champions["112"], 100);
-            fireAttackGroup(champions["112"], 200);*/
+            }
         }, 1000);
     });
 })();
