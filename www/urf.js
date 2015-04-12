@@ -44,11 +44,7 @@
     
     var gameState = GameState.Playing;
     var defeatBanner = new Bitmap(document.getElementById("defeat"));
-    defeatBanner.regX = defeatBanner.image.width / 2;
-    defeatBanner.regY = defeatBanner.image.height / 2;
     var victoryBanner = new Bitmap(document.getElementById("victory"));
-    victoryBanner.regX = victoryBanner.image.width / 2;
-    victoryBanner.regY = victoryBanner.image.height / 2;
     var endGameBanner;
 	
     var minPlayerX = 0.5 * hitbox.image.width;
@@ -543,14 +539,26 @@
 		player.y = hitbox.y;
 	}
 
+    function attacksOnStage() {
+        $.each(particles, function(i, particle) {
+            if (particle.attack.type != AttackType.Still || (particle.attack.finishCondition && particle.attack.finishCondition.duration !== undefined)) {
+                // The particle is not a Teemo mushroom.
+                return true;
+            }
+        });
+        return false;
+    }
+    
     function endGame(victory) {
-        if(gameState != GameState.Playing) return;
+        if (gameState != GameState.Playing) return;
         
         gameState = victory? GameState.Victory : GameState.Defeat;
         endGameBanner = victory ? victoryBanner : defeatBanner;
+        endGameBanner.regX = endGameBanner.image.width / 2;
+        endGameBanner.regY = endGameBanner.image.height / 2;
         stage.addChild(endGameBanner);
-        endGameBanner.x = endGameBanner.regX;
-        endGameBanner.y = endGameBanner.regY;
+        endGameBanner.x = stage.width / 2;
+        endGameBanner.y = 250;
         endGameBanner.alpha = 0;
     }
     
@@ -715,10 +723,17 @@
             }
         }
 		
-        if (gameState != GameState.Playing && endGameBanner.alpha < 1) {
-            endGameBanner.alpha = Math.min(1, endGameBanner.alpha + e.delta / 1000);
-            player.alpha = Math.max(0, player.alpha - e.delta / 1000);
-            hitbox.alpha = Math.max(0, hitbox.alpha - e.delta / 1000);
+        if (gameState != GameState.Playing) {
+            if (endGameBanner.alpha < 1) {
+                endGameBanner.alpha = Math.min(1, endGameBanner.alpha + e.delta / 1000);
+                player.alpha = Math.max(0, player.alpha - e.delta / 1000);
+                hitbox.alpha = Math.max(0, hitbox.alpha - e.delta / 1000);
+            } else if (!attacksOnStage()) {
+                // TODO: turn off onTick().
+            }
+        } else if (!attacksOnStage()) {
+            // TODO: also check that there are no more attacks to be launched.
+            //endGame(true);
         }
         
         stage.update();
@@ -786,18 +801,18 @@
             }
             var delay = 0;
             var teamOne = true;
-            /*for(championId in champions) {
-                var champion = champions[championId];
+            for(championId in champions) {
+                var champion = champions[56];
                 if(champion.attacks === undefined) {continue;}
                 doSetTimeout(champion, Team.One, delay);
                 doSetTimeout(champion, Team.Two, delay);
                 teamOne = !teamOne;
                 delay += 500;
-            }*/
-            fireAttackGroup(champions["77"], 100);
+            }
+            /*fireAttackGroup(champions["77"], 100);
             fireAttackGroup(champions["77"], 200);
             fireAttackGroup(champions["112"], 100);
-            fireAttackGroup(champions["112"], 200);
+            fireAttackGroup(champions["112"], 200);*/
         }, 1000);
     });
 })();
