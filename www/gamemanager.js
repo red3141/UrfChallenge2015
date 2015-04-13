@@ -7,7 +7,7 @@
     Container = createjs.Container;
     Ticker = createjs.Ticker;
 
-    window.GameManager = function(stage, attackManager, playerManager) {
+    window.GameManager = function(stage, attackManager, playerManager, dataManager) {
 
         // Number of times faster this game is than the source game.
         var gameSpeed = 30;
@@ -35,7 +35,7 @@
             });
         newMatchButtonUnhover.addEventListener("click",
             function() {
-               // TODO: start a new game. 
+                newGame();
             });
         newMatchButtonHover.addEventListener("mouseout",
             function() {
@@ -48,7 +48,7 @@
             });
         newMatchButtonHover.addEventListener("click",
             function() {
-               // TODO: start a new game. 
+                newGame();
             });
         var retryMatchButtonUnhover = new Bitmap(document.getElementById("button_retry"));
         retryMatchButtonUnhover.addEventListener("mouseover",
@@ -62,7 +62,7 @@
             });
         retryMatchButtonUnhover.addEventListener("click",
             function() {
-               retryGame(); 
+                retryGame();
             });
         var retryMatchButtonHover = new Bitmap(document.getElementById("button_retry_hover"));
         retryMatchButtonHover.addEventListener("mouseout",
@@ -196,6 +196,12 @@
                 }
             }
 
+            var totalGameSeconds = Math.floor(e.runTime * gameSpeed / 1000) ;
+            var minute = Math.floor(totalGameSeconds / 60);
+            var second = totalGameSeconds % 60;
+            second = ("0" + second).slice(-2);
+            $("#gameTime").text(minute + ":" + second);
+
             stage.update();
         }
         
@@ -227,6 +233,8 @@
             Ticker.addEventListener("tick", onTick);
             
             gameState = GameState.Playing;
+            $("#gameId").text(game.id);
+            $("#gameTime").text("0:00");
 
             // Test code (remove sometime)
             /*setTimeout(function() {
@@ -247,12 +255,22 @@
             }, 1000);*/
         }
 
+        function newGame() {
+            dataManager.getGameData()
+                .done(function(data) {
+                    startGame(data);
+                }).fail(function(promise, text, error) {
+                    console.log("Failed to get game data.");
+                });
+        }
+
         function retryGame() {
             startGame(game);
         }
 
         // Expose public members
         this.startGame = startGame;
+        this.newGame = newGame;
         this.retryGame = retryGame;
     };
 })();
