@@ -37,23 +37,19 @@
             });
         playButtonUnhover.addEventListener("click",
             function() {
+                playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
                 newGame();
-                stage.enableMouseOver(0);
-                stage.removeAllChildren();
-                stage.update();
             });
-        playButtonHover.addEventListener("mouseout",
-            function() {
-                stage.removeChild(playButtonHover);
-                stage.addChild(playButtonUnhover);
-                stage.update();
-            });
+        var playButtonMouseOut = function() {
+            stage.removeChild(playButtonHover);
+            stage.addChild(playButtonUnhover);
+            stage.update();
+        };
+        playButtonHover.addEventListener("mouseout", playButtonMouseOut);
         playButtonHover.addEventListener("click",
             function() {
+                playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
                 newGame();
-                stage.enableMouseOver(0);
-                stage.removeAllChildren();
-                stage.update();
             });
         
         var newGameButton;
@@ -196,6 +192,9 @@
                 }).fail(function(promise, text, error) {
                     console.log("Failed to get game data.");
                 });
+            stage.enableMouseOver(0);
+            stage.removeAllChildren();
+            stage.update();
         }
 
         function retryGame() {
