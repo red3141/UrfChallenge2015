@@ -15,13 +15,6 @@
         var topLayer = new Container();
         var darknessLayer = new Container();
 
-        function destroyAllParticles() {
-            $.each(particles, function(i, particle) {
-               destroyParticle(particle);
-            });
-            particles = [];
-        }
-        
         function fireAttackGroup(champion, team, currentTime) {
             if (!champion || !champion.attacks || !champion.attacks.length) return;
 
@@ -502,6 +495,13 @@
                 if (particle.flipDirection == -1)
                     particle.rotation += 2 * particle.imageDef.pointAngle - 180;
             }
+        }
+
+        function destroyAllParticles() {
+            $.each(particles, function(i, particle) {
+                destroyParticle(particle);
+            });
+            particles = [];
         }
 
         function destroyParticle(particle) {
