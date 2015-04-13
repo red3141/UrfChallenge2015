@@ -9,7 +9,21 @@
   <script src="ndmgr.Collision.js" type="text/javascript"></script>
 </head>
 <body>
-  <canvas id="canvas" width="550" height="700" />
+  <div id="container">
+    <div class="sideCol">
+      <h1>Controls</h1>
+      <b>Movement</b> = Arrow keys<br />
+      <b>Focus</b> = R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <div class="middleCol">
+      <canvas id="canvas" width="550" height="700" />
+    </div>
+    <div class="sideCol">
+      <h1>Current game</h1>
+      <b>Game ID</b> = <span id="gameId">(none)</span><br />
+      <span id="gameTime"></span>
+    </div>
+  </div>
 
   <div id="resources">
     <!-- Load images here. Urf will add the images to the canvas using the image IDs.-->
