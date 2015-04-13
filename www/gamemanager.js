@@ -183,6 +183,13 @@
                 if (eventIndex >= game.events.length && !attackManager.attacksOnStage()) {
                     endGame(true);
                 }
+
+                var totalGameSeconds = Math.floor(e.runTime * gameSpeed / 1000);
+                var minute = Math.floor(totalGameSeconds / 60);
+                var second = totalGameSeconds % 60;
+                second = ("0" + second).slice(-2);
+                $("#gameTime").text(minute + ":" + second);
+
             } else {
                 // Game over. Show victory/defeat screen.
                 if (endGameBanner.alpha < 1) {
@@ -196,11 +203,6 @@
                 }
             }
 
-            var totalGameSeconds = Math.floor(e.runTime * gameSpeed / 1000) ;
-            var minute = Math.floor(totalGameSeconds / 60);
-            var second = totalGameSeconds % 60;
-            second = ("0" + second).slice(-2);
-            $("#gameTime").text(minute + ":" + second);
 
             stage.update();
         }

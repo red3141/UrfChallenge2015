@@ -29,13 +29,15 @@
         var player = new Bitmap(document.getElementById("urf"));
         player.regX = player.image.width / 2;
         player.regY = player.image.height / 2;
-        
-        var health;
+
+        var maxHealth = 2000;
+        var health = maxHealth;
         
         resetPlayer();
 
         function resetPlayer() {
-            health = 2000;
+            health = maxHealth;
+            updateHealthBar();
             hitbox.x = player.x = stage.width / 2;
             hitbox.y = player.y = stage.height - 100;
             player.alpha = 1;
@@ -99,11 +101,18 @@
         }
 
         function applyDamage(damage) {
-            health -= damage;
+            health = Math.max(0, health - damage);
+            updateHealthBar();
             console.log(health);
             if (health <= 0) {
                 this.dispatchEvent("dead");
             }
+        }
+        
+        function updateHealthBar() {
+            var percentHealth = health / maxHealth * 100;
+            $("#health-bar").width(percentHealth + "%");
+            $("#health-bar-text").text(health + "k / " + maxHealth + "k");
         }
 
         // Expose public members

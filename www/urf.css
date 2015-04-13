@@ -31,6 +31,24 @@ h1 {
     background: #101010;
 }
 
+#health-bar-container {
+    background: #FF0000;
+    height: 20px;
+    position: relative;
+}
+
+#health-bar {
+    background: #00CC00;
+    height: 100%;
+    position: absolute;
+}
+
+#health-bar-text {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
 #gameTime {
     font-size: 1.2em;
     font-weight: bold;
