@@ -5,7 +5,7 @@
     window.DataManager = function() {
         function getGameData(gameId) {
             return $.ajax({
-                url: "games/" + (gameId || "random"),
+                url: "http://urf.pororeplays.com/games/" + (gameId || "random"),
                 dataType: 'json'
             });
         }

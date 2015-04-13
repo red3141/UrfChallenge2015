@@ -75,6 +75,7 @@ namespace UrfStg.Web.Controllers
             Console.WriteLine("Done accessing database.");
 
             HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "http://red3141.github.io");
+            HttpContext.Response.AddHeader("Vary", "Origin");
             return JsonNet(match, JsonRequestBehavior.AllowGet);
         }
     }
