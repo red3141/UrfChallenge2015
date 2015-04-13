@@ -67,14 +67,17 @@ namespace UrfStg.Web.Controllers
             Console.WriteLine("Getting events...");
 
             // The client is only interested in champion kill events.
-            match.Events = dataContext.Events
-                .Include(e => e.AssistingParticipants)
-                .Where(e => e.MatchId == selectedId && e.EventType == AdvancedMatchHistoryConstants.EventTypeAdvanced.ChampionKill).ToList();
+            var query =
+                from e in dataContext.Events.Include(e => e.AssistingParticipants)
+                where e.MatchId == selectedId && e.EventType == AdvancedMatchHistoryConstants.EventTypeAdvanced.ChampionKill
+                orderby e.Timestamp
+                select e;
+            match.Events = query.ToList();
             // Important: do NOT save changes at this point.
 
             Console.WriteLine("Done accessing database.");
 
-            HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "http://red3141.github.io");
+            HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "http://localhost");
             HttpContext.Response.AddHeader("Vary", "Origin");
             return JsonNet(match, JsonRequestBehavior.AllowGet);
         }

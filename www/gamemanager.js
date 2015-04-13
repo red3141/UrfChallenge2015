@@ -250,12 +250,12 @@
                 $.each(event.assistingParticipantIds, function(i, id) {
                     var assistingParticipant = game.participants[id - 1];
                     if (!assistingParticipant) {
-                        console.warn("Could not find participant with ID " + id);
+                        console.warn("Could not find assisting participant with ID " + id);
                         return;
                     }
                     var assistingChampion = champions[assistingParticipant.championId];
                     if (!assistingChampion) {
-                        console.warn("Could not find champion with ID " + assistingParticipant.championId);
+                        console.warn("Could not find assisting champion with ID " + assistingParticipant.championId);
                         return;
                     }
                     attackManager.fireAttackGroup(assistingChampion, assistingParticipant.teamId, currentTime);
