@@ -15,10 +15,69 @@
         var gameState = GameState.Playing;
         var defeatBanner = new Bitmap(document.getElementById("defeat"));
         var victoryBanner = new Bitmap(document.getElementById("victory"));
-        var endGameBanner = {};
-
+        var endGameBanner;
+        
         var game = {};
         var eventIndex = 0;
+        
+        var newGameButton;
+        var retryGameButton;
+        var newMatchButtonUnhover = new Bitmap(document.getElementById("button_new"));
+        var newMatchButtonHover = new Bitmap(document.getElementById("button_new_hover"));
+        newMatchButtonUnhover.addEventListener("mouseover",
+            function() {
+                var alpha = newGameButton.alpha;
+                stage.removeChild(newGameButton);
+                newGameButton = newMatchButtonHover;
+                newGameButton.alpha = alpha;
+                stage.addChild(newGameButton);
+                stage.update();
+            });
+        newMatchButtonUnhover.addEventListener("click",
+            function() {
+               // TODO: start a new game. 
+            });
+        newMatchButtonHover.addEventListener("mouseout",
+            function() {
+                var alpha = newGameButton.alpha;
+                stage.removeChild(newGameButton);
+                newGameButton = newMatchButtonUnhover;
+                newGameButton.alpha = alpha;
+                stage.addChild(newGameButton);
+                stage.update();
+            });
+        newMatchButtonHover.addEventListener("click",
+            function() {
+               // TODO: start a new game. 
+            });
+        var retryMatchButtonUnhover = new Bitmap(document.getElementById("button_retry"));
+        retryMatchButtonUnhover.addEventListener("mouseover",
+            function() {
+                var alpha = newGameButton.alpha;
+                stage.removeChild(retryGameButton);
+                retryGameButton = retryMatchButtonHover;
+                retryGameButton.alpha = alpha;
+                stage.addChild(retryGameButton);
+                stage.update();
+            });
+        retryMatchButtonUnhover.addEventListener("click",
+            function() {
+               retryGame(); 
+            });
+        var retryMatchButtonHover = new Bitmap(document.getElementById("button_retry_hover"));
+        retryMatchButtonHover.addEventListener("mouseout",
+            function() {
+                var alpha = retryGameButton.alpha;
+                stage.removeChild(retryGameButton);
+                retryGameButton = retryMatchButtonUnhover;
+                retryGameButton.alpha = alpha;
+                stage.addChild(retryGameButton);
+                stage.update();
+            });
+        retryMatchButtonHover.addEventListener("click",
+            function() {
+               retryGame(); 
+            });
 
         // The hitbox should appear above all bullets.
         // The player should appear below all bullets (except the bottom layer, e.g. Bard ult)
@@ -46,6 +105,30 @@
             endGameBanner.x = stage.width / 2;
             endGameBanner.y = 250;
             endGameBanner.alpha = 0;
+            
+            newMatchButtonHover.regX = newMatchButtonHover.image.width / 2;
+            newMatchButtonHover.regY = newMatchButtonHover.image.height / 2;
+            newMatchButtonUnhover.regX = newMatchButtonUnhover.image.width / 2;
+            newMatchButtonUnhover.regY = newMatchButtonUnhover.image.height / 2;
+            retryMatchButtonHover.regX = retryMatchButtonHover.image.width / 2;
+            retryMatchButtonHover.regY = retryMatchButtonHover.image.height / 2;
+            retryMatchButtonUnhover.regX = retryMatchButtonUnhover.image.width / 2;
+            retryMatchButtonUnhover.regY = retryMatchButtonUnhover.image.height / 2;
+            
+            newMatchButtonHover.x = newMatchButtonUnhover.x = stage.width / 2;
+            newMatchButtonHover.y = newMatchButtonUnhover.y = 450;
+            retryMatchButtonHover.x = retryMatchButtonUnhover.x = stage.width / 2;
+            retryMatchButtonHover.y = retryMatchButtonUnhover.y = 500;
+            
+            newGameButton = newMatchButtonUnhover;
+            newGameButton.alpha = 0;
+            retryGameButton = retryMatchButtonUnhover;
+            retryGameButton.alpha = 0;
+            
+            stage.addChild(newGameButton);
+            stage.addChild(retryGameButton);
+            
+            stage.enableMouseOver();
         }
 
         function fireAttacks(event, currentTime) {
@@ -104,6 +187,8 @@
                 // Game over. Show victory/defeat screen.
                 if (endGameBanner.alpha < 1) {
                     endGameBanner.alpha = Math.min(1, endGameBanner.alpha + e.delta / 1000);
+                    newGameButton.alpha = Math.min(1, newGameButton.alpha + e.delta / 1000);
+                    retryGameButton.alpha = Math.min(1, retryGameButton.alpha + e.delta / 1000);
                     playerManager.player.alpha = Math.max(0, playerManager.player.alpha - e.delta / 1000);
                     playerManager.hitbox.alpha = Math.max(0, playerManager.hitbox.alpha - e.delta / 1000);
                 } else if (!attackManager.attacksOnStage()) {
@@ -119,9 +204,29 @@
                 game = newGame;
             eventIndex = 0;
 
+            // Reset a number of things.
+            // Disable mouse over events.
+            stage.enableMouseOver(0);
+            playerManager.player.health = 2000;
+            if (endGameBanner) {
+                stage.removeChild(endGameBanner);
+            }
+            if (newGameButton) {
+                stage.removeChild(newGameButton);
+            }
+            if (retryGameButton) {
+                stage.removeChild(retryGameButton);
+            }
+            
+            playerManager.resetPlayer();
+            attackManager.destroyAllParticles();
+            
             // Events
+            Ticker.reset();
             Ticker.framerate = 60;
             Ticker.addEventListener("tick", onTick);
+            
+            gameState = GameState.Playing;
 
             // Test code (remove sometime)
             /*setTimeout(function() {
@@ -142,12 +247,12 @@
             }, 1000);*/
         }
 
-        function restartGame() {
+        function retryGame() {
             startGame(game);
         }
 
         // Expose public members
         this.startGame = startGame;
-        this.restartGame = restartGame;
+        this.retryGame = retryGame;
     };
 })();

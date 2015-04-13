@@ -15,6 +15,13 @@
         var topLayer = new Container();
         var darknessLayer = new Container();
 
+        function destroyAllParticles() {
+            $.each(particles, function(i, particle) {
+               destroyParticle(particle);
+            });
+            particles = [];
+        }
+        
         function fireAttackGroup(champion, team, currentTime) {
             if (!champion || !champion.attacks || !champion.attacks.length) return;
 
@@ -520,6 +527,7 @@
         }
 
         // Expose public members
+        this.destroyAllParticles = destroyAllParticles;
         this.fireAttackGroup = fireAttackGroup;
         this.moveParticles = moveParticles;
         this.attacksOnStage = attacksOnStage;
