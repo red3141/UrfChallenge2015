@@ -18,8 +18,7 @@
     var dataManager = new DataManager();
     var gameManager = new GameManager(stage, attackManager, playerManager, dataManager);
 
-    // Download game data
     $(document).ready(function() {
-        gameManager.newGame();
+        gameManager.showMenu();
     });
 })();

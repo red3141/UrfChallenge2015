@@ -19,6 +19,42 @@
         
         var game = {};
         var eventIndex = 0;
+
+        function centerRegistrationPoint(bitmap) {
+            bitmap.regX = bitmap.image.width / 2;
+            bitmap.regY = bitmap.image.height / 2;
+        }
+
+        var menuTitle = new Bitmap(document.getElementById("menu_title"));
+        var menuUrf = new Bitmap(document.getElementById("menu_urf"));
+        var playButtonUnhover = new Bitmap(document.getElementById("menu_play"));
+        var playButtonHover = new Bitmap(document.getElementById("menu_play_hover"));
+        playButtonUnhover.addEventListener("mouseover",
+            function() {
+                stage.removeChild(playButtonUnhover);
+                stage.addChild(playButtonHover);
+                stage.update();
+            });
+        playButtonUnhover.addEventListener("click",
+            function() {
+                newGame();
+                stage.enableMouseOver(0);
+                stage.removeAllChildren();
+                stage.update();
+            });
+        playButtonHover.addEventListener("mouseout",
+            function() {
+                stage.removeChild(playButtonHover);
+                stage.addChild(playButtonUnhover);
+                stage.update();
+            });
+        playButtonHover.addEventListener("click",
+            function() {
+                newGame();
+                stage.enableMouseOver(0);
+                stage.removeAllChildren();
+                stage.update();
+            });
         
         var newGameButton;
         var retryGameButton;
@@ -79,14 +115,6 @@
                retryGame(); 
             });
 
-        // The hitbox should appear above all bullets.
-        // The player should appear below all bullets (except the bottom layer, e.g. Bard ult)
-        stage.addChild(attackManager.bottomLayer);
-        stage.addChild(playerManager.player);
-        stage.addChild(attackManager.mainLayer);
-        stage.addChild(attackManager.topLayer);
-        stage.addChild(attackManager.darknessLayer);
-        stage.addChild(playerManager.hitbox);
 
         playerManager.addEventListener("dead", function(e) {
             endGame(false);
@@ -94,26 +122,101 @@
 
         // Methods
 
+        function showMenu() {
+            centerRegistrationPoint(menuTitle);
+            centerRegistrationPoint(menuUrf);
+            centerRegistrationPoint(playButtonUnhover);
+            centerRegistrationPoint(playButtonHover);
+
+            menuTitle.x = stage.width / 2;
+            menuTitle.y = 130;
+            menuUrf.x = stage.width / 2;
+            menuUrf.y = 420;
+            playButtonUnhover.x = stage.width / 2;
+            playButtonUnhover.y = 640;
+            playButtonHover.x = playButtonUnhover.x;
+            playButtonHover.y = playButtonUnhover.y;
+
+
+            stage.addChild(menuTitle);
+            stage.addChild(menuUrf);
+            stage.addChild(playButtonUnhover);
+            stage.enableMouseOver();
+            stage.update();
+        }
+
+        function startGame(newGame) {
+            if (newGame)
+                game = newGame;
+
+            stage.removeAllChildren();
+
+            // The hitbox should appear above all bullets.
+            // The player should appear below all bullets (except the bottom layer, e.g. Bard ult)
+            stage.addChild(attackManager.bottomLayer);
+            stage.addChild(playerManager.player);
+            stage.addChild(attackManager.mainLayer);
+            stage.addChild(attackManager.topLayer);
+            stage.addChild(attackManager.darknessLayer);
+            stage.addChild(playerManager.hitbox);
+
+            eventIndex = 0;
+
+            // Reset a number of things.
+            // Disable mouse over events.
+            stage.enableMouseOver(0);
+            playerManager.player.health = 2000;
+            if (endGameBanner) {
+                stage.removeChild(endGameBanner);
+            }
+            if (newGameButton) {
+                stage.removeChild(newGameButton);
+            }
+            if (retryGameButton) {
+                stage.removeChild(retryGameButton);
+            }
+
+            playerManager.resetPlayer();
+            attackManager.destroyAllParticles();
+
+            // Events
+            Ticker.reset();
+            Ticker.framerate = 60;
+            Ticker.addEventListener("tick", onTick);
+
+            gameState = GameState.Playing;
+            $("#game-id").text(game.id);
+            $("#game-time").text("0:00");
+        }
+
+        function newGame() {
+            dataManager.getGameData()
+                .done(function(data) {
+                    startGame(data);
+                }).fail(function(promise, text, error) {
+                    console.log("Failed to get game data.");
+                });
+        }
+
+        function retryGame() {
+            startGame(game);
+        }
+
         function endGame(victory) {
             if (gameState != GameState.Playing) return;
 
             gameState = victory ? GameState.Victory : GameState.Defeat;
             endGameBanner = victory ? victoryBanner : defeatBanner;
-            endGameBanner.regX = endGameBanner.image.width / 2;
-            endGameBanner.regY = endGameBanner.image.height / 2;
-            stage.addChild(endGameBanner);
+            centerRegistrationPoint(endGameBanner);
             endGameBanner.x = stage.width / 2;
             endGameBanner.y = 250;
             endGameBanner.alpha = 0;
-            
-            newMatchButtonHover.regX = newMatchButtonHover.image.width / 2;
-            newMatchButtonHover.regY = newMatchButtonHover.image.height / 2;
-            newMatchButtonUnhover.regX = newMatchButtonUnhover.image.width / 2;
-            newMatchButtonUnhover.regY = newMatchButtonUnhover.image.height / 2;
-            retryMatchButtonHover.regX = retryMatchButtonHover.image.width / 2;
-            retryMatchButtonHover.regY = retryMatchButtonHover.image.height / 2;
-            retryMatchButtonUnhover.regX = retryMatchButtonUnhover.image.width / 2;
-            retryMatchButtonUnhover.regY = retryMatchButtonUnhover.image.height / 2;
+            stage.addChild(endGameBanner);
+
+            centerRegistrationPoint(newMatchButtonHover);
+            centerRegistrationPoint(newMatchButtonUnhover);
+            centerRegistrationPoint(retryMatchButtonHover);
+            centerRegistrationPoint(retryMatchButtonUnhover);
             
             newMatchButtonHover.x = newMatchButtonUnhover.x = stage.width / 2;
             newMatchButtonHover.y = newMatchButtonUnhover.y = 450;
@@ -188,7 +291,7 @@
                 var minute = Math.floor(totalGameSeconds / 60);
                 var second = totalGameSeconds % 60;
                 second = ("0" + second).slice(-2);
-                $("#gameTime").text(minute + ":" + second);
+                $("#game-time").text(minute + ":" + second);
 
             } else {
                 // Game over. Show victory/defeat screen.
@@ -206,71 +309,8 @@
 
             stage.update();
         }
-        
-        function startGame(newGame) {
-            if (newGame)
-                game = newGame;
-            eventIndex = 0;
-
-            // Reset a number of things.
-            // Disable mouse over events.
-            stage.enableMouseOver(0);
-            playerManager.player.health = 2000;
-            if (endGameBanner) {
-                stage.removeChild(endGameBanner);
-            }
-            if (newGameButton) {
-                stage.removeChild(newGameButton);
-            }
-            if (retryGameButton) {
-                stage.removeChild(retryGameButton);
-            }
-            
-            playerManager.resetPlayer();
-            attackManager.destroyAllParticles();
-            
-            // Events
-            Ticker.reset();
-            Ticker.framerate = 60;
-            Ticker.addEventListener("tick", onTick);
-            
-            gameState = GameState.Playing;
-            $("#gameId").text(game.id);
-            $("#gameTime").text("0:00");
-
-            // Test code (remove sometime)
-            /*setTimeout(function() {
-                function doSetTimeout(champion, team, delay) {
-                    setTimeout(function() {
-                        if (gameState != GameState.Playing) return;
-                        attackManager.fireAttackGroup(champion, team, delay + 1000);
-                    }, delay);
-                }
-                var delay = 0;
-                for (championId in champions) {
-                    var champion = champions[championId];
-                    if (champion.attacks === undefined) { continue; }
-                    doSetTimeout(champion, Team.One, delay);
-                    doSetTimeout(champion, Team.Two, delay);
-                    delay += 500;
-                }
-            }, 1000);*/
-        }
-
-        function newGame() {
-            dataManager.getGameData()
-                .done(function(data) {
-                    startGame(data);
-                }).fail(function(promise, text, error) {
-                    console.log("Failed to get game data.");
-                });
-        }
-
-        function retryGame() {
-            startGame(game);
-        }
-
         // Expose public members
+        this.showMenu = showMenu;
         this.startGame = startGame;
         this.newGame = newGame;
         this.retryGame = retryGame;

@@ -10,23 +10,22 @@
 </head>
 <body>
   <div id="container">
-    <div class="sideCol">
+    <div class="left-side-col">
       <h1>Controls</h1>
       <b>Movement</b> = Arrow keys<br />
       <b>Focus</b> = R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     </div>
-    <div class="middleCol">
+    <div class="middle-col">
       <canvas id="canvas" width="550" height="700"></canvas>
       <div id="health-bar-container">
         <div id="health-bar"></div>
         <div id="health-bar-text">2000k / 2000k</div>
       </div>
+      <div id="game-time">0:00</div>
     </div>
-    <div class="sideCol">
+    <div class="right-side-col">
       <h1>Game Info</h1>
-      <span id="gameTime">0:00</span><br />
-      <br />
-      <b>Game ID</b> = <span id="gameId">(none)</span><br />
+      <b>Game ID</b> = <span id="game-id">(none)</span><br />
     </div>
   </div>
   <div id="non-endorsement">
@@ -35,6 +34,13 @@
 
   <div id="resources">
     <!-- Load images here. Urf will add the images to the canvas using the image IDs.-->
+
+    <!-- Main menu images. -->
+    <img id="menu_title" src="img/menu_title.png" />
+    <img id="menu_urf" src="img/menu_urf.png" />
+    <img id="menu_play" src="img/menu_play.png" />
+    <img id="menu_play_hover" src="img/menu_play_hover.png" />
+
 	<!-- Player images. -->
 	<img id="urf" src="img/urf.png" />
 	<img id="hitbox" src="img/hitbox.png" />
