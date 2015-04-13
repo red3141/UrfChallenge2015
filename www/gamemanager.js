@@ -260,7 +260,7 @@
                 .done(function(data) {
                     startGame(data);
                 }).fail(function(promise, text, error) {
-                    alert("Failed to get game data.");
+                    console.log("Failed to get game data.");
                 });
         }
 
