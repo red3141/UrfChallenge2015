@@ -141,6 +141,23 @@
             stage.update();
         }
 
+        function getParticipantById(id) {
+            if (id < 1 || id > game.participants.length) {
+                console.warn("Participant ID out of range: " + id);
+                return null;
+            }
+            var guess = game.participants[id - 1];
+            if (guess && guess.id == id)
+                return guess;
+            for (var i = 0; i < game.participants.length; ++i) {
+                var participant = game.participants[i];
+                if (participant && participant.id == id)
+                    return participant;
+            }
+            console.warn("Could not find participant with ID: " + id);
+            return null;
+        }
+
         function startGame(newGame) {
             if (newGame)
                 game = newGame;
@@ -235,11 +252,9 @@
 
         function fireAttacks(event, currentTime) {
             if (event.killerId == null) return null;
-            var participant = game.participants[event.killerId - 1];
-            if (!participant) {
-                console.warn("Could not find participant with ID " + event.killerId);
+            var participant = getParticipantById(event.killerId);
+            if (!participant)
                 return null;
-            }
             var champion = champions[participant.championId];
             if (!champion) {
                 console.warn("Could not find champion with ID " + participant.championId);
@@ -248,11 +263,9 @@
             attackManager.fireAttackGroup(champion, participant.teamId, currentTime);
             if (event.assistingParticipantIds) {
                 $.each(event.assistingParticipantIds, function(i, id) {
-                    var assistingParticipant = game.participants[id - 1];
-                    if (!assistingParticipant) {
-                        console.warn("Could not find assisting participant with ID " + id);
+                    var assistingParticipant = getParticipantById(id);
+                    if (!assistingParticipant)
                         return;
-                    }
                     var assistingChampion = champions[assistingParticipant.championId];
                     if (!assistingChampion) {
                         console.warn("Could not find assisting champion with ID " + assistingParticipant.championId);
