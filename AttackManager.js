@@ -3,8 +3,9 @@
         return;
 
     // Imports
-    Bitmap = createjs.Bitmap;
-    Event = createjs.Event;
+    var Bitmap = createjs.Bitmap;
+    var Container = createjs.Container;
+    var Event = createjs.Event;
 
     window.AttackManager = function(stage, pointGenerator, playerManager, collisionDetector) {
 
@@ -99,6 +100,8 @@
                 if (prevParticle && prevParticle.alphaModifier !== undefined) {
                     particle.alphaModifier = prevParticle.alphaModifier;
                     particle.alpha *= prevParticle.alphaModifier;
+                    if (particle.alphaSpeed)
+                        particle.alphaSpeed *= prevParticle.alphaModifier;
                 }
                 // Fire the next attack
                 if (attackIndex + 1 < champion.attacks.length) {
@@ -128,8 +131,11 @@
                         (team == Team.Two && particle.x <= stage.width / 2)) {
                         return;
                     }
-                    particle.alphaModifier = (particle.alphaModifier || 1) * 0.3;
-                    particle.alpha *= 0.3;
+                    var alphaFactor = 0.3;
+                    particle.alphaModifier = (particle.alphaModifier || 1) * alphaFactor;
+                    particle.alpha *= alphaFactor;
+                    if (particle.alphaSpeed)
+                        particle.alphaSpeed *= alphaFactor;
                 });
                 return;
             } else if (attack.type == AttackType.GlobalFocus) {

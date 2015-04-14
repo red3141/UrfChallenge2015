@@ -3,38 +3,54 @@
         return;
 
     // Imports
-    Bitmap = createjs.Bitmap;
-    EventDispatcher = createjs.EventDispatcher;
+    var Bitmap = createjs.Bitmap;
+    var EventDispatcher = createjs.EventDispatcher;
 
     window.PlayerManager = function(stage, keyboardManager) {
 
+        var self = this;
+
         var fastSpeed = 450;
         var slowSpeed = 100;
-
-        var hitboxLarge = new Bitmap(document.getElementById("hitbox"));
-        hitboxLarge.regX = hitboxLarge.image.width / 2;
-        hitboxLarge.regY = hitboxLarge.image.height / 2;
-        var hitboxSmall = new Bitmap(document.getElementById("hitbox_focus"));
-        hitboxSmall.regX = hitboxSmall.image.width / 2;
-        hitboxSmall.regY = hitboxSmall.image.height / 2;
         
         var isFocused = keyboardManager.keyPressed[Key.Focus];
-        var hitbox = isFocused ? hitboxSmall : hitboxLarge;
+        
+        var hitboxLarge, hitboxSmall, hitbox, player, damageIndicator;
+        var minPlayerX, maxPlayerX, minPlayerY, maxPlayerY;
 
-        var minPlayerX = 0.5 * hitbox.image.width;
-        var maxPlayerX = stage.width - minPlayerX;
-        var minPlayerY = 0.5 * hitbox.image.height;
-        var maxPlayerY = stage.height - minPlayerY;
+        $("#resources").imagesLoaded().always(function() {
+            hitboxLarge = new Bitmap(document.getElementById("hitbox"));
+            hitboxLarge.regX = hitboxLarge.image.width / 2;
+            hitboxLarge.regY = hitboxLarge.image.height / 2;
+            hitboxSmall = new Bitmap(document.getElementById("hitbox_focus"));
+            hitboxSmall.regX = hitboxSmall.image.width / 2;
+            hitboxSmall.regY = hitboxSmall.image.height / 2;
 
-        var player = new Bitmap(document.getElementById("urf"));
-        player.regX = player.image.width / 2;
-        player.regY = player.image.height / 2;
+            hitbox = hitboxLarge;
+            self.hitbox = hitbox;
+
+            damageIndicator = new Bitmap(document.getElementById("damage"));
+            self.damageIndicator = damageIndicator;
+
+            minPlayerX = 0.5 * hitbox.image.width;
+            maxPlayerX = stage.width - minPlayerX;
+            minPlayerY = 0.5 * hitbox.image.height;
+            maxPlayerY = stage.height - minPlayerY;
+
+            player = new Bitmap(document.getElementById("urf"));
+            player.regX = player.image.width / 2;
+            player.regY = player.image.height / 2;
+            self.player = player;
+
+            resetPlayer();
+
+            self.dispatchEvent("ready");
+        });
+
 
         var maxHealth = 2000;
         var health = maxHealth;
         
-        resetPlayer();
-
         function resetPlayer() {
             health = maxHealth;
             updateHealthBar();
@@ -43,6 +59,7 @@
             player.alpha = 1;
             hitboxLarge.alpha = 1;
             hitboxSmall.alpha = 1;
+            damageIndicator.alpha = 0;
         }
         
         function movePlayer(elapsedMilliseconds) {
@@ -91,6 +108,11 @@
             hitbox.y = Math.max(minPlayerY, Math.min(maxPlayerY, hitbox.y));
             player.x = hitbox.x;
             player.y = hitbox.y;
+            
+            // Update the damage indicator if necessary.
+            if (damageIndicator.alpha > 0) {
+                damageIndicator.alpha = Math.max(0, damageIndicator.alpha - elapsedMilliseconds / 200);
+            }
         }
 
         function getPosition() {
@@ -103,6 +125,7 @@
         function applyDamage(damage) {
             health = Math.max(0, health - damage);
             updateHealthBar();
+            damageIndicator.alpha = 1;
             console.log(health);
             if (health <= 0) {
                 this.dispatchEvent("dead");
@@ -123,6 +146,7 @@
         this.movePlayer = movePlayer;
         this.getPosition = getPosition;
         this.applyDamage = applyDamage;
+        this.damageIndicator = damageIndicator;
     };
 
     PlayerManager.prototype = new EventDispatcher();
