@@ -77,7 +77,7 @@ namespace UrfStg.Web.Controllers
 
             Console.WriteLine("Done accessing database.");
 
-            HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "http://localhost");
+            HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
             HttpContext.Response.AddHeader("Vary", "Origin");
             return JsonNet(match, JsonRequestBehavior.AllowGet);
         }

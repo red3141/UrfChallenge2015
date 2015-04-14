@@ -3,8 +3,9 @@
         return;
 
     // Imports
-    Bitmap = createjs.Bitmap;
-    Event = createjs.Event;
+    var Bitmap = createjs.Bitmap;
+    var Container = createjs.Container;
+    var Event = createjs.Event;
 
     window.AttackManager = function(stage, pointGenerator, playerManager, collisionDetector) {
 
