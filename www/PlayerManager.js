@@ -20,6 +20,8 @@
         
         var isFocused = keyboardManager.keyPressed[Key.Focus];
         var hitbox = isFocused ? hitboxSmall : hitboxLarge;
+        
+        var damageIndicator = new Bitmap(document.getElementById("damage"));
 
         var minPlayerX = 0.5 * hitbox.image.width;
         var maxPlayerX = stage.width - minPlayerX;
@@ -43,6 +45,7 @@
             player.alpha = 1;
             hitboxLarge.alpha = 1;
             hitboxSmall.alpha = 1;
+            damageIndicator.alpha = 0;
         }
         
         function movePlayer(elapsedMilliseconds) {
@@ -91,6 +94,11 @@
             hitbox.y = Math.max(minPlayerY, Math.min(maxPlayerY, hitbox.y));
             player.x = hitbox.x;
             player.y = hitbox.y;
+            
+            // Update the damage indicator if necessary.
+            if (damageIndicator.alpha > 0) {
+                damageIndicator.alpha = Math.max(0, damageIndicator.alpha - elapsedMilliseconds / 200);
+            }
         }
 
         function getPosition() {
@@ -103,6 +111,7 @@
         function applyDamage(damage) {
             health = Math.max(0, health - damage);
             updateHealthBar();
+            damageIndicator.alpha = 1;
             console.log(health);
             if (health <= 0) {
                 this.dispatchEvent("dead");
@@ -123,6 +132,7 @@
         this.movePlayer = movePlayer;
         this.getPosition = getPosition;
         this.applyDamage = applyDamage;
+        this.damageIndicator = damageIndicator;
     };
 
     PlayerManager.prototype = new EventDispatcher();
