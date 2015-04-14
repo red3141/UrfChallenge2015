@@ -127,9 +127,9 @@
             menuTitle.x = stage.width / 2;
             menuTitle.y = 130;
             menuUrf.x = stage.width / 2;
-            menuUrf.y = 420;
+            menuUrf.y = 400;
             playButtonUnhover.x = stage.width / 2;
-            playButtonUnhover.y = 640;
+            playButtonUnhover.y = 630;
             playButtonHover.x = playButtonUnhover.x;
             playButtonHover.y = playButtonUnhover.y;
 
