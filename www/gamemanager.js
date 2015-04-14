@@ -8,7 +8,7 @@
     var Ticker = createjs.Ticker;
     var Text = createjs.Text;
 
-    window.GameManager = function(stage, attackManager, playerManager, dataManager) {
+    window.GameManager = function(stage, attackManager, playerManager, keyboardManager, dataManager) {
 
         var self = this;
 
@@ -131,6 +131,10 @@
 
         playerManager.addEventListener("dead", function(e) {
             endGame(false);
+        });
+
+        keyboardManager.addEventListener("pause", function(e) {
+            Ticker.paused = !Ticker.paused;
         });
 
         // Methods
@@ -297,6 +301,8 @@
         }
 
         function onTick(e) {
+
+            if (e.paused) return;
 
             playerManager.movePlayer(e.delta);
             attackManager.moveParticles(e.delta, e.runTime);
