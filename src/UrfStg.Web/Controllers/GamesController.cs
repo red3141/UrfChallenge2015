@@ -34,6 +34,19 @@ namespace UrfStg.Web.Controllers
         }
 
         /// <summary>
+        /// Gets a game by id.
+        /// </summary>
+        /// <returns>A <see cref="Match"/>.</returns>
+        public ActionResult Index(long id)
+        {
+            var match = GetMatch(id);
+
+            HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            HttpContext.Response.AddHeader("Vary", "Origin");
+            return JsonNet(match, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
         /// Gets a random game.
         /// </summary>
         /// <returns>A <see cref="Match"/>.</returns>
@@ -56,24 +69,29 @@ namespace UrfStg.Web.Controllers
                     Monitor.Exit(random);
             }
             var selectedId = ids[index];
-
-            var match = dataContext.Matches
-                .Include(m => m.Participants)
-                .Include(m => m.Teams.Select(t => t.Bans))
-                .FirstOrDefault(m => m.Id == selectedId);
-
-            // The client is only interested in champion kill events.
-            var query =
-                from e in dataContext.Events.Include(e => e.AssistingParticipants)
-                where e.MatchId == selectedId && e.EventType == AdvancedMatchHistoryConstants.EventTypeAdvanced.ChampionKill
-                orderby e.Timestamp
-                select e;
-            match.Events = query.ToList();
-            // Important: do NOT save changes at this point.
+            var match = GetMatch(selectedId);
 
             HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
             HttpContext.Response.AddHeader("Vary", "Origin");
             return JsonNet(match, JsonRequestBehavior.AllowGet);
+        }
+
+        private Match GetMatch(long id)
+        {
+            var match = dataContext.Matches
+                .Include(m => m.Participants)
+                .Include(m => m.Teams.Select(t => t.Bans))
+                .FirstOrDefault(m => m.Id == id);
+
+            // The client is only interested in champion kill events.
+            var query =
+                from e in dataContext.Events.Include(e => e.AssistingParticipants)
+                where e.MatchId == id && e.EventType == AdvancedMatchHistoryConstants.EventTypeAdvanced.ChampionKill
+                orderby e.Timestamp
+                select e;
+            match.Events = query.ToList();
+            // Important: do NOT save changes at this point.
+            return match;
         }
     }
 }
