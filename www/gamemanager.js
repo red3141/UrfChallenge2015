@@ -190,6 +190,7 @@
             stage.addChild(attackManager.mainLayer);
             stage.addChild(attackManager.topLayer);
             stage.addChild(attackManager.darknessLayer);
+            stage.addChild(playerManager.damageIndicator);
             stage.addChild(playerManager.hitbox);
 
             eventIndex = 0;

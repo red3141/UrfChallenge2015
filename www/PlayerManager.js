@@ -14,8 +14,8 @@
         var slowSpeed = 100;
         
         var isFocused = keyboardManager.keyPressed[Key.Focus];
-
-        var hitboxLarge, hitboxSmall, hitbox, player;
+        
+        var hitboxLarge, hitboxSmall, hitbox, player, damageIndicator;
         var minPlayerX, maxPlayerX, minPlayerY, maxPlayerY;
 
         $("#resources").imagesLoaded().always(function() {
@@ -28,6 +28,9 @@
 
             hitbox = hitboxLarge;
             self.hitbox = hitbox;
+
+            damageIndicator = new Bitmap(document.getElementById("damage"));
+            self.damageIndicator = damageIndicator;
 
             minPlayerX = 0.5 * hitbox.image.width;
             maxPlayerX = stage.width - minPlayerX;
@@ -56,6 +59,7 @@
             player.alpha = 1;
             hitboxLarge.alpha = 1;
             hitboxSmall.alpha = 1;
+            damageIndicator.alpha = 0;
         }
         
         function movePlayer(elapsedMilliseconds) {
@@ -104,6 +108,11 @@
             hitbox.y = Math.max(minPlayerY, Math.min(maxPlayerY, hitbox.y));
             player.x = hitbox.x;
             player.y = hitbox.y;
+            
+            // Update the damage indicator if necessary.
+            if (damageIndicator.alpha > 0) {
+                damageIndicator.alpha = Math.max(0, damageIndicator.alpha - elapsedMilliseconds / 200);
+            }
         }
 
         function getPosition() {
@@ -116,6 +125,7 @@
         function applyDamage(damage) {
             health = Math.max(0, health - damage);
             updateHealthBar();
+            damageIndicator.alpha = 1;
             console.log(health);
             if (health <= 0) {
                 this.dispatchEvent("dead");
@@ -136,6 +146,7 @@
         this.movePlayer = movePlayer;
         this.getPosition = getPosition;
         this.applyDamage = applyDamage;
+        this.damageIndicator = damageIndicator;
     };
 
     PlayerManager.prototype = new EventDispatcher();
