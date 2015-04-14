@@ -39,7 +39,6 @@ namespace UrfStg.Web.Controllers
         /// <returns>A <see cref="Match"/>.</returns>
         public ActionResult Random()
         {
-            Console.WriteLine("Getting random game...");
             var ids = dataContext.Matches.Select(m => m.Id).ToList();
 
             // Try to re-use the same random number generator to avoid burdening the garbage collector.
@@ -58,13 +57,10 @@ namespace UrfStg.Web.Controllers
             }
             var selectedId = ids[index];
 
-            Console.WriteLine("Getting match...");
             var match = dataContext.Matches
                 .Include(m => m.Participants)
                 .Include(m => m.Teams.Select(t => t.Bans))
                 .FirstOrDefault(m => m.Id == selectedId);
-
-            Console.WriteLine("Getting events...");
 
             // The client is only interested in champion kill events.
             var query =
@@ -74,8 +70,6 @@ namespace UrfStg.Web.Controllers
                 select e;
             match.Events = query.ToList();
             // Important: do NOT save changes at this point.
-
-            Console.WriteLine("Done accessing database.");
 
             HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
             HttpContext.Response.AddHeader("Vary", "Origin");
