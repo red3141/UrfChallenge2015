@@ -13,11 +13,21 @@
         var fastSpeed = 450;
         var slowSpeed = 100;
         const maxZhonyasCharges = 3;
+        const maxFlashCharges = 3;
         
         var isFocused = keyboardManager.keyPressed[Key.Focus];
         
         var hitboxLarge, hitboxSmall, hitbox, player, playerZhonyas, damageIndicator;
         var minPlayerX, maxPlayerX, minPlayerY, maxPlayerY;
+        
+        var stasisMilliseconds = 0;
+        var zhonyasCharges = 3;
+        
+        var flashOnNextMove = false;
+        var flashCharges = 3;
+        
+        var maxHealth = 2000;
+        var health = maxHealth;
 
         $("#resources").imagesLoaded().always(function() {
             hitboxLarge = new Bitmap(document.getElementById("hitbox"));
@@ -53,10 +63,11 @@
             self.dispatchEvent("ready");
         });
 
-        var stasisMilliseconds = 0;
-        var zhonyasCharges = 3;
-        var maxHealth = 2000;
-        var health = maxHealth;
+        keyboardManager.addEventListener("flash", function (e) {
+            if (!isInStasis() && flashCharges > 0) {
+                flashOnNextMove = true;
+            }
+        });
         
         function resetPlayer() {
             health = maxHealth;
@@ -67,6 +78,8 @@
             hitboxLarge.alpha = 1;
             hitboxSmall.alpha = 1;
             damageIndicator.alpha = 0;
+            flashCharges = 3;
+            updateFlashCharges();
             stasisMilliseconds = 0;
             zhonyasCharges = 3;
             updateZhonyasCharges();
@@ -83,18 +96,21 @@
                 if (stasisMilliseconds <= 0) {
                     stage.removeChild(playerZhonyas);
                 } else {
+                    flashOnNextMove = false;
                     return;
                 }
             } else if (keyboardManager.keyPressed[Key.Zhonyas] && zhonyasCharges > 0 && gameState == GameState.Playing) {
                 putInStasis(1500);
-                zhonyasCharges -= 1;
+                --zhonyasCharges;
                 updateZhonyasCharges();
+                flashOnNextMove = false;
                 return;
             }
             
             var dx = 0;
             var dy = 0;
             var speed = keyboardManager.keyPressed[Key.Focus] ? slowSpeed : fastSpeed;
+            var flashDistance = (flashOnNextMove ? 100 : 0);
             
             // Change the hitbox if the player has pressed/unpressed the Focus key.
             if (isFocused != keyboardManager.keyPressed[Key.Focus]) {
@@ -109,7 +125,7 @@
                 stage.addChild(hitbox);
             }
             
-            var distance = speed * elapsedMilliseconds / 1000;
+            var distance = speed * elapsedMilliseconds / 1000 + flashDistance;
 
             if (keyboardManager.keyPressed[Key.Up]) {
                 dy -= distance;
@@ -135,6 +151,14 @@
             // Keep the player in bounds.
             hitbox.x = Math.max(minPlayerX, Math.min(maxPlayerX, hitbox.x));
             hitbox.y = Math.max(minPlayerY, Math.min(maxPlayerY, hitbox.y));
+            
+            // If the player attempted a flash, check if they moved. If they did not, they fail flashed, so don't charge them a flash.
+            if (flashOnNextMove && (player.x != hitbox.x || player.y != hitbox.y)) {
+                --flashCharges;
+                updateFlashCharges();
+            }
+            flashOnNextMove = false;
+            
             player.x = hitbox.x;
             player.y = hitbox.y;
         }
@@ -174,6 +198,16 @@
                 }
             } else {
                 $("#zhonyas" + zhonyasCharges).css("visibility", "hidden");
+            }
+        }
+        
+        function updateFlashCharges() {
+            if (flashCharges == maxFlashCharges) {
+                for (var i = 0; i < maxFlashCharges; ++i) {
+                    $("#flash" + i).css("visibility", "visible");
+                }
+            } else {
+                $("#flash" + flashCharges).css("visibility", "hidden");
             }
         }
         
