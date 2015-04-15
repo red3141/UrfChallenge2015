@@ -53,6 +53,10 @@ h1 {
     border-bottom-right-radius: 15px;
 }
 
+.ability-icon {
+    border: #999999 1px solid;
+}
+
 #canvas {
     background: #101010;
     /*border-top: #666 1px solid;*/
