@@ -37,6 +37,7 @@
         stage.update();
 
         $("#game-link").val(location.href);
+        $(".fb-share-button").attr("data-href", location.href);
 
         $("#resources").imagesLoaded().always(function() {
 
@@ -249,6 +250,7 @@
                 var query = "?matchId=" + game.id;
                 var absoluteUrl = [location.protocol, '//', location.host, location.pathname].join('');
                 $("#game-link").val(absoluteUrl + query);
+                $(".fb-share-button").attr("data-href", absoluteUrl + query);
             }
 
             stage.removeAllChildren();

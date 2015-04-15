@@ -16,6 +16,7 @@ input[type=text] {
     background-color: #101010;
     border: #808080 1px solid;
     color: #ccc;
+    cursor: text;
 }
 
 #container {
@@ -103,4 +104,9 @@ input[type=text] {
 
 #resources {
     display: none;
+}
+
+.fb-share-button {
+    position: relative;
+    top: 3px;
 }
