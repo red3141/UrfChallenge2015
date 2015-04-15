@@ -23,6 +23,8 @@
         var isGamePreloaded = false;
         var startGameOnLoad = false;
         var eventIndex = 0;
+        var firstFrame = true;
+        var gameStartTime = 0;
 
         var defeatBanner, victoryBanner, endGameBanner, menuTitle, menuUrf,
             playButtonUnhover, playButtonHover, newGameButton, retryGameButton,
@@ -286,6 +288,7 @@
 
             // Events
             Ticker.reset();
+            firstFrame = true;
             Ticker.framerate = 60;
             Ticker.addEventListener("tick", onTick);
 
@@ -385,8 +388,17 @@
         function onTick(e) {
             if (e.paused) return;
 
+            // There appears to be a bug in EaselJS where the runTime may be negative after you pause a game, then reset it.
+            // This is a workaround. And also just good for robustness.
+            if (firstFrame) {
+                gameStartTime = e.runTime;
+                firstFrame = false;
+            }
+
+            var currentTime = e.runTime - gameStartTime;
+
             playerManager.movePlayer(e.delta, gameState);
-            attackManager.moveParticles(e.delta, e.runTime);
+            attackManager.moveParticles(e.delta, currentTime);
 
             if (gameState == GameState.Playing) {
                 while (eventIndex < game.events.length) {
@@ -395,8 +407,8 @@
                         ++eventIndex;
                         continue;
                     }
-                    if (event.timestamp / gameSpeed <= e.runTime) {
-                        fireAttacks(event, e.runTime);
+                    if (event.timestamp / gameSpeed <= currentTime) {
+                        fireAttacks(event, currentTime);
                         ++eventIndex;
                     } else {
                         break;
@@ -406,7 +418,7 @@
                     endGame(true);
                 }
 
-                var totalGameSeconds = Math.floor(e.runTime * gameSpeed / 1000);
+                var totalGameSeconds = Math.floor(currentTime * gameSpeed / 1000);
                 var minute = Math.floor(totalGameSeconds / 60);
                 var second = totalGameSeconds % 60;
                 second = ("0" + second).slice(-2);
@@ -421,10 +433,9 @@
                     playerManager.player.alpha = Math.max(0, playerManager.player.alpha - e.delta / 1000);
                     playerManager.hitbox.alpha = Math.max(0, playerManager.hitbox.alpha - e.delta / 1000);
                 } else if (!attackManager.attacksOnStage()) {
-                    Ticker.reset();
+                    setTimeout(function() { Ticker.reset() }, 1);
                 }
             }
-
 
             stage.update();
         }
