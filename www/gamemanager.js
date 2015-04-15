@@ -18,6 +18,10 @@
         var gameState = GameState.Playing;
         
         var game = {};
+        var isGamePreloading = false;
+        var preloadMatchId = null;
+        var isGamePreloaded = false;
+        var startGameOnLoad = false;
         var eventIndex = 0;
 
         var defeatBanner, victoryBanner, endGameBanner, menuTitle, menuUrf,
@@ -31,6 +35,8 @@
         loadingMessage.y = stage.height / 2;
         stage.addChild(loadingMessage);
         stage.update();
+
+        $("#game-link").val(location.href);
 
         $("#resources").imagesLoaded().always(function() {
 
@@ -139,29 +145,19 @@
 
         // Methods
 
-        function showMenu() {
-            stage.removeChild(loadingMessage);
-
-            centerRegistrationPoint(menuTitle);
-            centerRegistrationPoint(menuUrf);
-            centerRegistrationPoint(playButtonUnhover);
-            centerRegistrationPoint(playButtonHover);
-
-            menuTitle.x = stage.width / 2;
-            menuTitle.y = 130;
-            menuUrf.x = stage.width / 2;
-            menuUrf.y = 400;
-            playButtonUnhover.x = stage.width / 2;
-            playButtonUnhover.y = 630;
-            playButtonHover.x = playButtonUnhover.x;
-            playButtonHover.y = playButtonUnhover.y;
-
-
-            stage.addChild(menuTitle);
-            stage.addChild(menuUrf);
-            stage.addChild(playButtonUnhover);
-            stage.enableMouseOver();
-            stage.update();
+        function parseQuery() {
+            var obj = {};
+            if (!location.search || !location.search.length)
+                return obj;
+            var query = location.search.substring(1);
+            var vars = query.split('&');
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split('=');
+                var name = decodeURIComponent(pair[0]);
+                var value = decodeURIComponent(pair[1]);
+                obj[name] = value;
+            }
+            return obj;
         }
 
         function getParticipantById(id) {
@@ -181,9 +177,79 @@
             return null;
         }
 
+        function showMenu() {
+            stage.removeChild(loadingMessage);
+
+            centerRegistrationPoint(menuTitle);
+            centerRegistrationPoint(menuUrf);
+            centerRegistrationPoint(playButtonUnhover);
+            centerRegistrationPoint(playButtonHover);
+
+            menuTitle.x = stage.width / 2;
+            menuTitle.y = 130;
+            menuUrf.x = stage.width / 2;
+            menuUrf.y = 400;
+            playButtonUnhover.x = stage.width / 2;
+            playButtonUnhover.y = 635;
+            playButtonHover.x = playButtonUnhover.x;
+            playButtonHover.y = playButtonUnhover.y;
+
+            var queryObj = parseQuery();
+            isGamePreloading = true;
+            preloadMatchId = queryObj.matchId;
+            dataManager.getGameData(preloadMatchId)
+                .done(function(data) {
+                    game = data;
+                    isGamePreloaded = true;
+                    isGamePreloading = false;
+                    if (startGameOnLoad) {
+                        startGame(data);
+                    } else if (preloadMatchId) {
+                        $("#game-id").text(queryObj.matchId);
+                        var matchIdText = new Text("Match ID: " + queryObj.matchId, "24px Arial", "#FFF");
+                        matchIdText.textBaseline = "alphabetic";
+                        matchIdText.x = (stage.width - 240) / 2;
+                        matchIdText.y = 595;
+                        stage.addChild(matchIdText);
+                        stage.update();
+                    }
+                    preloadMatchId = null;
+                }).fail(function(promise, text, error) {
+                    isGamePreloaded = false;
+                    isGamePreloading = false;
+                    console.log("Failed to get game data.");
+                    if (startGameOnLoad)
+                        showErrorScreen();
+                });
+
+            stage.addChild(menuTitle);
+            stage.addChild(menuUrf);
+            stage.addChild(playButtonUnhover);
+            stage.enableMouseOver();
+            stage.update();
+        }
+        
+        function showErrorScreen() {
+            var errorText = new Text("Failed to load match.", "24px Arial", "#FFF");
+            errorText.textBaseline = "alphabetic";
+            errorText.x = (stage.width - 160) / 2;
+            errorText.y = stage.height / 2;
+            stage.addChild(errorText);
+            stage.update();
+        }
+
         function startGame(newGame) {
-            if (newGame)
+            stage.enableMouseOver(0);
+            stage.removeAllChildren();
+            stage.update();
+            isGamePreloaded = false;
+            preloadMatchId = null;
+            if (newGame && (newGame != game || !location.search)) {
                 game = newGame;
+                var query = "?matchId=" + game.id;
+                var absoluteUrl = [location.protocol, '//', location.host, location.pathname].join('');
+                $("#game-link").val(absoluteUrl + query);
+            }
 
             stage.removeAllChildren();
 
@@ -227,15 +293,25 @@
         }
 
         function newGame() {
-            dataManager.getGameData()
-                .done(function(data) {
-                    startGame(data);
-                }).fail(function(promise, text, error) {
-                    console.log("Failed to get game data.");
-                });
+            // Clear the stage here to give feedback that the button was clicked.
             stage.enableMouseOver(0);
             stage.removeAllChildren();
             stage.update();
+            if (isGamePreloaded) {
+                startGame(game);
+            } else if (isGamePreloading) {
+                startGameOnLoad = true;
+                // TODO: loading message
+            } else {
+                // TODO: loading message
+                dataManager.getGameData()
+                    .done(function(data) {
+                        startGame(data);
+                    }).fail(function(promise, text, error) {
+                        console.log("Failed to get game data.");
+                        showErrorScreen();
+                    });
+            }
         }
 
         function retryGame() {
@@ -277,8 +353,10 @@
         function fireAttacks(event, currentTime) {
             if (event.killerId == null) return null;
             var participant = getParticipantById(event.killerId);
-            if (!participant)
+            if (!participant) {
+                console.log("Failed to get participant (event ID: " + event.id + ")");
                 return null;
+            }
             var champion = champions[participant.championId];
             if (!champion) {
                 console.warn("Could not find champion with ID " + participant.championId);
@@ -288,8 +366,10 @@
             if (event.assistingParticipantIds) {
                 $.each(event.assistingParticipantIds, function(i, id) {
                     var assistingParticipant = getParticipantById(id);
-                    if (!assistingParticipant)
+                    if (!assistingParticipant) {
+                        console.log("Failed to get assisting participant (event ID: " + event.id + ")");
                         return;
+                    }
                     var assistingChampion = champions[assistingParticipant.championId];
                     if (!assistingChampion) {
                         console.warn("Could not find assisting champion with ID " + assistingParticipant.championId);

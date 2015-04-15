@@ -40,6 +40,8 @@ namespace UrfStg.Web.Controllers
         public ActionResult Index(long id)
         {
             var match = GetMatch(id);
+            if (match == null)
+                return HttpNotFound();
 
             HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
             HttpContext.Response.AddHeader("Vary", "Origin");
@@ -82,6 +84,8 @@ namespace UrfStg.Web.Controllers
                 .Include(m => m.Participants)
                 .Include(m => m.Teams.Select(t => t.Bans))
                 .FirstOrDefault(m => m.Id == id);
+            if (match == null)
+                return null;
 
             // The client is only interested in champion kill events.
             var query =

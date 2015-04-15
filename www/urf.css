@@ -12,6 +12,12 @@ h1 {
     padding-top: 0;
 }
 
+input[type=text] {
+    background-color: #101010;
+    border: #808080 1px solid;
+    color: #ccc;
+}
+
 #container {
     width: 1040px;
     height: 709px;

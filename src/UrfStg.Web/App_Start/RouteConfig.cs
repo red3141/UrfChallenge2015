@@ -10,9 +10,15 @@ namespace UrfStg.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                name: "DefaultRandom",
+                url: "{controller}/random",
+                defaults: new { controller = "Home", action = "Random", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "DefaultById",
+                url: "{controller}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = -1L }
             );
         }
     }
