@@ -113,4 +113,5 @@ input[type=text] {
 .fb-share-button {
     position: relative;
     top: 3px;
+    margin-bottom: 20px;
 }
