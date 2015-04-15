@@ -12,6 +12,13 @@ h1 {
     padding-top: 0;
 }
 
+input[type=text] {
+    background-color: #101010;
+    border: #808080 1px solid;
+    color: #ccc;
+    cursor: text;
+}
+
 #container {
     width: 1040px;
     height: 709px;
@@ -51,6 +58,10 @@ h1 {
     -moz-border-radius-bottomright: 15px;
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
+}
+
+.ability-icon {
+    border: #999999 1px solid;
 }
 
 #canvas {
@@ -97,4 +108,9 @@ h1 {
 
 #resources {
     display: none;
+}
+
+.fb-share-button {
+    position: relative;
+    top: 3px;
 }

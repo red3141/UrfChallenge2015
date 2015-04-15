@@ -5,6 +5,7 @@
     Right: 39,
     Focus: 82, // R
     Pause: 80, // P
+    Zhonyas: 87, // W
 };
 
 (function() {
@@ -28,6 +29,7 @@
                 case Key.Up:
                 case Key.Down:
                 case Key.Focus:
+                case Key.Zhonyas:
                     keyPressed[e.keyCode] = true;
                     break;
                 case Key.Pause:
@@ -47,6 +49,7 @@
                 case Key.Up:
                 case Key.Down:
                 case Key.Focus:
+                case Key.Zhonyas:
                     keyPressed[e.keyCode] = false;
                     break;
                 default:
