@@ -15,7 +15,7 @@
         // Number of times faster this game is than the source game.
         var gameSpeed = 30;
 
-        var gameState = GameState.Playing;
+        var gameState = GameState.Ended;
         
         var game = {};
         var isGamePreloading = false;
@@ -323,7 +323,7 @@
         function endGame(victory) {
             if (gameState != GameState.Playing) return;
 
-            gameState = victory ? GameState.Victory : GameState.Defeat;
+            gameState = GameState.Ended;
             endGameBanner = victory ? victoryBanner : defeatBanner;
             centerRegistrationPoint(endGameBanner);
             endGameBanner.x = stage.width / 2;
