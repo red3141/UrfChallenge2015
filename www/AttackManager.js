@@ -372,6 +372,7 @@
                 }
 
                 // Check if Urf has taken tons of damage.
+                // If Urf is in stasis, then he is not taking tons of damage.
                 if (particle.isDamaging && !playerManager.isInStasis() && collisionDetector.checkPixelCollision(playerManager.hitbox, particle)) {
                     // Only allow a particle to deal damage once.
                     particle.isDamaging = false;
