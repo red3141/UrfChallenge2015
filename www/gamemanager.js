@@ -383,10 +383,9 @@
         }
 
         function onTick(e) {
-
             if (e.paused) return;
 
-            playerManager.movePlayer(e.delta);
+            playerManager.movePlayer(e.delta, gameState);
             attackManager.moveParticles(e.delta, e.runTime);
 
             if (gameState == GameState.Playing) {
@@ -403,7 +402,7 @@
                         break;
                     }
                 }
-                if (eventIndex >= game.events.length && !attackManager.attacksOnStage()) {
+                if (eventIndex >= game.events.length && !attackManager.attacksOnStage() && !playerManager.isInStasis()) {
                     endGame(true);
                 }
 

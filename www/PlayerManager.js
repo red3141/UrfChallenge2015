@@ -12,10 +12,11 @@
 
         var fastSpeed = 450;
         var slowSpeed = 100;
+        const maxZhonyasCharges = 3;
         
         var isFocused = keyboardManager.keyPressed[Key.Focus];
         
-        var hitboxLarge, hitboxSmall, hitbox, player, damageIndicator;
+        var hitboxLarge, hitboxSmall, hitbox, player, playerZhonyas, damageIndicator;
         var minPlayerX, maxPlayerX, minPlayerY, maxPlayerY;
 
         $("#resources").imagesLoaded().always(function() {
@@ -42,12 +43,18 @@
             player.regY = player.image.height / 2;
             self.player = player;
 
+            playerZhonyas = new Bitmap(document.getElementById("urf_zhonyas"));
+            playerZhonyas.regX = playerZhonyas.image.width / 2;
+            playerZhonyas.regY = playerZhonyas.image.height / 2;
+            self.playerZhonyas = playerZhonyas;
+            
             resetPlayer();
 
             self.dispatchEvent("ready");
         });
 
-
+        var stasisMilliseconds = 0;
+        var zhonyasCharges = 3;
         var maxHealth = 2000;
         var health = maxHealth;
         
@@ -60,9 +67,31 @@
             hitboxLarge.alpha = 1;
             hitboxSmall.alpha = 1;
             damageIndicator.alpha = 0;
+            stasisMilliseconds = 0;
+            zhonyasCharges = 3;
+            updateZhonyasCharges();
         }
         
-        function movePlayer(elapsedMilliseconds) {
+        function movePlayer(elapsedMilliseconds, gameState) {
+            // Update the damage indicator if necessary.
+            if (damageIndicator.alpha > 0) {
+                damageIndicator.alpha = Math.max(0, damageIndicator.alpha - elapsedMilliseconds / 200);
+            }
+            
+            if (stasisMilliseconds > 0) {
+                stasisMilliseconds -= elapsedMilliseconds;
+                if (stasisMilliseconds <= 0) {
+                    stage.removeChild(playerZhonyas);
+                } else {
+                    return;
+                }
+            } else if (keyboardManager.keyPressed[Key.Zhonyas] && zhonyasCharges > 0 && gameState == GameState.Playing) {
+                putInStasis(1500);
+                zhonyasCharges -= 1;
+                updateZhonyasCharges();
+                return;
+            }
+            
             var dx = 0;
             var dy = 0;
             var speed = keyboardManager.keyPressed[Key.Focus] ? slowSpeed : fastSpeed;
@@ -108,11 +137,6 @@
             hitbox.y = Math.max(minPlayerY, Math.min(maxPlayerY, hitbox.y));
             player.x = hitbox.x;
             player.y = hitbox.y;
-            
-            // Update the damage indicator if necessary.
-            if (damageIndicator.alpha > 0) {
-                damageIndicator.alpha = Math.max(0, damageIndicator.alpha - elapsedMilliseconds / 200);
-            }
         }
 
         function getPosition() {
@@ -122,6 +146,17 @@
             };
         }
 
+        function isInStasis() {
+            return stasisMilliseconds > 0;
+        }
+        
+        function putInStasis(durationMilliseconds) {
+            playerZhonyas.x = player.x;
+            playerZhonyas.y = player.y;
+            stage.addChild(playerZhonyas);
+            stasisMilliseconds = durationMilliseconds;
+        }
+        
         function applyDamage(damage) {
             health = Math.max(0, health - damage);
             updateHealthBar();
@@ -129,6 +164,16 @@
             console.log(health);
             if (health <= 0) {
                 this.dispatchEvent("dead");
+            }
+        }
+        
+        function updateZhonyasCharges() {
+            if (zhonyasCharges == maxZhonyasCharges) {
+                for (var i = 0; i < maxZhonyasCharges; ++i) {
+                    $("#zhonyas" + i).css("visibility", "visible");
+                }
+            } else {
+                $("#zhonyas" + zhonyasCharges).css("visibility", "hidden");
             }
         }
         
@@ -145,6 +190,8 @@
         this.resetPlayer = resetPlayer;
         this.movePlayer = movePlayer;
         this.getPosition = getPosition;
+        this.isInStasis = isInStasis;
+        this.putInStasis = putInStasis;
         this.applyDamage = applyDamage;
         this.damageIndicator = damageIndicator;
     };
