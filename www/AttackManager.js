@@ -310,7 +310,10 @@
                         particle.affectedParticles.push(otherParticle);
                     }
                 }
-                // TODO: put player in stasis
+
+                if (!playerManager.isInStasis() && collisionDetector.checkPixelCollision(particle, playerManager.hitbox)) {
+                    playerManager.putInStasis(2500);
+                }
             }
             particles.push(particle);
             return particle;
@@ -369,7 +372,7 @@
                 }
 
                 // Check if Urf has taken tons of damage.
-                if (particle.isDamaging && collisionDetector.checkPixelCollision(playerManager.hitbox, particle)) {
+                if (particle.isDamaging && !playerManager.isInStasis() && collisionDetector.checkPixelCollision(playerManager.hitbox, particle)) {
                     // Only allow a particle to deal damage once.
                     particle.isDamaging = false;
                     playerManager.applyDamage(500);

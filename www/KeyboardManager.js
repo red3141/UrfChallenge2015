@@ -5,7 +5,7 @@
     window.KeyboardManager = function() {
 
         // Keep track of which arrow keys are pressed.
-        var keyPressed = [false, false, false, false, false];
+        var keyPressed = [false, false, false, false, false, false];
 
         function keyDown(e) {
             switch (e.keyCode) {
@@ -23,6 +23,9 @@
                     break;
                 case 82:
                     keyPressed[Key.Focus] = true;
+                    break;
+                case 87:
+                    keyPressed[Key.Zhonyas] = true;
                     break;
                 default:
                     return;
@@ -47,6 +50,8 @@
                 case 82:
                     keyPressed[Key.Focus] = false;
                     break;
+                case 87:
+                    keyPressed[Key.Zhonyas] = false;
                 default:
                     return;
             }

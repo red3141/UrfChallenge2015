@@ -44,7 +44,8 @@ Key = {
 	Down: 1,
 	Left: 2,
 	Right: 3,
-	Focus: 4
+	Focus: 4,
+    Zhonyas: 5
 };
 
 GameState = {
