@@ -4,6 +4,7 @@
 
     // Imports
     var Bitmap = createjs.Bitmap;
+    var ColorFilter = createjs.ColorFilter;
     var Container = createjs.Container;
     var Event = createjs.Event;
 
@@ -128,7 +129,8 @@
             if (attack.type == AttackType.IncreaseTransparency) {
                 $.each(particles, function(i, particle) {
                     if ((team == Team.One && particle.x > stage.width / 2) ||
-                        (team == Team.Two && particle.x <= stage.width / 2)) {
+                        (team == Team.Two && particle.x <= stage.width / 2) ||
+                        particle.imageDef.id == "akali") {
                         return;
                     }
                     var alphaFactor = 0.3;
@@ -305,6 +307,7 @@
             }
             if (attack.effect == Effect.Stasis) {
                 particle.affectedParticles = [];
+                //var yellowFilter = new ColorFilter(1, 1, 0);
                 for (var i = 0; i < particles.length; ++i) {
                     var otherParticle = particles[i];
                     if (otherParticle.imageDef.id == "bard") {
@@ -313,6 +316,7 @@
                     }
                     if (collisionDetector.checkPixelCollision(particle, otherParticle)) {
                         otherParticle.isInStasis = true;
+                        //otherParticle.filters = [yellowFilter];
                         particle.affectedParticles.push(otherParticle);
                     }
                 }

@@ -12,6 +12,13 @@ h1 {
     padding-top: 0;
 }
 
+input[type=text] {
+    background-color: #101010;
+    border: #333 1px solid;
+    color: #ccc;
+    cursor: text;
+}
+
 #container {
     width: 1040px;
     height: 709px;
@@ -101,4 +108,9 @@ h1 {
 
 #resources {
     display: none;
+}
+
+.fb-share-button {
+    position: relative;
+    top: 3px;
 }
