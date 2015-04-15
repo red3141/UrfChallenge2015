@@ -5,6 +5,8 @@
     // Imports
     var Bitmap = createjs.Bitmap;
     var EventDispatcher = createjs.EventDispatcher;
+    var Graphics = createjs.Graphics;
+    var Shape = createjs.Shape;
     var Ticker = createjs.Ticker;
     var Text = createjs.Text;
 
@@ -33,106 +35,131 @@
 
         var loadingMessage = new Text("Loading...", "24px Arial", "#FFF");
         loadingMessage.textBaseline = "alphabetic";
-        loadingMessage.x = (stage.width - 80) / 2;
+        loadingMessage.x = (stage.width - 100) / 2;
         loadingMessage.y = stage.height / 2;
         stage.addChild(loadingMessage);
-        stage.update();
 
         $("#game-link").val(location.href);
+        $.each($("#game-link"), function(i, elem) { elem.scrollLeft = elem.scrollWidth; });
+        $("#game-link").click(function() {
+            this.select();
+        });
         $(".fb-share-button").attr("data-href", location.href);
 
-        $("#resources").imagesLoaded().always(function() {
+        var progressBar = new Shape();
+        progressBar.x = stage.width / 2;
+        progressBar.y = stage.height / 2 + 30;
+        progressBar.graphics.beginFill("#555555");
+        progressBar.graphics.drawRoundRect(-100, 0, 200, 20, 5);
+        progressBar.graphics.endFill();
+        stage.addChild(progressBar);
+        stage.update();
 
-            defeatBanner = new Bitmap(document.getElementById("defeat"));
-            victoryBanner = new Bitmap(document.getElementById("victory"));
+        var imageLoadedCount = 0;
 
-            menuTitle = new Bitmap(document.getElementById("menu_title"));
-            menuUrf = new Bitmap(document.getElementById("menu_urf"));
-            playButtonUnhover = new Bitmap(document.getElementById("menu_play"));
-            playButtonHover = new Bitmap(document.getElementById("menu_play_hover"));
-            playButtonUnhover.addEventListener("mouseover",
-                function() {
-                    stage.removeChild(playButtonUnhover);
-                    stage.addChild(playButtonHover);
-                    stage.update();
-                });
-            playButtonUnhover.addEventListener("click",
-                function() {
-                    playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                    newGame();
-                });
-            function playButtonMouseOut() {
-                stage.removeChild(playButtonHover);
-                stage.addChild(playButtonUnhover);
+        $("#resources").imagesLoaded()
+            .progress(function(instance, image) {
+                ++imageLoadedCount;
+                var progressFraction = imageLoadedCount / instance.images.length;
+                var w = Math.max(10, progressFraction * 200);
+                progressBar.graphics.beginFill("#4f9b27");
+                progressBar.graphics.drawRoundRect(-100, 0, w, 20, 5);
+                progressBar.graphics.endFill();
                 stage.update();
-            }
-            playButtonHover.addEventListener("mouseout", playButtonMouseOut);
-            playButtonHover.addEventListener("click",
-                function() {
-                    playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                    newGame();
-                });
+            })
+            .always(function() {
+                stage.update();
 
-            newMatchButtonUnhover = new Bitmap(document.getElementById("button_new"));
-            newMatchButtonHover = new Bitmap(document.getElementById("button_new_hover"));
-            newMatchButtonUnhover.addEventListener("mouseover",
-                function() {
-                    var alpha = newGameButton.alpha;
-                    stage.removeChild(newGameButton);
-                    newGameButton = newMatchButtonHover;
-                    newGameButton.alpha = alpha;
-                    stage.addChild(newGameButton);
-                    stage.update();
-                });
-            newMatchButtonUnhover.addEventListener("click",
-                function() {
-                    newGame();
-                });
-            newMatchButtonHover.addEventListener("mouseout",
-                function() {
-                    var alpha = newGameButton.alpha;
-                    stage.removeChild(newGameButton);
-                    newGameButton = newMatchButtonUnhover;
-                    newGameButton.alpha = alpha;
-                    stage.addChild(newGameButton);
-                    stage.update();
-                });
-            newMatchButtonHover.addEventListener("click",
-                function() {
-                    newGame();
-                });
-            retryMatchButtonUnhover = new Bitmap(document.getElementById("button_retry"));
-            retryMatchButtonUnhover.addEventListener("mouseover",
-                function() {
-                    var alpha = newGameButton.alpha;
-                    stage.removeChild(retryGameButton);
-                    retryGameButton = retryMatchButtonHover;
-                    retryGameButton.alpha = alpha;
-                    stage.addChild(retryGameButton);
-                    stage.update();
-                });
-            retryMatchButtonUnhover.addEventListener("click",
-                function() {
-                    retryGame();
-                });
-            retryMatchButtonHover = new Bitmap(document.getElementById("button_retry_hover"));
-            retryMatchButtonHover.addEventListener("mouseout",
-                function() {
-                    var alpha = retryGameButton.alpha;
-                    stage.removeChild(retryGameButton);
-                    retryGameButton = retryMatchButtonUnhover;
-                    retryGameButton.alpha = alpha;
-                    stage.addChild(retryGameButton);
-                    stage.update();
-                });
-            retryMatchButtonHover.addEventListener("click",
-                function() {
-                    retryGame();
-                });
+                defeatBanner = new Bitmap(document.getElementById("defeat"));
+                victoryBanner = new Bitmap(document.getElementById("victory"));
 
-            self.dispatchEvent("ready");
-        });
-        
+                menuTitle = new Bitmap(document.getElementById("menu_title"));
+                menuUrf = new Bitmap(document.getElementById("menu_urf"));
+                playButtonUnhover = new Bitmap(document.getElementById("menu_play"));
+                playButtonHover = new Bitmap(document.getElementById("menu_play_hover"));
+                playButtonUnhover.addEventListener("mouseover",
+                    function() {
+                        stage.removeChild(playButtonUnhover);
+                        stage.addChild(playButtonHover);
+                        stage.update();
+                    });
+                playButtonUnhover.addEventListener("click",
+                    function() {
+                        playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
+                        newGame();
+                    });
+                function playButtonMouseOut() {
+                    stage.removeChild(playButtonHover);
+                    stage.addChild(playButtonUnhover);
+                    stage.update();
+                }
+                playButtonHover.addEventListener("mouseout", playButtonMouseOut);
+                playButtonHover.addEventListener("click",
+                    function() {
+                        playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
+                        newGame();
+                    });
+
+                newMatchButtonUnhover = new Bitmap(document.getElementById("button_new"));
+                newMatchButtonHover = new Bitmap(document.getElementById("button_new_hover"));
+                newMatchButtonUnhover.addEventListener("mouseover",
+                    function() {
+                        var alpha = newGameButton.alpha;
+                        stage.removeChild(newGameButton);
+                        newGameButton = newMatchButtonHover;
+                        newGameButton.alpha = alpha;
+                        stage.addChild(newGameButton);
+                        stage.update();
+                    });
+                newMatchButtonUnhover.addEventListener("click",
+                    function() {
+                        newGame();
+                    });
+                newMatchButtonHover.addEventListener("mouseout",
+                    function() {
+                        var alpha = newGameButton.alpha;
+                        stage.removeChild(newGameButton);
+                        newGameButton = newMatchButtonUnhover;
+                        newGameButton.alpha = alpha;
+                        stage.addChild(newGameButton);
+                        stage.update();
+                    });
+                newMatchButtonHover.addEventListener("click",
+                    function() {
+                        newGame();
+                    });
+                retryMatchButtonUnhover = new Bitmap(document.getElementById("button_retry"));
+                retryMatchButtonUnhover.addEventListener("mouseover",
+                    function() {
+                        var alpha = newGameButton.alpha;
+                        stage.removeChild(retryGameButton);
+                        retryGameButton = retryMatchButtonHover;
+                        retryGameButton.alpha = alpha;
+                        stage.addChild(retryGameButton);
+                        stage.update();
+                    });
+                retryMatchButtonUnhover.addEventListener("click",
+                    function() {
+                        retryGame();
+                    });
+                retryMatchButtonHover = new Bitmap(document.getElementById("button_retry_hover"));
+                retryMatchButtonHover.addEventListener("mouseout",
+                    function() {
+                        var alpha = retryGameButton.alpha;
+                        stage.removeChild(retryGameButton);
+                        retryGameButton = retryMatchButtonUnhover;
+                        retryGameButton.alpha = alpha;
+                        stage.addChild(retryGameButton);
+                        stage.update();
+                    });
+                retryMatchButtonHover.addEventListener("click",
+                    function() {
+                        retryGame();
+                    });
+
+                self.dispatchEvent("ready");
+            });
+
         function centerRegistrationPoint(bitmap) {
             bitmap.regX = bitmap.image.width / 2;
             bitmap.regY = bitmap.image.height / 2;
@@ -252,6 +279,7 @@
                 var query = "?matchId=" + game.id;
                 var absoluteUrl = [location.protocol, '//', location.host, location.pathname].join('');
                 $("#game-link").val(absoluteUrl + query);
+                $.each($("#game-link"), function(i, elem) { elem.scrollLeft = elem.scrollWidth; });
                 $(".fb-share-button").attr("data-href", absoluteUrl + query);
             }
 
