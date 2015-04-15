@@ -3,6 +3,7 @@
     Down: 40,
     Left: 37,
     Right: 39,
+    Flash: 69, // E
     Focus: 82, // R
     Pause: 80, // P
     Zhonyas: 87, // W
@@ -31,6 +32,9 @@
                 case Key.Focus:
                 case Key.Zhonyas:
                     keyPressed[e.keyCode] = true;
+                    break;
+                case Key.Flash:
+                    self.dispatchEvent("flash");
                     break;
                 case Key.Pause:
                     self.dispatchEvent("pause");
