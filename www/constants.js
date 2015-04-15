@@ -39,15 +39,6 @@ Team = {
     Two: 200
 };
 
-Key = {
-	Up: 0,
-	Down: 1,
-	Left: 2,
-	Right: 3,
-	Focus: 4,
-    Zhonyas: 5
-};
-
 GameState = {
     Playing: 0,
     Victory: 1,

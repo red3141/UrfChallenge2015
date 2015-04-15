@@ -3,47 +3,61 @@
         return;
 
     // Imports
-    Bitmap = createjs.Bitmap;
-    EventDispatcher = createjs.EventDispatcher;
+    var Bitmap = createjs.Bitmap;
+    var EventDispatcher = createjs.EventDispatcher;
 
     window.PlayerManager = function(stage, keyboardManager) {
+
+        var self = this;
 
         var fastSpeed = 450;
         var slowSpeed = 100;
         const maxZhonyasCharges = 3;
-
-        var hitboxLarge = new Bitmap(document.getElementById("hitbox"));
-        hitboxLarge.regX = hitboxLarge.image.width / 2;
-        hitboxLarge.regY = hitboxLarge.image.height / 2;
-        var hitboxSmall = new Bitmap(document.getElementById("hitbox_focus"));
-        hitboxSmall.regX = hitboxSmall.image.width / 2;
-        hitboxSmall.regY = hitboxSmall.image.height / 2;
         
         var isFocused = keyboardManager.keyPressed[Key.Focus];
-        var hitbox = isFocused ? hitboxSmall : hitboxLarge;
         
-        var damageIndicator = new Bitmap(document.getElementById("damage"));
+        var hitboxLarge, hitboxSmall, hitbox, player, playerZhonyas, damageIndicator;
+        var minPlayerX, maxPlayerX, minPlayerY, maxPlayerY;
 
-        var minPlayerX = 0.5 * hitbox.image.width;
-        var maxPlayerX = stage.width - minPlayerX;
-        var minPlayerY = 0.5 * hitbox.image.height;
-        var maxPlayerY = stage.height - minPlayerY;
+        $("#resources").imagesLoaded().always(function() {
+            hitboxLarge = new Bitmap(document.getElementById("hitbox"));
+            hitboxLarge.regX = hitboxLarge.image.width / 2;
+            hitboxLarge.regY = hitboxLarge.image.height / 2;
+            hitboxSmall = new Bitmap(document.getElementById("hitbox_focus"));
+            hitboxSmall.regX = hitboxSmall.image.width / 2;
+            hitboxSmall.regY = hitboxSmall.image.height / 2;
 
-        var player = new Bitmap(document.getElementById("urf"));
-        player.regX = player.image.width / 2;
-        player.regY = player.image.height / 2;
-        
-        var playerZhonyas = new Bitmap(document.getElementById("urf_zhonyas"));
-        playerZhonyas.regX = playerZhonyas.image.width / 2;
-        playerZhonyas.regY = playerZhonyas.image.height / 2;
+            hitbox = hitboxLarge;
+            self.hitbox = hitbox;
+
+            damageIndicator = new Bitmap(document.getElementById("damage"));
+            self.damageIndicator = damageIndicator;
+
+            minPlayerX = 0.5 * hitbox.image.width;
+            maxPlayerX = stage.width - minPlayerX;
+            minPlayerY = 0.5 * hitbox.image.height;
+            maxPlayerY = stage.height - minPlayerY;
+
+            player = new Bitmap(document.getElementById("urf"));
+            player.regX = player.image.width / 2;
+            player.regY = player.image.height / 2;
+            self.player = player;
+
+            playerZhonyas = new Bitmap(document.getElementById("urf_zhonyas"));
+            playerZhonyas.regX = playerZhonyas.image.width / 2;
+            playerZhonyas.regY = playerZhonyas.image.height / 2;
+            self.playerZhonyas = playerZhonyas;
+            
+            resetPlayer();
+
+            self.dispatchEvent("ready");
+        });
+
         var stasisMilliseconds = 0;
         var zhonyasCharges = 3;
-
         var maxHealth = 2000;
         var health = maxHealth;
         
-        resetPlayer();
-
         function resetPlayer() {
             health = maxHealth;
             updateHealthBar();

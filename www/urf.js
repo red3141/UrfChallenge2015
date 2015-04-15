@@ -1,7 +1,7 @@
 ﻿(function() {
 
     // Imports
-    Stage = createjs.Stage;
+    var Stage = createjs.Stage;
 
     // Stage setup
     var stage = new Stage("canvas");
@@ -16,9 +16,26 @@
     //var collisionDetector = { checkPixelCollision: function() { return false; } };
     var attackManager = new AttackManager(stage, pointGenerator, playerManager, collisionDetector);
     var dataManager = new DataManager();
-    var gameManager = new GameManager(stage, attackManager, playerManager, dataManager);
+    var gameManager = new GameManager(stage, attackManager, playerManager, keyboardManager, dataManager);
 
-    $(document).ready(function() {
+    var requiredCount = 0;
+    var readyCount = 0;
+
+    function onLoadComplete() {
         gameManager.showMenu();
-    });
+    }
+    
+    function onComponentLoad() {
+        ++readyCount;
+        if (readyCount >= requiredCount)
+            onLoadComplete();
+    }
+
+    function waitFor(eventDispatcher) {
+        ++requiredCount;
+        eventDispatcher.addEventListener("ready", onComponentLoad);
+    }
+
+    waitFor(gameManager);
+    waitFor(playerManager);
 })();

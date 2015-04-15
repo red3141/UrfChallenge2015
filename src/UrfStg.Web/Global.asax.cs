@@ -14,7 +14,6 @@ namespace UrfStg.Web
     {
         protected void Application_Start()
         {
-            Console.WriteLine("Starting app...");
             /*var config = GlobalConfiguration.Configuration;
             Console.WriteLine("Got config.");
             Console.WriteLine(config.GetType().Name);
@@ -29,8 +28,6 @@ namespace UrfStg.Web
             var settings = new JsonSerializerSettings {  ContractResolver = new CamelCasePropertyNamesContractResolver() };
             settings.Converters.Add(new TimeSpanConverter());
             JsonConvert.DefaultSettings = () => settings;
-
-            Console.WriteLine("Configuration complete.");
         }
     }
 }

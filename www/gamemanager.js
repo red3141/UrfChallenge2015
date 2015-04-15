@@ -3,122 +3,145 @@
         return;
 
     // Imports
-    Bitmap = createjs.Bitmap;
-    Container = createjs.Container;
-    Ticker = createjs.Ticker;
+    var Bitmap = createjs.Bitmap;
+    var EventDispatcher = createjs.EventDispatcher;
+    var Ticker = createjs.Ticker;
+    var Text = createjs.Text;
 
-    window.GameManager = function(stage, attackManager, playerManager, dataManager) {
+    window.GameManager = function(stage, attackManager, playerManager, keyboardManager, dataManager) {
+
+        var self = this;
 
         // Number of times faster this game is than the source game.
         var gameSpeed = 30;
 
         var gameState = GameState.Playing;
-        var defeatBanner = new Bitmap(document.getElementById("defeat"));
-        var victoryBanner = new Bitmap(document.getElementById("victory"));
-        var endGameBanner;
         
         var game = {};
         var eventIndex = 0;
 
+        var defeatBanner, victoryBanner, endGameBanner, menuTitle, menuUrf,
+            playButtonUnhover, playButtonHover, newGameButton, retryGameButton,
+            newMatchButtonUnhover, newMatchButtonHover,
+            retryMatchButtonUnhover, retryMatchButtonHover;
+
+        var loadingMessage = new Text("Loading...", "24px Arial", "#FFF");
+        loadingMessage.textBaseline = "alphabetic";
+        loadingMessage.x = (stage.width - 80) / 2;
+        loadingMessage.y = stage.height / 2;
+        stage.addChild(loadingMessage);
+        stage.update();
+
+        $("#resources").imagesLoaded().always(function() {
+
+            defeatBanner = new Bitmap(document.getElementById("defeat"));
+            victoryBanner = new Bitmap(document.getElementById("victory"));
+
+            menuTitle = new Bitmap(document.getElementById("menu_title"));
+            menuUrf = new Bitmap(document.getElementById("menu_urf"));
+            playButtonUnhover = new Bitmap(document.getElementById("menu_play"));
+            playButtonHover = new Bitmap(document.getElementById("menu_play_hover"));
+            playButtonUnhover.addEventListener("mouseover",
+                function() {
+                    stage.removeChild(playButtonUnhover);
+                    stage.addChild(playButtonHover);
+                    stage.update();
+                });
+            playButtonUnhover.addEventListener("click",
+                function() {
+                    playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
+                    newGame();
+                });
+            function playButtonMouseOut() {
+                stage.removeChild(playButtonHover);
+                stage.addChild(playButtonUnhover);
+                stage.update();
+            }
+            playButtonHover.addEventListener("mouseout", playButtonMouseOut);
+            playButtonHover.addEventListener("click",
+                function() {
+                    playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
+                    newGame();
+                });
+
+            newMatchButtonUnhover = new Bitmap(document.getElementById("button_new"));
+            newMatchButtonHover = new Bitmap(document.getElementById("button_new_hover"));
+            newMatchButtonUnhover.addEventListener("mouseover",
+                function() {
+                    var alpha = newGameButton.alpha;
+                    stage.removeChild(newGameButton);
+                    newGameButton = newMatchButtonHover;
+                    newGameButton.alpha = alpha;
+                    stage.addChild(newGameButton);
+                    stage.update();
+                });
+            newMatchButtonUnhover.addEventListener("click",
+                function() {
+                    newGame();
+                });
+            newMatchButtonHover.addEventListener("mouseout",
+                function() {
+                    var alpha = newGameButton.alpha;
+                    stage.removeChild(newGameButton);
+                    newGameButton = newMatchButtonUnhover;
+                    newGameButton.alpha = alpha;
+                    stage.addChild(newGameButton);
+                    stage.update();
+                });
+            newMatchButtonHover.addEventListener("click",
+                function() {
+                    newGame();
+                });
+            retryMatchButtonUnhover = new Bitmap(document.getElementById("button_retry"));
+            retryMatchButtonUnhover.addEventListener("mouseover",
+                function() {
+                    var alpha = newGameButton.alpha;
+                    stage.removeChild(retryGameButton);
+                    retryGameButton = retryMatchButtonHover;
+                    retryGameButton.alpha = alpha;
+                    stage.addChild(retryGameButton);
+                    stage.update();
+                });
+            retryMatchButtonUnhover.addEventListener("click",
+                function() {
+                    retryGame();
+                });
+            retryMatchButtonHover = new Bitmap(document.getElementById("button_retry_hover"));
+            retryMatchButtonHover.addEventListener("mouseout",
+                function() {
+                    var alpha = retryGameButton.alpha;
+                    stage.removeChild(retryGameButton);
+                    retryGameButton = retryMatchButtonUnhover;
+                    retryGameButton.alpha = alpha;
+                    stage.addChild(retryGameButton);
+                    stage.update();
+                });
+            retryMatchButtonHover.addEventListener("click",
+                function() {
+                    retryGame();
+                });
+
+            self.dispatchEvent("ready");
+        });
+        
         function centerRegistrationPoint(bitmap) {
             bitmap.regX = bitmap.image.width / 2;
             bitmap.regY = bitmap.image.height / 2;
         }
 
-        var menuTitle = new Bitmap(document.getElementById("menu_title"));
-        var menuUrf = new Bitmap(document.getElementById("menu_urf"));
-        var playButtonUnhover = new Bitmap(document.getElementById("menu_play"));
-        var playButtonHover = new Bitmap(document.getElementById("menu_play_hover"));
-        playButtonUnhover.addEventListener("mouseover",
-            function() {
-                stage.removeChild(playButtonUnhover);
-                stage.addChild(playButtonHover);
-                stage.update();
-            });
-        playButtonUnhover.addEventListener("click",
-            function() {
-                playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                newGame();
-            });
-        var playButtonMouseOut = function() {
-            stage.removeChild(playButtonHover);
-            stage.addChild(playButtonUnhover);
-            stage.update();
-        };
-        playButtonHover.addEventListener("mouseout", playButtonMouseOut);
-        playButtonHover.addEventListener("click",
-            function() {
-                playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                newGame();
-            });
-        
-        var newGameButton;
-        var retryGameButton;
-        var newMatchButtonUnhover = new Bitmap(document.getElementById("button_new"));
-        var newMatchButtonHover = new Bitmap(document.getElementById("button_new_hover"));
-        newMatchButtonUnhover.addEventListener("mouseover",
-            function() {
-                var alpha = newGameButton.alpha;
-                stage.removeChild(newGameButton);
-                newGameButton = newMatchButtonHover;
-                newGameButton.alpha = alpha;
-                stage.addChild(newGameButton);
-                stage.update();
-            });
-        newMatchButtonUnhover.addEventListener("click",
-            function() {
-                newGame();
-            });
-        newMatchButtonHover.addEventListener("mouseout",
-            function() {
-                var alpha = newGameButton.alpha;
-                stage.removeChild(newGameButton);
-                newGameButton = newMatchButtonUnhover;
-                newGameButton.alpha = alpha;
-                stage.addChild(newGameButton);
-                stage.update();
-            });
-        newMatchButtonHover.addEventListener("click",
-            function() {
-                newGame();
-            });
-        var retryMatchButtonUnhover = new Bitmap(document.getElementById("button_retry"));
-        retryMatchButtonUnhover.addEventListener("mouseover",
-            function() {
-                var alpha = newGameButton.alpha;
-                stage.removeChild(retryGameButton);
-                retryGameButton = retryMatchButtonHover;
-                retryGameButton.alpha = alpha;
-                stage.addChild(retryGameButton);
-                stage.update();
-            });
-        retryMatchButtonUnhover.addEventListener("click",
-            function() {
-                retryGame();
-            });
-        var retryMatchButtonHover = new Bitmap(document.getElementById("button_retry_hover"));
-        retryMatchButtonHover.addEventListener("mouseout",
-            function() {
-                var alpha = retryGameButton.alpha;
-                stage.removeChild(retryGameButton);
-                retryGameButton = retryMatchButtonUnhover;
-                retryGameButton.alpha = alpha;
-                stage.addChild(retryGameButton);
-                stage.update();
-            });
-        retryMatchButtonHover.addEventListener("click",
-            function() {
-               retryGame(); 
-            });
-
-
         playerManager.addEventListener("dead", function(e) {
             endGame(false);
+        });
+
+        keyboardManager.addEventListener("pause", function(e) {
+            Ticker.paused = !Ticker.paused;
         });
 
         // Methods
 
         function showMenu() {
+            stage.removeChild(loadingMessage);
+
             centerRegistrationPoint(menuTitle);
             centerRegistrationPoint(menuUrf);
             centerRegistrationPoint(playButtonUnhover);
@@ -139,6 +162,23 @@
             stage.addChild(playButtonUnhover);
             stage.enableMouseOver();
             stage.update();
+        }
+
+        function getParticipantById(id) {
+            if (id < 1 || id > game.participants.length) {
+                console.warn("Participant ID out of range: " + id);
+                return null;
+            }
+            var guess = game.participants[id - 1];
+            if (guess && guess.id == id)
+                return guess;
+            for (var i = 0; i < game.participants.length; ++i) {
+                var participant = game.participants[i];
+                if (participant && participant.id == id)
+                    return participant;
+            }
+            console.warn("Could not find participant with ID: " + id);
+            return null;
         }
 
         function startGame(newGame) {
@@ -236,11 +276,9 @@
 
         function fireAttacks(event, currentTime) {
             if (event.killerId == null) return null;
-            var participant = game.participants[event.killerId - 1];
-            if (!participant) {
-                console.warn("Could not find participant with ID " + event.killerId);
+            var participant = getParticipantById(event.killerId);
+            if (!participant)
                 return null;
-            }
             var champion = champions[participant.championId];
             if (!champion) {
                 console.warn("Could not find champion with ID " + participant.championId);
@@ -249,11 +287,9 @@
             attackManager.fireAttackGroup(champion, participant.teamId, currentTime);
             if (event.assistingParticipantIds) {
                 $.each(event.assistingParticipantIds, function(i, id) {
-                    var assistingParticipant = game.participants[id - 1];
-                    if (!assistingParticipant) {
-                        console.warn("Could not find assisting participant with ID " + id);
+                    var assistingParticipant = getParticipantById(id);
+                    if (!assistingParticipant)
                         return;
-                    }
                     var assistingChampion = champions[assistingParticipant.championId];
                     if (!assistingChampion) {
                         console.warn("Could not find assisting champion with ID " + assistingParticipant.championId);
@@ -265,6 +301,7 @@
         }
 
         function onTick(e) {
+            if (e.paused) return;
 
             playerManager.movePlayer(e.delta, gameState);
             attackManager.moveParticles(e.delta, e.runTime);
@@ -315,4 +352,6 @@
         this.newGame = newGame;
         this.retryGame = retryGame;
     };
+
+    GameManager.prototype = new EventDispatcher();
 })();
