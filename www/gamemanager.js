@@ -241,6 +241,7 @@
 
         function showMenu() {
             stage.removeChild(loadingMessage);
+            stage.removeChild(progressBar);
 
             centerRegistrationPoint(menuTitle);
             centerRegistrationPoint(menuUrf);
@@ -324,7 +325,7 @@
             // Events
             Ticker.reset();
             firstFrame = true;
-            Ticker.framerate = 60;
+            Ticker.timingMode = Ticker.RAF;
             Ticker.addEventListener("tick", onTick);
 
             gameState = GameState.Playing;
