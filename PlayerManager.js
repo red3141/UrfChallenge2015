@@ -185,7 +185,6 @@
             health = Math.max(0, health - damage);
             updateHealthBar();
             damageIndicator.alpha = 1;
-            console.log(health);
             if (health <= 0) {
                 this.dispatchEvent("dead");
             }
