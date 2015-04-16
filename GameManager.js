@@ -21,9 +21,10 @@
         
         var game = {};
         var isGamePreloading = false;
-        var preloadMatchId = null;
         var isGamePreloaded = false;
         var startGameOnLoad = false;
+        var preloadMatchId = null;
+        var preloadedGame = null;
         var eventIndex = 0;
         var firstFrame = true;
         var gameStartTime = 0;
@@ -207,6 +208,37 @@
             return null;
         }
 
+        function startPreloadingMatch(matchId) {
+            preloadMatchId = matchId;
+            isGamePreloading = true;
+            isGamePreloaded = false;
+            startGameOnLoad = false;
+            dataManager.getGameData(matchId)
+                .done(function(data) {
+                    preloadedGame = data;
+                    isGamePreloaded = true;
+                    isGamePreloading = false;
+                    if (startGameOnLoad) {
+                        startGame(preloadedGame);
+                    } else if (matchId) {
+                        $("#game-id").text(queryObj.matchId);
+                        var matchIdText = new Text("Match ID: " + queryObj.matchId, "24px Arial", "#FFF");
+                        matchIdText.textBaseline = "alphabetic";
+                        matchIdText.x = (stage.width - 240) / 2;
+                        matchIdText.y = 595;
+                        stage.addChild(matchIdText);
+                        stage.update();
+                    }
+                    preloadMatchId = null;
+                }).fail(function(promise, text, error) {
+                    isGamePreloaded = false;
+                    isGamePreloading = false;
+                    console.log("Failed to get game data.");
+                    if (startGameOnLoad)
+                        showErrorScreen();
+                });
+        }
+
         function showMenu() {
             stage.removeChild(loadingMessage);
 
@@ -225,32 +257,7 @@
             playButtonHover.y = playButtonUnhover.y;
 
             var queryObj = parseQuery();
-            isGamePreloading = true;
-            preloadMatchId = queryObj.matchId;
-            dataManager.getGameData(preloadMatchId)
-                .done(function(data) {
-                    game = data;
-                    isGamePreloaded = true;
-                    isGamePreloading = false;
-                    if (startGameOnLoad) {
-                        startGame(data);
-                    } else if (preloadMatchId) {
-                        $("#game-id").text(queryObj.matchId);
-                        var matchIdText = new Text("Match ID: " + queryObj.matchId, "24px Arial", "#FFF");
-                        matchIdText.textBaseline = "alphabetic";
-                        matchIdText.x = (stage.width - 240) / 2;
-                        matchIdText.y = 595;
-                        stage.addChild(matchIdText);
-                        stage.update();
-                    }
-                    preloadMatchId = null;
-                }).fail(function(promise, text, error) {
-                    isGamePreloaded = false;
-                    isGamePreloading = false;
-                    console.log("Failed to get game data.");
-                    if (startGameOnLoad)
-                        showErrorScreen();
-                });
+            startPreloadingMatch(queryObj.matchId);
 
             stage.addChild(menuTitle);
             stage.addChild(menuUrf);
@@ -260,9 +267,9 @@
         }
         
         function showErrorScreen() {
-            var errorText = new Text("Failed to load match.", "24px Arial", "#FFF");
+            var errorText = new Text("Failed to load match :(", "24px Arial", "#FFF");
             errorText.textBaseline = "alphabetic";
-            errorText.x = (stage.width - 160) / 2;
+            errorText.x = (stage.width - 170) / 2;
             errorText.y = stage.height / 2;
             stage.addChild(errorText);
             stage.update();
@@ -331,12 +338,12 @@
             stage.removeAllChildren();
             stage.update();
             if (isGamePreloaded) {
-                startGame(game);
+                startGame(preloadedGame);
             } else if (isGamePreloading) {
                 startGameOnLoad = true;
-                // TODO: loading message
+                stage.addChild(loadingMessage);
+                stage.update();
             } else {
-                // TODO: loading message
                 dataManager.getGameData()
                     .done(function(data) {
                         startGame(data);
@@ -344,6 +351,8 @@
                         console.log("Failed to get game data.");
                         showErrorScreen();
                     });
+                stage.addChild(loadingMessage);
+                stage.update();
             }
         }
 
@@ -353,6 +362,9 @@
 
         function endGame(victory) {
             if (gameState != GameState.Playing) return;
+
+            if (!isGamePreloaded && !isGamePreloading)
+                startPreloadingMatch();
 
             gameState = GameState.Ended;
             endGameBanner = victory ? victoryBanner : defeatBanner;
