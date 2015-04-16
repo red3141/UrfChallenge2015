@@ -1,5 +1,4 @@
 ﻿body {
-    color: #ccc;
     text-align: center;
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
@@ -33,6 +32,7 @@ input[type=text] {
     padding: 25px;
     text-align: left;
     background: #000;
+    color: #ccc;
 }
 
 .left-side-col {
@@ -65,6 +65,15 @@ input[type=text] {
 
 .ability-icon {
     border: #999999 1px solid;
+}
+
+.faq {
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 50px;
+    clear: left;
+    text-align: left;
 }
 
 #canvas {
@@ -110,6 +119,10 @@ input[type=text] {
 
 #resources {
     display: none;
+}
+
+#faq-title {
+    text-align: center;
 }
 
 .fb-share-button {
