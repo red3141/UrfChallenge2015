@@ -10,7 +10,7 @@
     var Ticker = createjs.Ticker;
     var Text = createjs.Text;
 
-    window.GameManager = function(stage, attackManager, playerManager, keyboardManager, dataManager) {
+    window.GameManager = function(stage, attackManager, playerManager, keyboardManager, dataManager, tutorialManager) {
 
         var self = this;
 
@@ -28,6 +28,8 @@
         var eventIndex = 0;
         var firstFrame = true;
         var gameStartTime = 0;
+
+        var doneTutorial = true;
 
         var defeatBanner, victoryBanner, endGameBanner, menuTitle, menuUrf,
             playButtonUnhover, playButtonHover, newGameButton, retryGameButton,
@@ -87,7 +89,12 @@
                 playButtonUnhover.addEventListener("click",
                     function() {
                         playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                        newGame();
+                        if (doneTutorial) {
+                            newGame();
+                        } else {
+                            tutorialManager.startTutorial();
+                            gameState = GameState.Tutorial;
+                        }
                     });
                 function playButtonMouseOut() {
                     stage.removeChild(playButtonHover);
@@ -98,7 +105,12 @@
                 playButtonHover.addEventListener("click",
                     function() {
                         playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                        newGame();
+                        if (doneTutorial) {
+                            newGame();
+                        } else {
+                            tutorialManager.startTutorial();
+                            gameState = GameState.Tutorial;
+                        }
                     });
 
                 newMatchButtonUnhover = new Bitmap(document.getElementById("button_new"));
@@ -171,7 +183,8 @@
         });
 
         keyboardManager.addEventListener("pause", function(e) {
-            Ticker.paused = !Ticker.paused;
+            if (gameState != GameState.Ended)
+                Ticker.paused = !Ticker.paused;
         });
 
         // Methods
@@ -221,8 +234,8 @@
                     if (startGameOnLoad) {
                         startGame(preloadedGame);
                     } else if (matchId) {
-                        $("#game-id").text(queryObj.matchId);
-                        var matchIdText = new Text("Match ID: " + queryObj.matchId, "24px Arial", "#FFF");
+                        $("#game-id").text(matchId);
+                        var matchIdText = new Text("Match ID: " + matchId, "24px Arial", "#FFF");
                         matchIdText.textBaseline = "alphabetic";
                         matchIdText.x = (stage.width - 240) / 2;
                         matchIdText.y = 595;
@@ -241,6 +254,7 @@
 
         function showMenu() {
             stage.removeChild(loadingMessage);
+            stage.removeChild(progressBar);
 
             centerRegistrationPoint(menuTitle);
             centerRegistrationPoint(menuUrf);
@@ -324,7 +338,7 @@
             // Events
             Ticker.reset();
             firstFrame = true;
-            Ticker.framerate = 60;
+            Ticker.timingMode = Ticker.RAF;
             Ticker.addEventListener("tick", onTick);
 
             gameState = GameState.Playing;
@@ -336,13 +350,11 @@
             // Clear the stage here to give feedback that the button was clicked.
             stage.enableMouseOver(0);
             stage.removeAllChildren();
-            stage.update();
             if (isGamePreloaded) {
                 startGame(preloadedGame);
             } else if (isGamePreloading) {
                 startGameOnLoad = true;
                 stage.addChild(loadingMessage);
-                stage.update();
             } else {
                 dataManager.getGameData()
                     .done(function(data) {
@@ -352,8 +364,8 @@
                         showErrorScreen();
                     });
                 stage.addChild(loadingMessage);
-                stage.update();
             }
+            stage.update();
         }
 
         function retryGame() {
@@ -361,7 +373,7 @@
         }
 
         function endGame(victory) {
-            if (gameState != GameState.Playing) return;
+            if (gameState == GameState.Ended) return;
 
             if (!isGamePreloaded && !isGamePreloading)
                 startPreloadingMatch();
@@ -463,6 +475,14 @@
                 var second = totalGameSeconds % 60;
                 second = ("0" + second).slice(-2);
                 $("#game-time").text(minute + ":" + second);
+
+            } else if (gameState == GameState.Tutorial) {
+                playerManager.movePlayer(e.delta, gameState);
+                tutorialManager.onTick(e.delta, currentTime);
+                attackManager.moveParticles(e.delta, currentTime);
+                if (tutorialManager.hasEnded() && !playerManager.isInStasis()) {
+                    endGame(true);
+                }
 
             } else {
                 // Game over. Show victory/defeat screen.

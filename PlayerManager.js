@@ -12,8 +12,8 @@
 
         var fastSpeed = 450;
         var slowSpeed = 100;
-        const maxZhonyasCharges = 3;
-        const maxFlashCharges = 3;
+        var maxZhonyasCharges = 3;
+        var maxFlashCharges = 3;
         
         var isFocused = keyboardManager.keyPressed[Key.Focus];
         
@@ -99,7 +99,7 @@
                     flashOnNextMove = false;
                     return;
                 }
-            } else if (keyboardManager.keyPressed[Key.Zhonyas] && zhonyasCharges > 0 && gameState == GameState.Playing) {
+            } else if (keyboardManager.keyPressed[Key.Zhonyas] && zhonyasCharges > 0 && gameState != GameState.Ended) {
                 putInStasis(1500);
                 --zhonyasCharges;
                 updateZhonyasCharges();
@@ -185,7 +185,6 @@
             health = Math.max(0, health - damage);
             updateHealthBar();
             damageIndicator.alpha = 1;
-            console.log(health);
             if (health <= 0) {
                 this.dispatchEvent("dead");
             }

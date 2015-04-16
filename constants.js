@@ -41,5 +41,6 @@ Team = {
 
 GameState = {
     Playing: 0,
-    Ended: 1,
+    Tutorial: 1,
+    Ended: 2,
 };
