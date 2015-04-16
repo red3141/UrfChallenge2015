@@ -341,9 +341,9 @@
                 startGame(preloadedGame);
             } else if (isGamePreloading) {
                 startGameOnLoad = true;
-                // TODO: loading message
+                stage.addChild(loadingMessage);
+                stage.update();
             } else {
-                // TODO: loading message
                 dataManager.getGameData()
                     .done(function(data) {
                         startGame(data);
@@ -351,6 +351,8 @@
                         console.log("Failed to get game data.");
                         showErrorScreen();
                     });
+                stage.addChild(loadingMessage);
+                stage.update();
             }
         }
 
