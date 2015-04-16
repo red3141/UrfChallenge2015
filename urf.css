@@ -33,7 +33,6 @@ input[type=text] {
 .left-side-col, .right-side-col {
     float: left;
     width: 191px;
-    height: 100%;
     padding: 25px;
     text-align: left;
     color: #ccc;
@@ -115,5 +114,4 @@ input[type=text] {
 .fb-share-button {
     position: relative;
     top: 3px;
-    height: 40px;
 }
