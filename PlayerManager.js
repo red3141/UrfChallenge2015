@@ -12,8 +12,8 @@
 
         var fastSpeed = 450;
         var slowSpeed = 100;
-        const maxZhonyasCharges = 3;
-        const maxFlashCharges = 3;
+        var maxZhonyasCharges = 3;
+        var maxFlashCharges = 3;
         
         var isFocused = keyboardManager.keyPressed[Key.Focus];
         
