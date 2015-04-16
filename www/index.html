@@ -59,6 +59,57 @@
       </div>
     </div>
   </div>
+  
+  <div class="faq">
+    <h1 id="faq-title">About the Game/FAQ</h1>
+    <h2>Who created this nifty game?</h2>
+    KirkBerkley is a high silver ADC main on the NA server. His favourite champions are Tristana and Jinx.<br /><br />
+    RndmInternetMan is a mid gold Jungle main on the NA server. His favourite champions are Amumu and Leona.
+  
+    <h2>Why'd they make this game?</h2>
+    This game was created for the <a href="https://na.leagueoflegends.com/en/news/community/contests/riot-games-api-challenge">Riot Games API Challenge</a>.
+  
+    <h2>Ok, but why a game? Isn't the challenge about doing something cool with URF game data?</h2>
+    When we started this project, we tried to think of interesting ways of showing URF game data.
+    Eventually, we thought about the <a href="http://en.wikipedia.org/wiki/Touhou_Project">Touhou</a> references in League of Legends, such as Final Spark (Lux's ult) and Youmuu's Ghostblade.
+    We decided to use a Touhou-style game to show URF game data.
+    
+    <h2>So... the random patterns of attacks in the game actually mean something?</h2>
+    Yes! Here's how it works:
+    <ul>
+        <li>Every champion has their own attack</li>
+        <li>We take a game of URF and go through the data at 30x speed (game time is shown below the health bar)</li>
+        <li>Every time a champion gets a kill or an assist, that champion's attack is fired</li>
+        <li>If the champion was on blue side, the attack is fired from the left side of the screen; if the champion was on red side, the attack is fired from the right side of the screen</li>
+    </ul>
+    So if you're seeing a lot of attacks from the left side of the screen and not many from the right side, that means blue team got a lot of kills, and red team didn't.
+    Equally, if you only see a particular champion's attack once in a game, it means that champion was only involved in one kill.
+    
+    <h2>Interesting! But I'm having some trouble telling which champion each attack belongs to. Like, I just saw a chicken head and a banana. What?</h2>
+    The images for most attacks are based on one of the champion's ability icons. For example, Ezreal's attack is based on Trueshot Barrage's ability icon.<br /><br />
+    Some champions have attacks based on their splash arts or in-game particles. For example, Teemo's attack is based on a mushroom from his splash art.
+    That chicken head you saw appears in-game above enemy champion's heads when Tryndamere uses Mocking Shout. Jax's attack is the word "Dodge!", because he's cool like that.<br /><br />
+    A couple of champions have attacks based on something that champion is known for. For example, Gangplank's attack is an orange, and the banana you saw was from Soraka.<br /><br />
+    Lastly, there are two champions whose attacks do not have an image. Warwick causes all particles on his side of the screen to be directed toward Urf.
+    Evelynn causes all particles on her side of the screen to become more transparent.
+    
+    <h2>About those attack images. Aren't those pretty much directly copied from League of Legends? Is that even allowed?</h2>
+    Great question! From the "Please Do" section of Riot's <a href="https://developer.riotgames.com/docs/app-guidelines">application guidelines</a>,
+    "Feel free to use any of our art assets from the game (but NOT any official Logos)".
+    
+    <h2>The game seems really choppy to me. Help?</h2>
+    In our experience, the game runs best in the Chrome browser.
+    
+    <h2>Thanks for answering my questions! I just have one more: do you have any favourite matches that I should try?</h2>
+    No problem, hypothetical question asker!<br /><br />
+    Here's a few of our favourite matches:
+    <ul>
+        <li></li>
+    </ul>
+    Enjoy!
+    
+  </div>
+  
   <div id="non-endorsement">
     Summonurf's Rift isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
   </div>
