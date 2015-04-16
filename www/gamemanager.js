@@ -21,9 +21,10 @@
         
         var game = {};
         var isGamePreloading = false;
-        var preloadMatchId = null;
         var isGamePreloaded = false;
         var startGameOnLoad = false;
+        var preloadMatchId = null;
+        var preloadedGame = null;
         var eventIndex = 0;
         var firstFrame = true;
         var gameStartTime = 0;
@@ -214,11 +215,11 @@
             startGameOnLoad = false;
             dataManager.getGameData(matchId)
                 .done(function(data) {
-                    game = data;
+                    preloadedGame = data;
                     isGamePreloaded = true;
                     isGamePreloading = false;
                     if (startGameOnLoad) {
-                        startGame(data);
+                        startGame(preloadedGame);
                     } else if (matchId) {
                         $("#game-id").text(queryObj.matchId);
                         var matchIdText = new Text("Match ID: " + queryObj.matchId, "24px Arial", "#FFF");
@@ -337,7 +338,7 @@
             stage.removeAllChildren();
             stage.update();
             if (isGamePreloaded) {
-                startGame(game);
+                startGame(preloadedGame);
             } else if (isGamePreloading) {
                 startGameOnLoad = true;
                 // TODO: loading message
