@@ -16,7 +16,7 @@
     //var collisionDetector = { checkPixelCollision: function() { return false; } };
     var attackManager = new AttackManager(stage, pointGenerator, playerManager, collisionDetector);
     var dataManager = new DataManager();
-    var tutorialManager = new TutorialManager(stage);
+    var tutorialManager = new TutorialManager(stage, attackManager);
     var gameManager = new GameManager(stage, attackManager, playerManager, keyboardManager, dataManager, tutorialManager);
 
     var requiredCount = 0;

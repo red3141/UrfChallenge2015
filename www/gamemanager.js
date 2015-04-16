@@ -29,7 +29,8 @@
         var firstFrame = true;
         var gameStartTime = 0;
 
-        var doneTutorial = true;
+        // TODO: read cookie
+        var doneTutorial = false;
 
         var defeatBanner, victoryBanner, endGameBanner, menuTitle, menuUrf,
             playButtonUnhover, playButtonHover, newGameButton, retryGameButton,
@@ -92,8 +93,7 @@
                         if (doneTutorial) {
                             newGame();
                         } else {
-                            tutorialManager.startTutorial();
-                            gameState = GameState.Tutorial;
+                            startTutorial();
                         }
                     });
                 function playButtonMouseOut() {
@@ -108,8 +108,7 @@
                         if (doneTutorial) {
                             newGame();
                         } else {
-                            tutorialManager.startTutorial();
-                            gameState = GameState.Tutorial;
+                            startTutorial();
                         }
                     });
 
@@ -287,6 +286,17 @@
             errorText.y = stage.height / 2;
             stage.addChild(errorText);
             stage.update();
+        }
+
+        function startTutorial() {
+            gameState = GameState.Tutorial;
+            tutorialManager.startTutorial();
+            keyboardManager.addEventListener("skip", skipTutorial);
+        }
+
+        function skipTutorial() {
+            keyboardManager.removeEventListener("skip", skipTutorial);
+            newGame();
         }
 
         function startGame(newGame) {
@@ -481,6 +491,9 @@
                 tutorialManager.onTick(e.delta, currentTime);
                 attackManager.moveParticles(e.delta, currentTime);
                 if (tutorialManager.hasEnded() && !playerManager.isInStasis()) {
+                    doneTutorial = true;
+                    // TODO: set cookie
+                    keyboardManager.removeEventListener("skip", skipTutorial);
                     endGame(true);
                 }
 

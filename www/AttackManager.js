@@ -428,7 +428,7 @@
                             case FinishedAction.Return:
                                 if (particle.isReturning) {
                                     // Particle has already returned to its origin. Destroy it.
-                                    particle.destroyTime = currentTime;
+                                    particle.destroyTime = currentTime + 1000;
                                 } else {
                                     particle.isReturning = true;
                                     // Back up the particle so it is not outside the boundaries on the next iteration

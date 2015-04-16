@@ -7,6 +7,7 @@
     Focus: 82, // R
     Pause: 80, // P
     Zhonyas: 87, // W
+    Skip: 32,  // Space
 };
 
 (function() {
@@ -38,6 +39,9 @@
                     break;
                 case Key.Pause:
                     self.dispatchEvent("pause");
+                    break;
+                case Key.Skip:
+                    self.dispatchEvent("skip");
                     break;
                 default:
                     return;
