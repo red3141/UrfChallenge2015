@@ -99,7 +99,7 @@
                     flashOnNextMove = false;
                     return;
                 }
-            } else if (keyboardManager.keyPressed[Key.Zhonyas] && zhonyasCharges > 0 && gameState == GameState.Playing) {
+            } else if (keyboardManager.keyPressed[Key.Zhonyas] && zhonyasCharges > 0 && gameState != GameState.Ended) {
                 putInStasis(1500);
                 --zhonyasCharges;
                 updateZhonyasCharges();
