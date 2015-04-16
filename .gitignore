@@ -12,3 +12,6 @@ obj
 *.suo
 *.user
 *.pubxml
+
+# A file to prevent the www/ folder from getting wiped out when switching from master to gh-pages
+www/dummy.txt
