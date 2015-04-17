@@ -17,7 +17,7 @@
         var topLayer = new Container();
         var darknessLayer = new Container();
 
-        function fireAttackGroup(champion, team, currentTime) {
+        function fireAttackGroup(champion, team, currentTime, spawnPoint, targetPoint) {
             if (!champion || !champion.attacks || !champion.attacks.length) return;
 
             if (team != Team.One && team != Team.Two) {
@@ -59,10 +59,10 @@
                 });
             }
 
-            var targetPoint = pointGenerator.getRandomTargetPoint(team, isSpawnPointRequired, spawnOnTarget, minOffset, maxOffset, targeted);
-
-            var spawnPoint = null;
-            if (isSpawnPointRequired) {
+            if (!targetPoint) {
+                targetPoint = pointGenerator.getRandomTargetPoint(team, isSpawnPointRequired, spawnOnTarget, minOffset, maxOffset, targeted);
+            }
+            if (!spawnPoint && isSpawnPointRequired) {
                 if (champion.attackAngle === undefined) {
                     spawnPoint = pointGenerator.getRandomSpawnPoint(targetPoint, minAngleOffset, maxAngleOffset, team);
                 } else {
@@ -428,7 +428,7 @@
                             case FinishedAction.Return:
                                 if (particle.isReturning) {
                                     // Particle has already returned to its origin. Destroy it.
-                                    particle.destroyTime = currentTime;
+                                    particle.destroyTime = currentTime + 1000;
                                 } else {
                                     particle.isReturning = true;
                                     // Back up the particle so it is not outside the boundaries on the next iteration
@@ -512,14 +512,15 @@
         }
 
         function destroyAllParticles() {
-            $.each(particles, function(i, particle) {
-                destroyParticle(particle);
-            });
             particles = [];
+            bottomLayer.removeAllChildren();
+            mainLayer.removeAllChildren();
+            topLayer.removeAllChildren();
+            darknessLayer.removeAllChildren();
         }
 
         function destroyParticle(particle) {
-            if (particle.attack.effect == Effect.Stasis && particle.affectedParticles) {
+            if (particle.attack && particle.attack.effect == Effect.Stasis && particle.affectedParticles) {
                 for (var i = 0; i < particle.affectedParticles.length; ++i) {
                     particle.affectedParticles[i].isInStasis = false;
                 }
