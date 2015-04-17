@@ -11,7 +11,7 @@
             $.each(cookieStrings, function(i, cookie) {
                 var parts = cookie.split("=");
                 if (parts.length < 2) return;
-                cookies[parts[0]] = parts[1];
+                cookies[parts[0].trim()] = parts[1].trim();
             });
             return cookies;
         }
