@@ -203,7 +203,7 @@ champions = {
     "9": {
         name: "Fiddlesticks",
         images: [{ id: "fiddlesticks", pointAngle: -90 }],
-        attacks: [{ type: AttackType.Bullet, speed: 250, rotationSpeed: 300 }]
+        attacks: [{ type: AttackType.Bullet, speed: 200, rotationSpeed: 150 }]
     },
     "114": {
         name: "Fiora",
@@ -513,7 +513,7 @@ champions = {
     },
     "421": {
         name: "Rek'Sai",
-        images: [{ id: "reksai", pointAngle: 45, flipIfForward: true }],
+        images: [{ id: "reksai", pointAngle: 45, flipIfBackward: true }],
         attacks: [{ type: AttackType.Bullet, speed: 300 }]
     },
     "58": {
@@ -529,7 +529,7 @@ champions = {
     "92": {
         name: "Riven",
         images: [{ id: "riven", flipIfForward: true, regXRatio: 1, regYRatio: 1 }],
-        attacks: [{ type: AttackType.Swing, rotationSpeed: -350, rotation: 45 }]
+        attacks: [{ type: AttackType.Swing, rotationSpeed: -300, rotation: 45 }]
     },
     "68": {
         name: "Rumble",
@@ -607,7 +607,7 @@ champions = {
     "14": {
         name: "Sion",
         images: [{ id: "sion", pointAngle: 30, flipIfBackward: true }],
-        attacks: [{ type: AttackType.Bullet, speed: 200, accel: 400 }]
+        attacks: [{ type: AttackType.Bullet, speed: 200, accel: 300 }]
     },
     "15": {
         name: "Sivir",
