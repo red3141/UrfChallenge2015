@@ -19,6 +19,12 @@
             [{ text: "Urf is trying to cross Summoner's Rift,\nbut the summoners are playing\nUltra Rapid Fire!", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
             [{ text: "Move Urf using the arrow keys!", advanceKeys: [Key.Up, Key.Down, Key.Left, Key.Right], alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
         ];
+        /* TODO: add attacks to the correct spot on the timeline
+        [
+            { championId: 22, spawnPoint: { x: 0, y: 0 }, targetPoint: { x: stage.width / 2, y: stage.height * 3 / 4 } },
+            { championId: 22, spawnPoint: { x: stage.width / 2, y: 0 }, targetPoint: { x: stage.width / 2, y: stage.height * 3 / 4 } },
+            { championId: 22, spawnPoint: { x: stage.width, y: 0 }, targetPoint: { x: stage.width / 2, y: stage.height * 3 / 4 } },
+        ],*/
 
         function startTutorial() {
             prevEventTime = null;
@@ -90,6 +96,10 @@
                     if (e.alphaSpeed !== undefined)
                         e.obj.alphaSpeed = e.alphaSpeed;
                 }
+                if (e.championId) {
+                    var champion = champions[e.championId];
+                    attackManager.fireAttackGroup(champion, e.team || 100, currentTime, e.spawnPoint, e.targetPoint);
+                }
                 e.startTime = currentTime;
                 e.isCompleted = false;
             });
@@ -108,6 +118,7 @@
 
         function isEventCompleted(e, currentTime) {
             if (e.isCompleted) return true;
+            if (e.obj && e.obj.alphaSpeed) return false;
             if (e.duration && currentTime >= e.startTime + e.duration * 1000) {
                 e.isCompleted = true;
             }
@@ -118,6 +129,9 @@
                         return false;
                     }
                 });
+            }
+            if (e.championId && !attackManager.attacksOnStage()) {
+                e.isCompleted = true;
             }
             return e.isCompleted;
         }

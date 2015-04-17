@@ -482,9 +482,7 @@
                 $("#game-time").text(minute + ":" + second);
 
             } else if (gameState == GameState.Tutorial) {
-                playerManager.movePlayer(e.delta, gameState);
                 tutorialManager.onTick(e.delta, currentTime);
-                attackManager.moveParticles(e.delta, currentTime);
                 if (tutorialManager.hasEnded() && !playerManager.isInStasis()) {
                     doneTutorial = true;
                     // TODO: set cookie
