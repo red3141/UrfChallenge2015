@@ -48,6 +48,17 @@ input[type=text] {
     line-height: 1.5;
 }
 
+#team1, #team2 {
+    text-align: center;
+    height: 175px;
+    margin-top: 90px;
+}
+
+#team1 img, #team2 img {
+    height: 60px;
+    width: 60px;
+}
+
 .ability-icon {
     border: #999999 1px solid;
 }
@@ -64,6 +75,10 @@ input[type=text] {
 #canvas {
     background: #101010;
     margin-top: 20px;
+}
+
+#match-info {
+    margin-top: 115px;
 }
 
 #health-bar-container {
