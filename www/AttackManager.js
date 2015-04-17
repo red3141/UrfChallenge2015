@@ -187,7 +187,7 @@
 
             particle.flipDirection = 1;
             if ((imageDef.flipIfForward && (Math.abs(angle) + 1e-4 < Math.PI / 2 || (Math.abs(Math.abs(angle) - Math.PI / 2) < 1e-4 && team == Team.One)))
-                || (imageDef.flipIfBackward && Math.abs(angle) - 1e-4 > Math.PI / 2 || (Math.abs(Math.abs(angle) - Math.PI / 2) < 1e-4 && team == Team.Two))) {
+                || (imageDef.flipIfBackward && (Math.abs(angle) - 1e-4 > Math.PI / 2 || (Math.abs(Math.abs(angle) - Math.PI / 2) < 1e-4 && team == Team.Two)))) {
                 particle.scaleX = -1;
                 particle.flipDirection = -1;
             }

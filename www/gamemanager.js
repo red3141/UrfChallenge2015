@@ -213,7 +213,7 @@
                     } else if (matchId) {
                         $("#game-id").text(matchId);
                         var matchIdText = utils.createText("Match ID: " + matchId);
-                        matchIdText.y = 595;
+                        matchIdText.y = stage.height * 5.8/7;
                         stage.addChild(matchIdText);
                         stage.update();
                     }
@@ -237,11 +237,11 @@
             utils.centerRegistrationPoint(playButtonHover);
 
             menuTitle.x = stage.width / 2;
-            menuTitle.y = 130;
+            menuTitle.y = 100;
             menuUrf.x = stage.width / 2;
-            menuUrf.y = 400;
+            menuUrf.y = stage.height / 2 + 30;
             playButtonUnhover.x = stage.width / 2;
-            playButtonUnhover.y = 635;
+            playButtonUnhover.y = stage.height - 65;
             playButtonHover.x = playButtonUnhover.x;
             playButtonHover.y = playButtonUnhover.y;
 

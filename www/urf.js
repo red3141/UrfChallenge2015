@@ -5,6 +5,10 @@
 
     // Stage setup
     var stage = new Stage("canvas");
+    var h = $(window).height();
+    if (h < 770) {
+        stage.canvas.height = 650;
+    }
     stage.width = stage.canvas.width;
     stage.height = stage.canvas.height;
 

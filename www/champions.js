@@ -65,7 +65,7 @@ champions = {
     "103": {
         name: "Ahri",
         images: [{ id: "ahri" }],
-        attacks: [{ type: AttackType.Bullet, finished: FinishedAction.Return, speed: 350, returnSpeed: 180 }]
+        attacks: [{ type: AttackType.Bullet, finished: FinishedAction.Return, speed: 350, returnSpeed: 250 }]
     },
     "84": {
         name: "Akali",
@@ -127,7 +127,7 @@ champions = {
     "53": {
         name: "Blitzcrank",
         images: [{ id: "blitzcrank", pointAngle: 0, flipIfBackward: true, regXRatio: 1 }],
-        attacks: [{ type: AttackType.Bullet, speed: 450, finished: FinishedAction.Disappear }]
+        attacks: [{ type: AttackType.Bullet, speed: 400, finished: FinishedAction.Disappear }]
     },
     "63": {
         name: "Brand",
@@ -324,7 +324,7 @@ champions = {
     },
     "38": {
         name: "Kassadin",
-        images: [{ id: "kassadin", pointAngle: -45 }],
+        images: [{ id: "kassadin", pointAngle: -45, regXRatio: 0.75, regYRatio: 0.25 }],
         attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "55": {
@@ -370,7 +370,7 @@ champions = {
     "89": {
         name: "Leona",
         images: [{ id: "leona" }],
-        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 360 }]
+        attacks: [{ type: AttackType.Bullet, speed: 175, rotationSpeed: 160 }]
     },
     "127": {
         name: "Lissandra",
@@ -453,7 +453,7 @@ champions = {
     "75": {
         name: "Nasus",
         images: [{ id: "nasus", flipIfBackward: true, regXRatio: 0, regYRatio: 0.9 }],
-        attacks: [{ type: AttackType.Swing, speed: 175, rotationSpeed: 350, rotation: -90 }]
+        attacks: [{ type: AttackType.Swing, speed: 175, rotationSpeed: 280, rotation: -90 }]
     },
     "111": {
         name: "Nautilus",
@@ -489,7 +489,7 @@ champions = {
     "61": {
         name: "Orianna",
         images: [{ id: "orianna", pointAngle: 100, flipIfForward: true }],
-        attacks: [{ type: AttackType.Bullet, speed: 335 }]
+        attacks: [{ type: AttackType.Bullet, speed: 275 }]
     },
     "80": {
         name: "Pantheon",
@@ -803,7 +803,7 @@ champions = {
     },
     "115": {
         name: "Ziggs",
-        image: { id: "ziggs", regXRatio: 0.1, regYRatio: 0.1 },
+        images: [{ id: "ziggs", regXRatio: 0.1, regYRatio: 0.1 }],
         attacks: [
             { type: AttackType.Bullet, speed: 250, rotationSpeed: 250 }
         ]
