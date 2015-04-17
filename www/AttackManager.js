@@ -519,7 +519,7 @@
         }
 
         function destroyParticle(particle) {
-            if (particle.attack.effect == Effect.Stasis && particle.affectedParticles) {
+            if (particle.attack && particle.attack.effect == Effect.Stasis && particle.affectedParticles) {
                 for (var i = 0; i < particle.affectedParticles.length; ++i) {
                     particle.affectedParticles[i].isInStasis = false;
                 }

@@ -9,6 +9,7 @@
     stage.height = stage.canvas.height;
 
     // Instantiate objects with dependencies
+    var utils = new Utils();
     var keyboardManager = new KeyboardManager();
     var playerManager = new PlayerManager(stage, keyboardManager);
     var pointGenerator = new PointGenerator(stage, playerManager);
@@ -16,8 +17,8 @@
     //var collisionDetector = { checkPixelCollision: function() { return false; } };
     var attackManager = new AttackManager(stage, pointGenerator, playerManager, collisionDetector);
     var dataManager = new DataManager();
-    var tutorialManager = new TutorialManager(stage, attackManager);
-    var gameManager = new GameManager(stage, attackManager, playerManager, keyboardManager, dataManager, tutorialManager);
+    var tutorialManager = new TutorialManager(stage, attackManager, keyboardManager, utils);
+    var gameManager = new GameManager(stage, attackManager, playerManager, keyboardManager, dataManager, tutorialManager, utils);
 
     var requiredCount = 0;
     var readyCount = 0;
