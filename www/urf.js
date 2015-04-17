@@ -9,7 +9,7 @@
     stage.height = stage.canvas.height;
 
     // Instantiate objects with dependencies
-    var utils = new Utils();
+    var utils = new Utils(stage);
     var keyboardManager = new KeyboardManager();
     var playerManager = new PlayerManager(stage, keyboardManager);
     var pointGenerator = new PointGenerator(stage, playerManager);

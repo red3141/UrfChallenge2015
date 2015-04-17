@@ -4,7 +4,7 @@
 
     var Text = createjs.Text;
 
-    window.Utils = function() {
+    window.Utils = function(stage) {
         function centerRegistrationPoint(displayObject) {
             var bounds = displayObject.getBounds();
             displayObject.regX = bounds.width / 2;
@@ -19,6 +19,8 @@
             var text = new Text(value, size + " Arial", "#FFF");
             text.textAlign = "center";
             text.textBaseline = "middle";
+            text.x = stage.width / 2;
+            text.y = stage.height / 2;
             return text;
         }
 

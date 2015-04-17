@@ -8,7 +8,6 @@
     var Graphics = createjs.Graphics;
     var Shape = createjs.Shape;
     var Ticker = createjs.Ticker;
-    var Text = createjs.Text;
 
     window.GameManager = function(stage, attackManager, playerManager, keyboardManager, dataManager, tutorialManager, utils) {
 
@@ -39,10 +38,7 @@
             newMatchButtonUnhover, newMatchButtonHover,
             retryMatchButtonUnhover, retryMatchButtonHover;
 
-        var loadingMessage = new Text("Loading...", "24px Arial", "#FFF");
-        loadingMessage.textBaseline = "alphabetic";
-        loadingMessage.x = (stage.width - 100) / 2;
-        loadingMessage.y = stage.height / 2;
+        var loadingMessage = utils.createText("Loading...");
         stage.addChild(loadingMessage);
 
         $("#game-link").val(location.href);
@@ -174,11 +170,6 @@
                 self.dispatchEvent("ready");
             });
 
-        function centerRegistrationPoint(bitmap) {
-            bitmap.regX = bitmap.image.width / 2;
-            bitmap.regY = bitmap.image.height / 2;
-        }
-
         playerManager.addEventListener("dead", function(e) {
             endGame(false);
         });
@@ -236,9 +227,7 @@
                         startGame(preloadedGame);
                     } else if (matchId) {
                         $("#game-id").text(matchId);
-                        var matchIdText = new Text("Match ID: " + matchId, "24px Arial", "#FFF");
-                        matchIdText.textBaseline = "alphabetic";
-                        matchIdText.x = (stage.width - 240) / 2;
+                        var matchIdText = utils.createText("Match ID: " + matchId);
                         matchIdText.y = 595;
                         stage.addChild(matchIdText);
                         stage.update();
@@ -257,10 +246,10 @@
             stage.removeChild(loadingMessage);
             stage.removeChild(progressBar);
 
-            centerRegistrationPoint(menuTitle);
-            centerRegistrationPoint(menuUrf);
-            centerRegistrationPoint(playButtonUnhover);
-            centerRegistrationPoint(playButtonHover);
+            utils.centerRegistrationPoint(menuTitle);
+            utils.centerRegistrationPoint(menuUrf);
+            utils.centerRegistrationPoint(playButtonUnhover);
+            utils.centerRegistrationPoint(playButtonHover);
 
             menuTitle.x = stage.width / 2;
             menuTitle.y = 130;
@@ -283,10 +272,7 @@
         
         function showErrorScreen() {
             stage.removeAllChildren();
-            var errorText = new Text("Failed to load match :(", "24px Arial", "#FFF");
-            errorText.textBaseline = "alphabetic";
-            errorText.x = (stage.width - 200) / 2;
-            errorText.y = stage.height / 2;
+            var errorText = utils.createText("Failed to load match :(");
             stage.addChild(errorText);
             stage.update();
         }
@@ -385,16 +371,16 @@
 
             gameState = GameState.Ended;
             endGameBanner = victory ? victoryBanner : defeatBanner;
-            centerRegistrationPoint(endGameBanner);
+            utils.centerRegistrationPoint(endGameBanner);
             endGameBanner.x = stage.width / 2;
             endGameBanner.y = 250;
             endGameBanner.alpha = 0;
             stage.addChild(endGameBanner);
 
-            centerRegistrationPoint(newMatchButtonHover);
-            centerRegistrationPoint(newMatchButtonUnhover);
-            centerRegistrationPoint(retryMatchButtonHover);
-            centerRegistrationPoint(retryMatchButtonUnhover);
+            utils.centerRegistrationPoint(newMatchButtonHover);
+            utils.centerRegistrationPoint(newMatchButtonUnhover);
+            utils.centerRegistrationPoint(retryMatchButtonHover);
+            utils.centerRegistrationPoint(retryMatchButtonUnhover);
             
             newMatchButtonHover.x = newMatchButtonUnhover.x = stage.width / 2;
             newMatchButtonHover.y = newMatchButtonUnhover.y = 450;

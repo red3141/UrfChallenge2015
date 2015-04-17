@@ -86,8 +86,6 @@
             $.each(group, function(i, e) {
                 if (e.text && !e.obj) {
                     e.obj = utils.createText(e.text);
-                    e.obj.x = stage.width / 2;
-                    e.obj.y = stage.height / 2;
                 }
                 if (e.obj) {
                     attackManager.darknessLayer.addChild(e.obj);
