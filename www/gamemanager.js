@@ -30,7 +30,6 @@
         var firstFrame = true;
         var gameStartTime = 0;
 
-        //utils.setCookie("doneTutorial", "false");
         var cookies = utils.getCookies();
         var doneTutorial = cookies.doneTutorial == "true";
 
