@@ -16,20 +16,23 @@
         var eventIndex = -1;
 
         var timeline = [
-            [{ text: "Urf is trying to cross Summoner's Rift,\nbut the summoners are playing\nUltra Rapid Fire!", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "Urf is trying to cross Summoner's Rift, but the summoners are playing Ultra Rapid Fire!", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
             [{ text: "Move Urf using the arrow keys!", advanceKeys: [Key.Up, Key.Down, Key.Left, Key.Right], alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
-            [{ text: "Although Urf is a large manatee, he will only take damage if he is hit in the red dot on his back.", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
-            [{ text: "Holding the R key causes Urf to Focus. While Focused, the red dot on Urf's back shrinks dramatically, and Urf moves slower. Try it out!", advanceKeys: [Key.Focus], alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
-            [{ text: "Urf's health bar is at the bottom of the screen. Every time Urf is hit, he takes damage. If his health reaches 0, you will lose!"}, duration: 5: alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
-            [{ text: "Try to avoid the incoming attacks!"}, duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "Urf's health bar is at the bottom of the screen. Every time Urf is hit, he takes damage. If his health reaches 0, you will lose!", duration: 6, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "Although Urf is a large manatee, he will only take damage if he is hit on the red dot on his back.", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "Try to avoid the incoming attacks!", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ championId: 22, spawnPoint: { x: stage.width / 2, y: 0 }, targetPoint: { x: stage.width / 2, y: stage.height * 3 / 4 } }],
+            [{ text: "Hold the R key to make Urf Focus!", advanceKeys: [Key.Focus], alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "While Focused, the red dot on Urf's back shrinks dramatically, and Urf moves slower.", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "Try to avoid the incoming attacks!", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
             [
                 { championId: 22, spawnPoint: { x: 0, y: 0 }, targetPoint: { x: stage.width / 2, y: stage.height * 3 / 4 } },
                 { championId: 22, spawnPoint: { x: stage.width / 2, y: 0 }, targetPoint: { x: stage.width / 2, y: stage.height * 3 / 4 } },
                 { championId: 22, spawnPoint: { x: stage.width, y: 0 }, targetPoint: { x: stage.width / 2, y: stage.height * 3 / 4 } },
             ],
             [{ text: "Great job!", duration: 3, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
-            [{ text: "Urf has a few other advanced abilities. Don't worry about them yet, but when you're ready, hover over their icons to the left to learn more about them.", duration: 5: alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
-            [{ text: "Now get out there and get Urf across the Rift!"}, duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "Urf has a few other advanced abilities. Don't worry about them yet, but when you're ready, hover over their icons to the right to learn more about them.", duration: 7, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "Now get out there and get Urf across the Rift!", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
         ];
 
         function startTutorial() {
@@ -92,6 +95,8 @@
             $.each(group, function(i, e) {
                 if (e.text && !e.obj) {
                     e.obj = utils.createText(e.text);
+                    e.obj.y = stage.height / 3;
+                    e.obj.lineWidth = stage.width - 40;
                 }
                 if (e.obj) {
                     attackManager.darknessLayer.addChild(e.obj);
