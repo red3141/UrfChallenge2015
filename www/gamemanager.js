@@ -309,9 +309,14 @@
                 game = newGame;
                 var query = "?matchId=" + game.id;
                 var absoluteUrl = [location.protocol, '//', location.host, location.pathname].join('');
-                $("#game-link").val(absoluteUrl + query);
+                var href = absoluteUrl + query;
+                $("#game-link").val(href);
                 $.each($("#game-link"), function(i, elem) { elem.scrollLeft = elem.scrollWidth; });
-                $(".fb-share-button").attr("data-href", absoluteUrl + query);
+                $(".fb-share-button").attr("data-href", href);
+                $(".fb-share-button iframe").attr("src",
+                    location.protocol + "//www.facebook.com/v2.3/plugins/share_button.php?app_id=&channel=http%3A%2F%2Fstatic.ak.facebook.com%2Fconnect%2Fxd_arbiter%2FKvoNGODIqPG.js%3Fversion%3D41%23cb%3Df29bfbb228%26domain%3D"
+                    + location.host + "%26origin%3D" + encodeURIComponent(encodeURIComponent(location.protocol)) + "%252F%252F" + location.host + "%252Ff2b736fc34%26relation%3Dparent.parent&container_width=191&href="
+                    + encodeURIComponent(href) + "&layout=button&locale=en_US&sdk=joey");
             }
 
             eventIndex = 0;
