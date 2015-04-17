@@ -395,8 +395,8 @@ champions = {
         name: "Lulu",
         images: [{ id: "lulu", pointAngle: -35 }],
         attacks: [
-            { type: AttackType.Bullet, speed: 225 },
-            { type: AttackType.Bullet, speed: 225, offset: 10, delay: 0.05 },
+            { type: AttackType.Bullet, speed: 225, offset: -75, focusOnTarget: true },
+            { type: AttackType.Bullet, speed: 225, offset: 75, focusOnTarget: true }
         ]
     },
     "99": {
@@ -412,8 +412,8 @@ champions = {
     },
     "54": {
         name: "Malphite",
-        images: [{ id: "malphite", pointAngle: -90 }],
-        attacks: [{ type: AttackType.Bullet, speed: 300 }]
+        images: [{ id: "malphite" }],
+        attacks: [{ type: AttackType.Bullet, speed: 300, scale: 1, scaleSpeed: 0.3, maxScale: 2.5 }]
     },
     "90": {
         name: "Malzahar",

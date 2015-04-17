@@ -8,18 +8,19 @@
     var Graphics = createjs.Graphics;
     var Shape = createjs.Shape;
     var Ticker = createjs.Ticker;
-    var Text = createjs.Text;
 
-    window.GameManager = function(stage, attackManager, playerManager, keyboardManager, dataManager, tutorialManager) {
+    window.GameManager = function(stage, attackManager, playerManager, keyboardManager, dataManager, tutorialManager, utils) {
 
         var self = this;
+
+        Ticker.timingMode = Ticker.RAF;
 
         // Number of times faster this game is than the source game.
         var gameSpeed = 30;
 
         var gameState = GameState.Ended;
         
-        var game = {};
+        var game = null;
         var isGamePreloading = false;
         var isGamePreloaded = false;
         var startGameOnLoad = false;
@@ -29,17 +30,15 @@
         var firstFrame = true;
         var gameStartTime = 0;
 
-        var doneTutorial = true;
+        var cookies = utils.getCookies();
+        var doneTutorial = cookies.doneTutorial == "true";
 
         var defeatBanner, victoryBanner, endGameBanner, menuTitle, menuUrf,
             playButtonUnhover, playButtonHover, newGameButton, retryGameButton,
             newMatchButtonUnhover, newMatchButtonHover,
             retryMatchButtonUnhover, retryMatchButtonHover;
 
-        var loadingMessage = new Text("Loading...", "24px Arial", "#FFF");
-        loadingMessage.textBaseline = "alphabetic";
-        loadingMessage.x = (stage.width - 100) / 2;
-        loadingMessage.y = stage.height / 2;
+        var loadingMessage = utils.createText("Loading...");
         stage.addChild(loadingMessage);
 
         $("#game-link").val(location.href);
@@ -92,8 +91,7 @@
                         if (doneTutorial) {
                             newGame();
                         } else {
-                            tutorialManager.startTutorial();
-                            gameState = GameState.Tutorial;
+                            startTutorial();
                         }
                     });
                 function playButtonMouseOut() {
@@ -108,8 +106,7 @@
                         if (doneTutorial) {
                             newGame();
                         } else {
-                            tutorialManager.startTutorial();
-                            gameState = GameState.Tutorial;
+                            startTutorial();
                         }
                     });
 
@@ -173,11 +170,6 @@
                 self.dispatchEvent("ready");
             });
 
-        function centerRegistrationPoint(bitmap) {
-            bitmap.regX = bitmap.image.width / 2;
-            bitmap.regY = bitmap.image.height / 2;
-        }
-
         playerManager.addEventListener("dead", function(e) {
             endGame(false);
         });
@@ -188,21 +180,6 @@
         });
 
         // Methods
-
-        function parseQuery() {
-            var obj = {};
-            if (!location.search || !location.search.length)
-                return obj;
-            var query = location.search.substring(1);
-            var vars = query.split('&');
-            for (var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split('=');
-                var name = decodeURIComponent(pair[0]);
-                var value = decodeURIComponent(pair[1]);
-                obj[name] = value;
-            }
-            return obj;
-        }
 
         function getParticipantById(id) {
             if (id < 1 || id > game.participants.length) {
@@ -235,9 +212,7 @@
                         startGame(preloadedGame);
                     } else if (matchId) {
                         $("#game-id").text(matchId);
-                        var matchIdText = new Text("Match ID: " + matchId, "24px Arial", "#FFF");
-                        matchIdText.textBaseline = "alphabetic";
-                        matchIdText.x = (stage.width - 240) / 2;
+                        var matchIdText = utils.createText("Match ID: " + matchId);
                         matchIdText.y = 595;
                         stage.addChild(matchIdText);
                         stage.update();
@@ -256,10 +231,10 @@
             stage.removeChild(loadingMessage);
             stage.removeChild(progressBar);
 
-            centerRegistrationPoint(menuTitle);
-            centerRegistrationPoint(menuUrf);
-            centerRegistrationPoint(playButtonUnhover);
-            centerRegistrationPoint(playButtonHover);
+            utils.centerRegistrationPoint(menuTitle);
+            utils.centerRegistrationPoint(menuUrf);
+            utils.centerRegistrationPoint(playButtonUnhover);
+            utils.centerRegistrationPoint(playButtonHover);
 
             menuTitle.x = stage.width / 2;
             menuTitle.y = 130;
@@ -270,7 +245,7 @@
             playButtonHover.x = playButtonUnhover.x;
             playButtonHover.y = playButtonUnhover.y;
 
-            var queryObj = parseQuery();
+            var queryObj = utils.parseQuery();
             startPreloadingMatch(queryObj.matchId);
 
             stage.addChild(menuTitle);
@@ -281,29 +256,18 @@
         }
         
         function showErrorScreen() {
-            var errorText = new Text("Failed to load match :(", "24px Arial", "#FFF");
-            errorText.textBaseline = "alphabetic";
-            errorText.x = (stage.width - 170) / 2;
-            errorText.y = stage.height / 2;
+            stage.removeAllChildren();
+            var errorText = utils.createText("Failed to load match :(");
             stage.addChild(errorText);
             stage.update();
         }
 
-        function startGame(newGame) {
-            stage.enableMouseOver(0);
-            stage.removeAllChildren();
-            stage.update();
-            isGamePreloaded = false;
-            preloadMatchId = null;
-            if (newGame && (newGame != game || !location.search)) {
-                game = newGame;
-                var query = "?matchId=" + game.id;
-                var absoluteUrl = [location.protocol, '//', location.host, location.pathname].join('');
-                $("#game-link").val(absoluteUrl + query);
-                $.each($("#game-link"), function(i, elem) { elem.scrollLeft = elem.scrollWidth; });
-                $(".fb-share-button").attr("data-href", absoluteUrl + query);
-            }
+        function setupGameArea() {
+            attackManager.destroyAllParticles();
+            playerManager.resetPlayer();
 
+            // Setup for a real game or tutorial
+            stage.enableMouseOver(0);
             stage.removeAllChildren();
 
             // The hitbox should appear above all bullets.
@@ -316,30 +280,41 @@
             stage.addChild(playerManager.damageIndicator);
             stage.addChild(playerManager.hitbox);
 
-            eventIndex = 0;
+            stage.update();
 
-            // Reset a number of things.
-            // Disable mouse over events.
-            stage.enableMouseOver(0);
-            playerManager.player.health = 2000;
-            if (endGameBanner) {
-                stage.removeChild(endGameBanner);
-            }
-            if (newGameButton) {
-                stage.removeChild(newGameButton);
-            }
-            if (retryGameButton) {
-                stage.removeChild(retryGameButton);
-            }
-
-            playerManager.resetPlayer();
-            attackManager.destroyAllParticles();
-
-            // Events
             Ticker.reset();
             firstFrame = true;
-            Ticker.timingMode = Ticker.RAF;
             Ticker.addEventListener("tick", onTick);
+        }
+
+        function startTutorial() {
+            setupGameArea();
+            gameState = GameState.Tutorial;
+            tutorialManager.startTutorial();
+            keyboardManager.addEventListener("skip", skipTutorial);
+        }
+
+        function skipTutorial() {
+            keyboardManager.removeEventListener("skip", skipTutorial);
+            doneTutorial = true;
+            utils.setCookie("doneTutorial", "true");
+            newGame();
+        }
+
+        function startGame(newGame) {
+            setupGameArea();
+            isGamePreloaded = false;
+            preloadMatchId = null;
+            if (newGame && (newGame != game || !location.search)) {
+                game = newGame;
+                var query = "?matchId=" + game.id;
+                var absoluteUrl = [location.protocol, '//', location.host, location.pathname].join('');
+                $("#game-link").val(absoluteUrl + query);
+                $.each($("#game-link"), function(i, elem) { elem.scrollLeft = elem.scrollWidth; });
+                $(".fb-share-button").attr("data-href", absoluteUrl + query);
+            }
+
+            eventIndex = 0;
 
             gameState = GameState.Playing;
             $("#game-id").text(game.id);
@@ -369,7 +344,10 @@
         }
 
         function retryGame() {
-            startGame(game);
+            if (game)
+                startGame(game);
+            else
+                startTutorial();
         }
 
         function endGame(victory) {
@@ -380,16 +358,16 @@
 
             gameState = GameState.Ended;
             endGameBanner = victory ? victoryBanner : defeatBanner;
-            centerRegistrationPoint(endGameBanner);
+            utils.centerRegistrationPoint(endGameBanner);
             endGameBanner.x = stage.width / 2;
             endGameBanner.y = 250;
             endGameBanner.alpha = 0;
             stage.addChild(endGameBanner);
 
-            centerRegistrationPoint(newMatchButtonHover);
-            centerRegistrationPoint(newMatchButtonUnhover);
-            centerRegistrationPoint(retryMatchButtonHover);
-            centerRegistrationPoint(retryMatchButtonUnhover);
+            utils.centerRegistrationPoint(newMatchButtonHover);
+            utils.centerRegistrationPoint(newMatchButtonUnhover);
+            utils.centerRegistrationPoint(retryMatchButtonHover);
+            utils.centerRegistrationPoint(retryMatchButtonUnhover);
             
             newMatchButtonHover.x = newMatchButtonUnhover.x = stage.width / 2;
             newMatchButtonHover.y = newMatchButtonUnhover.y = 450;
@@ -477,10 +455,11 @@
                 $("#game-time").text(minute + ":" + second);
 
             } else if (gameState == GameState.Tutorial) {
-                playerManager.movePlayer(e.delta, gameState);
                 tutorialManager.onTick(e.delta, currentTime);
-                attackManager.moveParticles(e.delta, currentTime);
                 if (tutorialManager.hasEnded() && !playerManager.isInStasis()) {
+                    doneTutorial = true;
+                    utils.setCookie("doneTutorial", "true");
+                    keyboardManager.removeEventListener("skip", skipTutorial);
                     endGame(true);
                 }
 
