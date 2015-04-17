@@ -395,8 +395,8 @@ champions = {
         name: "Lulu",
         images: [{ id: "lulu", pointAngle: -35 }],
         attacks: [
-            { type: AttackType.Bullet, speed: 225 },
-            { type: AttackType.Bullet, speed: 225, offset: 10, delay: 0.05 },
+            { type: AttackType.Bullet, speed: 225, offset: -75, focusOnTarget: true },
+            { type: AttackType.Bullet, speed: 225, offset: 75, focusOnTarget: true }
         ]
     },
     "99": {
