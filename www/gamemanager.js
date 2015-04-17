@@ -30,8 +30,9 @@
         var firstFrame = true;
         var gameStartTime = 0;
 
-        // TODO: read cookie
-        var doneTutorial = false;
+        //utils.setCookie("doneTutorial", "false");
+        var cookies = utils.getCookies();
+        var doneTutorial = cookies.doneTutorial == "true";
 
         var defeatBanner, victoryBanner, endGameBanner, menuTitle, menuUrf,
             playButtonUnhover, playButtonHover, newGameButton, retryGameButton,
@@ -181,21 +182,6 @@
 
         // Methods
 
-        function parseQuery() {
-            var obj = {};
-            if (!location.search || !location.search.length)
-                return obj;
-            var query = location.search.substring(1);
-            var vars = query.split('&');
-            for (var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split('=');
-                var name = decodeURIComponent(pair[0]);
-                var value = decodeURIComponent(pair[1]);
-                obj[name] = value;
-            }
-            return obj;
-        }
-
         function getParticipantById(id) {
             if (id < 1 || id > game.participants.length) {
                 console.warn("Participant ID out of range: " + id);
@@ -260,7 +246,7 @@
             playButtonHover.x = playButtonUnhover.x;
             playButtonHover.y = playButtonUnhover.y;
 
-            var queryObj = parseQuery();
+            var queryObj = utils.parseQuery();
             startPreloadingMatch(queryObj.matchId);
 
             stage.addChild(menuTitle);
@@ -311,6 +297,8 @@
 
         function skipTutorial() {
             keyboardManager.removeEventListener("skip", skipTutorial);
+            doneTutorial = true;
+            utils.setCookie("doneTutorial", "true");
             newGame();
         }
 
@@ -471,7 +459,7 @@
                 tutorialManager.onTick(e.delta, currentTime);
                 if (tutorialManager.hasEnded() && !playerManager.isInStasis()) {
                     doneTutorial = true;
-                    // TODO: set cookie
+                    utils.setCookie("doneTutorial", "true");
                     keyboardManager.removeEventListener("skip", skipTutorial);
                     endGame(true);
                 }
