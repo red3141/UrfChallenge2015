@@ -786,8 +786,8 @@ champions = {
     },
     "154": {
         name: "Zac",
-        images: [{ id: "zac", flipIfBackward: true }],
-        attacks: [{ type: AttackType.Bullet, speed: 200, rotationSpeed: 30 }]
+        images: [{ id: "zac", flipIfBackward: true, pointAngle: 10 }],
+        attacks: [{ type: AttackType.Bullet, speed: 200 }]
     },
     "238": {
         name: "Zed",
