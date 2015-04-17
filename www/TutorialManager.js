@@ -16,8 +16,8 @@
         var eventIndex = -1;
 
         var timeline = [
-            { text: "Urf is trying to cross Summoner's Rift,\nbut the summoners are playing\nUltra Rapid Fire!", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade },
-            { text: "Move Urf using the arrow keys!", advanceKeys: [Key.Up, Key.Down, Key.Left, Key.Right], alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade },
+            [{ text: "Urf is trying to cross Summoner's Rift,\nbut the summoners are playing\nUltra Rapid Fire!", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "Move Urf using the arrow keys!", advanceKeys: [Key.Up, Key.Down, Key.Left, Key.Right], alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
         ];
 
         function startTutorial() {
@@ -32,28 +32,38 @@
 
             if (eventIndex < 0) {
                 eventIndex = 0;
-                fireEvent(timeline[eventIndex], currentTime);
+                fireEvents(timeline[eventIndex], currentTime);
             }
-            var e = timeline[eventIndex];
-            if (e.obj && e.obj.alphaSpeed) {
-                e.obj.alpha += e.obj.alphaSpeed * elapsedMilliseconds / 1000;
-                if (e.obj.alpha >= 1) {
-                    e.obj.alpha = 1;
-                    e.obj.alphaSpeed = 0;
-                } else if (e.obj.alpha <= 0) {
-                    e.obj.alpha = 0;
-                    e.obj.alphaSpeed = 0;
+            var group = timeline[eventIndex];
+            $.each(group, function(i, e) {
+                if (e.obj && e.obj.alphaSpeed) {
+                    e.obj.alpha += e.obj.alphaSpeed * elapsedMilliseconds / 1000;
+                    if (e.obj.alpha >= 1) {
+                        e.obj.alpha = 1;
+                        e.obj.alphaSpeed = 0;
+                    } else if (e.obj.alpha <= 0) {
+                        e.obj.alpha = 0;
+                        e.obj.alphaSpeed = 0;
+                    }
                 }
-            }
-            while (isCompleted(e, currentTime)) {
-                if (e.finished == FinishedAction.Fade && e.obj) {
-                    e.obj.alpha -= elapsedMilliseconds / 500;
-                    // Don't proceed to the next event until this one fades out.
-                    if (e.obj.alpha > 0) break;
-                }
-                if (e.obj) {
-                    e.obj.parent.removeChild(e.obj);
-                }
+            });
+            while (isGroupCompleted(group, currentTime)) {
+                var proceed = true;
+                $.each(group, function(i, e) {
+                    if (e.finished == FinishedAction.Fade && e.obj) {
+                        e.obj.alpha -= elapsedMilliseconds / 500;
+                        // Don't proceed to the next event until this one fades out.
+                        if (e.obj.alpha > 0) {
+                            proceed = false;
+                            return;
+                        }
+                    }
+                    if (e.obj) {
+                        e.obj.parent.removeChild(e.obj);
+                    }
+                });
+                if (!proceed) break;
+
                 ++eventIndex;
                 if (eventIndex >= timeline.length) {
                     // ended
@@ -61,29 +71,42 @@
                         skipText.parent.removeChild(skipText);
                     break;
                 }
-                e = timeline[eventIndex];
-                fireEvent(e, currentTime);
+                group = timeline[eventIndex];
+                fireEvents(group, currentTime);
             }
         }
 
-        function fireEvent(e, currentTime) {
-            if (e.text && !e.obj) {
-                e.obj = utils.createText(e.text);
-                e.obj.x = stage.width / 2;
-                e.obj.y = stage.height / 2;
-            }
-            if (e.obj) {
-                attackManager.darknessLayer.addChild(e.obj);
-                if (e.alpha !== undefined)
-                    e.obj.alpha = e.alpha;
-                if (e.alphaSpeed !== undefined)
-                    e.obj.alphaSpeed = e.alphaSpeed;
-            }
-            e.startTime = currentTime;
-            e.isCompleted = false;
+        function fireEvents(group, currentTime) {
+            $.each(group, function(i, e) {
+                if (e.text && !e.obj) {
+                    e.obj = utils.createText(e.text);
+                    e.obj.x = stage.width / 2;
+                    e.obj.y = stage.height / 2;
+                }
+                if (e.obj) {
+                    attackManager.darknessLayer.addChild(e.obj);
+                    if (e.alpha !== undefined)
+                        e.obj.alpha = e.alpha;
+                    if (e.alphaSpeed !== undefined)
+                        e.obj.alphaSpeed = e.alphaSpeed;
+                }
+                e.startTime = currentTime;
+                e.isCompleted = false;
+            });
         }
 
-        function isCompleted(e, currentTime) {
+        function isGroupCompleted(group, currentTime) {
+            var isCompleted = true;
+            $.each(group, function(i, e) {
+                if (!isEventCompleted(e, currentTime)) {
+                    isCompleted = false;
+                    return false;
+                }
+            });
+            return isCompleted;
+        }
+
+        function isEventCompleted(e, currentTime) {
             if (e.isCompleted) return true;
             if (e.duration && currentTime >= e.startTime + e.duration * 1000) {
                 e.isCompleted = true;
