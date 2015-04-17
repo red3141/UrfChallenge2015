@@ -317,6 +317,21 @@
                     location.protocol + "//www.facebook.com/v2.3/plugins/share_button.php?app_id=&channel=http%3A%2F%2Fstatic.ak.facebook.com%2Fconnect%2Fxd_arbiter%2FKvoNGODIqPG.js%3Fversion%3D41%23cb%3Df29bfbb228%26domain%3D"
                     + location.host + "%26origin%3D" + encodeURIComponent(encodeURIComponent(location.protocol)) + "%252F%252F" + location.host + "%252Ff2b736fc34%26relation%3Dparent.parent&container_width=191&href="
                     + encodeURIComponent(href) + "&layout=button&locale=en_US&sdk=joey");
+
+                var team1Container = $("#team1");
+                var team2Container = $("#team2");
+                team1Container.empty();
+                team2Container.empty();
+                team1Container.append("<h1>Blue Team</h1>");
+                team2Container.append("<h1>Red Team</h1>");
+                $.each(game.participants, function(i, participant) {
+                    var champion = champions[participant.championId];
+                    var portraitHtml = ["<img src='img/championPortraits/", champion.portrait, "' title='", champion.name, "' />"].join('');
+                    if (participant.teamId == Team.One)
+                        team1Container.append(portraitHtml);
+                    else
+                        team2Container.append(portraitHtml);
+                });
             }
 
             eventIndex = 0;
