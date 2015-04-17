@@ -478,8 +478,8 @@ champions = {
     },
     "20": {
         name: "Nunu",
-        images: [{ id: "nunu" }],
-        attacks: [{ type: AttackType.Bullet, speed: 150, rotationSpeed: 30 }]
+        images: [{ id: "nunu", pointAngle: 135 }],
+        attacks: [{ type: AttackType.Bullet, speed: 150 }]
     },
     "2": {
         name: "Olaf",
