@@ -348,7 +348,8 @@
                     particle.y += particle.vy * elapsedSeconds;
                 if (particle.attack.accel) {
                     var speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
-                    if (speed > 0) {
+                    // Enforce a minimum speed so that particles don't stop moving.
+                    if (speed > 60) {
                         particle.vx += particle.attack.accel * elapsedSeconds * particle.vx / speed;
                         particle.vy += particle.attack.accel * elapsedSeconds * particle.vy / speed;
                     }
@@ -540,12 +541,21 @@
             });
             return attackFound;
         }
+        
+        function applyRanduins() {
+            var slowFactor = 0.65;
+            $.each(particles, function(i, particle) {
+                if (particle.vx) particle.vx *= slowFactor;
+                if (particle.vy) particle.vy *= slowFactor;
+            })
+        }
 
         // Expose public members
         this.destroyAllParticles = destroyAllParticles;
         this.fireAttackGroup = fireAttackGroup;
         this.moveParticles = moveParticles;
         this.attacksOnStage = attacksOnStage;
+        this.applyRanduins = applyRanduins;
         this.bottomLayer = bottomLayer;
         this.mainLayer = mainLayer;
         this.topLayer = topLayer;

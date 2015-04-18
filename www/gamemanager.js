@@ -165,6 +165,12 @@
         playerManager.addEventListener("dead", function(e) {
             endGame(false);
         });
+        
+        keyboardManager.addEventListener("randuins", function(e) {
+            if (gameState == GameState.Playing && playerManager.useRanduinsCharge()) {
+                attackManager.applyRanduins();
+            }
+        });
 
         keyboardManager.addEventListener("newGame", function(e) {
             if (gameState == GameState.Ended)

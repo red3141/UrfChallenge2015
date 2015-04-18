@@ -471,7 +471,7 @@ champions = {
         name: "Malphite",
         portrait: "Malphite_Square_0.png",
         images: [{ id: "malphite" }],
-        attacks: [{ type: AttackType.Bullet, speed: 300, scale: 1, scaleSpeed: 0.3, maxScale: 2.5 }]
+        attacks: [{ type: AttackType.Bullet, speed: 300, scale: 1, scaleSpeed: 0.3 }]
     },
     "90": {
         name: "Malzahar",

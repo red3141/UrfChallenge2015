@@ -7,6 +7,7 @@
     Focus: 82, // R
     Pause: 80, // P
     Zhonyas: 87, // W
+    Randuins: 81, // Q
     Skip: 32,  // Space
     NewGame: 78,   // N
     RetryGame: 77, // M
@@ -36,6 +37,9 @@
                 case Key.Focus:
                 case Key.Zhonyas:
                     keyPressed[e.keyCode] = true;
+                    break;
+                case Key.Randuins:
+                    self.dispatchEvent("randuins");
                     break;
                 case Key.Flash:
                     self.dispatchEvent("flash");
