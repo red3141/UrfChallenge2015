@@ -254,7 +254,7 @@
             stage.enableMouseOver();
             stage.update();
         }
-        
+
         function showErrorScreen() {
             stage.removeAllChildren();
             var errorText = utils.createText("Failed to load match :(");
