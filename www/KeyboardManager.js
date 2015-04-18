@@ -8,6 +8,9 @@
     Pause: 80, // P
     Zhonyas: 87, // W
     Skip: 32,  // Space
+    NewGame: 78,   // N
+    RetryGame: 77, // M
+    Enter: 13,
 };
 
 (function() {
@@ -42,6 +45,13 @@
                     break;
                 case Key.Skip:
                     self.dispatchEvent("skip");
+                    break;
+                case Key.NewGame:
+                case Key.Enter:
+                    self.dispatchEvent("newGame");
+                    break;
+                case Key.RetryGame:
+                    self.dispatchEvent("retryGame");
                     break;
                 default:
                     return;

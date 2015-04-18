@@ -51,7 +51,6 @@ input[type=text] {
 #team1, #team2 {
     text-align: center;
     height: 175px;
-    margin-top: 90px;
 }
 
 #team1 img, #team2 img {

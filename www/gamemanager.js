@@ -88,11 +88,7 @@
                 playButtonUnhover.addEventListener("click",
                     function() {
                         playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                        if (doneTutorial) {
-                            newGame();
-                        } else {
-                            startTutorial();
-                        }
+                        newGameOrTutorial();
                     });
                 function playButtonMouseOut() {
                     stage.removeChild(playButtonHover);
@@ -103,11 +99,7 @@
                 playButtonHover.addEventListener("click",
                     function() {
                         playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                        if (doneTutorial) {
-                            newGame();
-                        } else {
-                            startTutorial();
-                        }
+                        newGameOrTutorial();
                     });
 
                 newMatchButtonUnhover = new Bitmap(document.getElementById("button_new"));
@@ -172,6 +164,16 @@
 
         playerManager.addEventListener("dead", function(e) {
             endGame(false);
+        });
+
+        keyboardManager.addEventListener("newGame", function(e) {
+            if (gameState == GameState.Ended)
+                newGameOrTutorial();
+        });
+
+        keyboardManager.addEventListener("retryGame", function(e) {
+            if (gameState == GameState.Ended)
+                retryGame();
         });
 
         keyboardManager.addEventListener("pause", function(e) {
@@ -285,6 +287,14 @@
             Ticker.reset();
             firstFrame = true;
             Ticker.addEventListener("tick", onTick);
+        }
+        
+        function newGameOrTutorial() {
+            if (doneTutorial) {
+                newGame();
+            } else {
+                startTutorial();
+            }
         }
 
         function startTutorial() {
