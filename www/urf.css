@@ -108,18 +108,25 @@ input[type=text] {
 }
 
 #non-endorsement {
-    font-size: 0.75em;
-    color: #666;
+    font-size: 0.9em;
+    color: #333;
     
     width: 550px;
-    padding-top: 40px;
+    margin-top: 30px;
+    margin-bottom: 10px;
     margin-left: auto;
     margin-right: auto;
     clear: left;
 }
 
 #resources {
-    display: none;
+    /* Note: normally I would use display:none here,
+        but that prevents IE 10 from being able to get the image sizes.
+        As such, use this workaround instead. */
+    visibility: hidden;
+    position: absolute;
+    height: 0px;
+    overflow: hidden;
 }
 
 #faq-title {
