@@ -43,8 +43,11 @@ namespace UrfStg.Web.Controllers
             if (match == null)
                 return HttpNotFound();
 
-            HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
-            HttpContext.Response.AddHeader("Vary", "Origin");
+            if (HttpContext != null)
+            {
+                HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
+                HttpContext.Response.AddHeader("Vary", "Origin");
+            }
             return JsonNet(match, JsonRequestBehavior.AllowGet);
         }
 
@@ -73,8 +76,11 @@ namespace UrfStg.Web.Controllers
             var selectedId = ids[index];
             var match = GetMatch(selectedId);
 
-            HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
-            HttpContext.Response.AddHeader("Vary", "Origin");
+            if (HttpContext != null)
+            {
+                HttpContext.Response.AddHeader("Access-Control-Allow-Origin", "*");
+                HttpContext.Response.AddHeader("Vary", "Origin");
+            }
             return JsonNet(match, JsonRequestBehavior.AllowGet);
         }
 

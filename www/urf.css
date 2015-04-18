@@ -108,8 +108,8 @@ input[type=text] {
 }
 
 #non-endorsement {
-    font-size: 0.9em;
-    color: #333;
+    font-size: 0.85em;
+    color: #555;
     
     width: 550px;
     margin-top: 30px;

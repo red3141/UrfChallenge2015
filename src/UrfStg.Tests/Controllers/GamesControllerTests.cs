@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FakeDbSet;
 using Moq;
 using NUnit.Framework;
 using UrfStg.Model;
+using UrfStg.Web;
 using UrfStg.Web.Controllers;
 using Match = UrfStg.Model.Match;
 
@@ -12,14 +14,16 @@ namespace UrfStg.Tests.Controllers
 {
     [TestFixture]
     public class GamesControllerTests
-    {/*
+    {
         [Test]
         public void ShouldGetGame()
         {
-            var mockDb = Mock.Of<IRiotDataContext>(d => d.Matches == new MatchDbSet { new Match { Id = 12L } });
+            var mockDb = Mock.Of<IRiotDataContext>(d =>
+                d.Matches == new MatchDbSet { new Match { Id = 12L } } &&
+                d.Events == new InMemoryDbSet<Event>());
             var controller = new GamesController(mockDb);
 
-            var match = controller.Random();
+            var match = (Match)((JsonNetResult)controller.Random()).Data;
 
             Assert.That(match, Is.Not.Null);
             Assert.That(match.Id, Is.EqualTo(12L));
@@ -36,13 +40,37 @@ namespace UrfStg.Tests.Controllers
                 new Match { Id = 2436475L },
                 new Match { Id = 95344L },
             };
-            var mockDb = Mock.Of<IRiotDataContext>(d => d.Matches == matches);
+            var mockDb = Mock.Of<IRiotDataContext>(d =>
+                d.Matches == matches &&
+                d.Events == new InMemoryDbSet<Event>());
             var controller = new GamesController(mockDb);
 
-            var match = controller.Random();
+            var match = (Match)((JsonNetResult)controller.Random()).Data;
 
             Assert.That(match, Is.Not.Null);
             Assert.That(matches.Any(m => m.Id == match.Id), "Invalid match ID.");
+        }
+
+        [Test]
+        public void ShouldGetSpecificGame()
+        {
+            var matches = new MatchDbSet
+            {
+                new Match { Id = 134L },
+                new Match { Id = 14L },
+                new Match { Id = 2436474L },
+                new Match { Id = 2436475L },
+                new Match { Id = 95344L },
+            };
+            var mockDb = Mock.Of<IRiotDataContext>(d =>
+                d.Matches == matches &&
+                d.Events == new InMemoryDbSet<Event>());
+            var controller = new GamesController(mockDb);
+
+            var match = (Match)((JsonNetResult)controller.Index(14L)).Data;
+
+            Assert.That(match, Is.Not.Null);
+            Assert.That(match.Id, Is.EqualTo(14L));
         }
 
         [Test]
@@ -65,17 +93,19 @@ namespace UrfStg.Tests.Controllers
             var numIterations = 1000;
             var counts = new int[matches.Count()];
 
-            for (var i = 0; i < numIterations; ++i)
+            Parallel.For(0, 1000, i =>
             {
-                var mockDb = Mock.Of<IRiotDataContext>(d => d.Matches == matches);
+                var mockDb = Mock.Of<IRiotDataContext>(d =>
+                    d.Matches == matches &&
+                    d.Events == new InMemoryDbSet<Event>());
                 var controller = new GamesController(mockDb);
 
-                var match = controller.Random();
+                var match = (Match)((JsonNetResult)controller.Random()).Data;
 
                 var index = IndexOf(matches, match);
                 Assert.That(index, Is.AtLeast(0));
                 ++counts[index];
-            }
+            });
 
             var expected = (double)numIterations / counts.Length;
             var tolerance = 0.15;
@@ -86,7 +116,7 @@ namespace UrfStg.Tests.Controllers
                 Assert.That(count, Is.AtLeast(min));
                 Assert.That(count, Is.AtMost(max));
             }
-        }*/
+        }
 
         private static int IndexOf<T>(IEnumerable<T> list, T item)
         {
