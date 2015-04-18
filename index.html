@@ -23,15 +23,20 @@
 
   <div id="container">
     <div class="left-side-col">
-      <h1>Controls</h1>
-      <div class="controls">
+      <div id="team1">
+        <h1>Blue Team</h1>
+      </div>
+      <div id="controls" style="margin-top: 290px;">
+        <h1>Controls</h1>
         <b>Movement</b> = Arrow keys<br />
+        <b>Randuin's Omen</b> = Q<br />
         <b>Zhonya's Hourglass</b> = W<br />
         <b>Flash</b> = E<br />
         <b>Focus</b> = R<br />
-        <b>Pause</b> = P
-      </div>
-      <div id="team1">
+        <b>Pause</b> = P<br />
+        <br />
+        <b>New Match</b> = N<br />
+        <b>Retry Match</b> = M
       </div>
     </div>
     <div class="middle-col">
@@ -43,32 +48,43 @@
       <div id="game-time">0:00</div>
     </div>
     <div class="right-side-col">
-      <h1>Abilities</h1>
-      <div style="margin-top: 10px; height: 50px;">
-        <img id="zhonyas0" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
-Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
-        <img id="zhonyas1" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
-Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
-        <img id="zhonyas2" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
-Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
-      </div>
-      <div style="margin-top: 10px; height: 50px;">
-        <img id="flash0" class="ability-icon" src="img/flash.png" title="FLASH
-Teleports Urf a short distance in the direction that he is moving." />
-        <img id="flash1" class="ability-icon" src="img/flash.png" title="FLASH
-Teleports Urf a short distance in the direction that he is moving." />
-        <img id="flash2" class="ability-icon" src="img/flash.png" title="FLASH
-Teleports Urf a short distance in the direction that he is moving." />
-      </div>
       <div id="team2">
+        <h1>Red Team</h1>
       </div>
-      <div id="match-info">
-        <h1>Match Info</h1>
-        <b>Match ID</b> = <span id="game-id">(none)</span><br />
-        <br />
-        <b>Share this match:</b><br />
-        <input type="text" id="game-link" style="width: 100%;" readonly /><br />
-        <div class="fb-share-button" data-href="http://red3141.github.io/UrfChallenge2015/" data-layout="button"></div>
+      <div id="abilities" style="margin-top: 60px;">
+        <h1>Abilities</h1>
+        <div style="margin-top: 10px; height: 50px;">
+          <img id="randuins0" class="ability-icon" src="img/randuins.png" title="RANDUIN'S OMEN
+Slows the movement speed of all on-screen attacks by 35% (stacks multiplicatively)." />
+          <img id="randuins1" class="ability-icon" src="img/randuins.png" title="RANDUIN'S OMEN
+Slows the movement speed of all on-screen attacks by 35% (stacks multiplicatively)." />
+          <img id="randuins2" class="ability-icon" src="img/randuins.png" title="RANDUIN'S OMEN
+Slows the movement speed of all on-screen attacks by 35% (stacks multiplicatively)." />
+        </div>
+        <div style="margin-top: 10px; height: 50px;">
+          <img id="zhonyas0" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
+Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
+          <img id="zhonyas1" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
+Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
+          <img id="zhonyas2" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
+Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
+        </div>
+        <div style="margin-top: 10px; height: 50px;">
+          <img id="flash0" class="ability-icon" src="img/flash.png" title="FLASH
+Teleports Urf a short distance in the direction that he is moving." />
+          <img id="flash1" class="ability-icon" src="img/flash.png" title="FLASH
+Teleports Urf a short distance in the direction that he is moving." />
+          <img id="flash2" class="ability-icon" src="img/flash.png" title="FLASH
+Teleports Urf a short distance in the direction that he is moving." />
+        </div>
+        <div id="match-info" style="display: none;">
+          <h1>Match Info</h1>
+          <b>Match ID</b> = <span id="game-id">(none)</span><br />
+          <br />
+          <b>Share this match:</b><br />
+          <input type="text" id="game-link" style="width: 100%;" readonly /><br />
+          <div class="fb-share-button" data-href="http://red3141.github.io/UrfChallenge2015/" data-layout="button"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -128,7 +144,8 @@ Teleports Urf a short distance in the direction that he is moving." />
   </div>
   
   <div id="non-endorsement">
-    Summonurf's Rift isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+    Summonurf's Rift isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.<br /><br />
+    No manatees were harmed in the making of this game.
   </div>
 
   <div id="resources">

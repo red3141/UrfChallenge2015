@@ -88,11 +88,7 @@
                 playButtonUnhover.addEventListener("click",
                     function() {
                         playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                        if (doneTutorial) {
-                            newGame();
-                        } else {
-                            startTutorial();
-                        }
+                        newGameOrTutorial();
                     });
                 function playButtonMouseOut() {
                     stage.removeChild(playButtonHover);
@@ -103,11 +99,7 @@
                 playButtonHover.addEventListener("click",
                     function() {
                         playButtonHover.removeEventListener("mouseout", playButtonMouseOut);
-                        if (doneTutorial) {
-                            newGame();
-                        } else {
-                            startTutorial();
-                        }
+                        newGameOrTutorial();
                     });
 
                 newMatchButtonUnhover = new Bitmap(document.getElementById("button_new"));
@@ -173,6 +165,22 @@
         playerManager.addEventListener("dead", function(e) {
             endGame(false);
         });
+        
+        keyboardManager.addEventListener("randuins", function(e) {
+            if (gameState == GameState.Playing && playerManager.useRanduinsCharge()) {
+                attackManager.applyRanduins();
+            }
+        });
+
+        keyboardManager.addEventListener("newGame", function(e) {
+            if (gameState == GameState.Ended)
+                newGameOrTutorial();
+        });
+
+        keyboardManager.addEventListener("retryGame", function(e) {
+            if (gameState == GameState.Ended)
+                retryGame();
+        });
 
         keyboardManager.addEventListener("pause", function(e) {
             if (gameState != GameState.Ended)
@@ -211,6 +219,7 @@
                     if (startGameOnLoad) {
                         startGame(preloadedGame);
                     } else if (matchId) {
+                        $("#match-info").show();
                         $("#game-id").text(matchId);
                         var matchIdText = utils.createText("Match ID: " + matchId);
                         matchIdText.y = stage.height * 5.8/7;
@@ -280,11 +289,23 @@
             stage.addChild(playerManager.damageIndicator);
             stage.addChild(playerManager.hitbox);
 
-            stage.update();
+            var c = $("#controls");
+            $("#abilities").show();
+            $("#match-info").show();
 
             Ticker.reset();
             firstFrame = true;
             Ticker.addEventListener("tick", onTick);
+
+            stage.update();
+        }
+        
+        function newGameOrTutorial() {
+            if (doneTutorial) {
+                newGame();
+            } else {
+                startTutorial();
+            }
         }
 
         function startTutorial() {
@@ -318,12 +339,9 @@
                     + location.host + "%26origin%3D" + encodeURIComponent(encodeURIComponent(location.protocol)) + "%252F%252F" + location.host + "%252Ff2b736fc34%26relation%3Dparent.parent&container_width=191&href="
                     + encodeURIComponent(href) + "&layout=button&locale=en_US&sdk=joey");
 
+                $("#team1 img, #team2 img").remove();
                 var team1Container = $("#team1");
                 var team2Container = $("#team2");
-                team1Container.empty();
-                team2Container.empty();
-                team1Container.append("<h1>Blue Team</h1>");
-                team2Container.append("<h1>Red Team</h1>");
                 $.each(game.participants, function(i, participant) {
                     var champion = champions[participant.championId];
                     var portraitHtml = ["<img src='img/championPortraits/", champion.portrait, "' title='", champion.name, "' />"].join('');
@@ -332,6 +350,10 @@
                     else
                         team2Container.append(portraitHtml);
                 });
+
+                if (utils.parseQuery().matchId) {
+                    history.replaceState(game, "", "?matchId=" + game.id);
+                }
             }
 
             eventIndex = 0;

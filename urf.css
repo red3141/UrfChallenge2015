@@ -44,19 +44,35 @@ input[type=text] {
     color: #ccc;
 }
 
-.controls {
+#controls {
     line-height: 1.5;
 }
 
 #team1, #team2 {
     text-align: center;
-    height: 175px;
-    margin-top: 90px;
+    height: 165px;
+    padding: 5px;
+
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+#team1 h1, #team2 h1 {
+    margin-bottom: 5px;
 }
 
 #team1 img, #team2 img {
     height: 60px;
     width: 60px;
+}
+
+#team1 {
+    background-color: #012f44;
+}
+
+#team2 {
+    background-color: #360000;
 }
 
 .ability-icon {
@@ -67,7 +83,7 @@ input[type=text] {
     width: 1000px;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 50px;
+    margin-top: 100px;
     clear: left;
     text-align: left;
 }
@@ -108,8 +124,8 @@ input[type=text] {
 }
 
 #non-endorsement {
-    font-size: 0.9em;
-    color: #333;
+    font-size: 0.85em;
+    color: #555;
     
     width: 550px;
     margin-top: 30px;

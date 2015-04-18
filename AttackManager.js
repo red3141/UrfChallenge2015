@@ -307,7 +307,7 @@
             }
             if (attack.effect == Effect.Stasis) {
                 particle.affectedParticles = [];
-                //var yellowFilter = new ColorFilter(1, 1, 0);
+                var yellowFilter = new ColorFilter(1, 1, 0, 1, 128, 128, 0, 0);
                 for (var i = 0; i < particles.length; ++i) {
                     var otherParticle = particles[i];
                     if (otherParticle.imageDef.id == "bard") {
@@ -316,7 +316,10 @@
                     }
                     if (collisionDetector.checkPixelCollision(particle, otherParticle)) {
                         otherParticle.isInStasis = true;
-                        //otherParticle.filters = [yellowFilter];
+                        var bounds = otherParticle.getBounds();
+                        otherParticle.cache(0, 0, bounds.width, bounds.height);
+                        otherParticle.filters = [yellowFilter];
+                        otherParticle.updateCache();
                         particle.affectedParticles.push(otherParticle);
                     }
                 }
@@ -348,7 +351,8 @@
                     particle.y += particle.vy * elapsedSeconds;
                 if (particle.attack.accel) {
                     var speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
-                    if (speed > 0) {
+                    // Enforce a minimum speed so that particles don't stop moving.
+                    if (speed > 60) {
                         particle.vx += particle.attack.accel * elapsedSeconds * particle.vx / speed;
                         particle.vy += particle.attack.accel * elapsedSeconds * particle.vy / speed;
                     }
@@ -522,7 +526,10 @@
         function destroyParticle(particle) {
             if (particle.attack && particle.attack.effect == Effect.Stasis && particle.affectedParticles) {
                 for (var i = 0; i < particle.affectedParticles.length; ++i) {
-                    particle.affectedParticles[i].isInStasis = false;
+                    var otherParticle = particle.affectedParticles[i];
+                    otherParticle.isInStasis = false;
+                    otherParticle.filters = [];
+                    otherParticle.updateCache();
                 }
             }
             if (particle.parent)
@@ -540,12 +547,21 @@
             });
             return attackFound;
         }
+        
+        function applyRanduins() {
+            var slowFactor = 0.65;
+            $.each(particles, function(i, particle) {
+                if (particle.vx) particle.vx *= slowFactor;
+                if (particle.vy) particle.vy *= slowFactor;
+            })
+        }
 
         // Expose public members
         this.destroyAllParticles = destroyAllParticles;
         this.fireAttackGroup = fireAttackGroup;
         this.moveParticles = moveParticles;
         this.attacksOnStage = attacksOnStage;
+        this.applyRanduins = applyRanduins;
         this.bottomLayer = bottomLayer;
         this.mainLayer = mainLayer;
         this.topLayer = topLayer;
