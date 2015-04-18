@@ -58,8 +58,6 @@
             playerZhonyas.regY = playerZhonyas.image.height / 2;
             self.playerZhonyas = playerZhonyas;
             
-            resetPlayer();
-
             self.dispatchEvent("ready");
         });
 

@@ -23,8 +23,11 @@
 
   <div id="container">
     <div class="left-side-col">
-      <h1>Controls</h1>
-      <div class="controls">
+      <div id="team1">
+        <h1>Blue Team</h1>
+      </div>
+      <div id="controls" style="margin-top: 300px;">
+        <h1>Controls</h1>
         <b>Movement</b> = Arrow keys<br />
         <b>Zhonya's Hourglass</b> = W<br />
         <b>Flash</b> = E<br />
@@ -34,7 +37,6 @@
         <b>New Match</b> = N<br />
         <b>Retry Match</b> = M
       </div>
-      <div id="team1" style="margin-top: 40px;"></div>
     </div>
     <div class="middle-col">
       <canvas id="canvas" width="550" height="700"></canvas>
@@ -45,31 +47,35 @@
       <div id="game-time">0:00</div>
     </div>
     <div class="right-side-col">
-      <h1>Abilities</h1>
-      <div style="margin-top: 10px; height: 50px;">
-        <img id="zhonyas0" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
-Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
-        <img id="zhonyas1" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
-Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
-        <img id="zhonyas2" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
-Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
+      <div id="team2">
+        <h1>Red Team</h1>
       </div>
-      <div style="margin-top: 10px; height: 50px;">
-        <img id="flash0" class="ability-icon" src="img/flash.png" title="FLASH
+      <div id="abilities" style="display: none;">
+        <h1 style="margin-top: 70px;">Abilities</h1>
+        <div style="margin-top: 10px; height: 50px;">
+          <img id="zhonyas0" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
+Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
+          <img id="zhonyas1" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
+Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
+          <img id="zhonyas2" class="ability-icon" src="img/zhonyas.png" title="ZHONYA'S HOURGLASS
+Places Urf in stasis for 1.5 seconds. While in stasis, Urf cannot move or take damage." />
+        </div>
+        <div style="margin-top: 10px; height: 50px;">
+          <img id="flash0" class="ability-icon" src="img/flash.png" title="FLASH
 Teleports Urf a short distance in the direction that he is moving." />
-        <img id="flash1" class="ability-icon" src="img/flash.png" title="FLASH
+          <img id="flash1" class="ability-icon" src="img/flash.png" title="FLASH
 Teleports Urf a short distance in the direction that he is moving." />
-        <img id="flash2" class="ability-icon" src="img/flash.png" title="FLASH
+          <img id="flash2" class="ability-icon" src="img/flash.png" title="FLASH
 Teleports Urf a short distance in the direction that he is moving." />
-      </div>
-      <div id="team2" style="margin-top: 100px;"></div>
-      <div id="match-info">
-        <h1>Match Info</h1>
-        <b>Match ID</b> = <span id="game-id">(none)</span><br />
-        <br />
-        <b>Share this match:</b><br />
-        <input type="text" id="game-link" style="width: 100%;" readonly /><br />
-        <div class="fb-share-button" data-href="http://red3141.github.io/UrfChallenge2015/" data-layout="button"></div>
+        </div>
+        <div id="match-info" style="display: none;">
+          <h1>Match Info</h1>
+          <b>Match ID</b> = <span id="game-id">(none)</span><br />
+          <br />
+          <b>Share this match:</b><br />
+          <input type="text" id="game-link" style="width: 100%;" readonly /><br />
+          <div class="fb-share-button" data-href="http://red3141.github.io/UrfChallenge2015/" data-layout="button"></div>
+        </div>
       </div>
     </div>
   </div>
