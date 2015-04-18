@@ -8,4 +8,5 @@ Browser support:
 - Chrome
 - Firefox
 - Opera
-- Internet Explorer 11
+- Internet Explorer >= 10
+  - Technically works in IE 9 but may have poor performance
