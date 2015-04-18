@@ -8,9 +8,9 @@
             $.ajax({
                 url: "//urf.pororeplays.com/games/" + (gameId || "random"),
                 dataType: 'json'
-            }).done(/*function(data) {
+            }).done(function(data) {
                 dfd.resolve(data);
-            }).fail(*/function() {
+            }).fail(function() {
                 // Failed to get data from server :(
                 // Grab a pre-stored JSON game so the user at least has something to look at.
                 console.log("Failed to get game data. Attempting to get backup game...");
