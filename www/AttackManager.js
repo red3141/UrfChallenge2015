@@ -356,13 +356,13 @@
                 if (particle.attack.rotationSpeed)
                     particle.rotation += particle.attack.rotationSpeed * elapsedSeconds * particle.flipDirection;
                 if (particle.scaleSpeed) {
-                    if (particle.scaleSpeed < 0 && particle.scaleY < -particle.scaleSpeed * elapsedSeconds) {
+                    if (particle.scaleSpeed < 0 && particle.scaleY < Math.abs(particle.scaleSpeed) * elapsedSeconds) {
                         // Particle is too small now and should be destroyed
                         particle.destroyTime = currentTime;
                     } else {
                         particle.scaleX += particle.scaleSpeed * elapsedSeconds * particle.flipDirection;
                         particle.scaleY += particle.scaleSpeed * elapsedSeconds;
-                        if (particle.attack.maxScale && particle.scaleY >= particle.attack.maxScale) {
+                        if (particle.scaleSpeed > 0 && particle.attack.maxScale && particle.scaleY >= particle.attack.maxScale) {
                             particle.scaleSpeed *= -1;
                         }
                     }
