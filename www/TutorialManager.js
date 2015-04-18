@@ -24,7 +24,7 @@
             [{ championId: 22, spawnPoint: { x: stage.width / 2, y: 0 }, targetPoint: { x: stage.width / 2, y: stage.height * 3 / 4 } }],
             [{ text: "Great job!", duration: 3, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
             [{ text: "Hold the R key to make Urf Focus!", advanceKeys: [Key.Focus], alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
-            [{ text: "While Focused, the red dot on Urf's back shrinks dramatically, and Urf moves slower.", duration: 8, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
+            [{ text: "While Focused, the red dot on Urf's back shrinks dramatically and Urf moves slower.", duration: 8, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
             [{ text: "Try to avoid the incoming attacks!", duration: 5, alpha: 0, alphaSpeed: 2, finished: FinishedAction.Fade }],
             [
                 { championId: 22, spawnPoint: { x: 0, y: 0 }, targetPoint: { x: stage.width / 2, y: stage.height * 3 / 4 } },

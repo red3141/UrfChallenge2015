@@ -9,8 +9,8 @@
     if (h < 770) {
         stage.canvas.height = 650;
         $("#container").height(710);
-        $("#controls").css("marginTop", 250);
-        $("#match-info").css("marginTop", 80);
+        $("#controls").css("marginTop", 240);
+        $("#match-info").css("marginTop", 65);
     }
     stage.width = stage.canvas.width;
     stage.height = stage.canvas.height;

@@ -12,6 +12,7 @@
 
         var fastSpeed = 450;
         var slowSpeed = 100;
+        var maxRanduinsCharges = 3;
         var maxZhonyasCharges = 3;
         var maxFlashCharges = 3;
         
@@ -20,11 +21,13 @@
         var hitboxLarge, hitboxSmall, hitbox, player, playerZhonyas, damageIndicator;
         var minPlayerX, maxPlayerX, minPlayerY, maxPlayerY;
         
+        var randuinsCharges = maxRanduinsCharges;
+        
         var stasisMilliseconds = 0;
-        var zhonyasCharges = 3;
+        var zhonyasCharges = maxZhonyasCharges;
         
         var flashOnNextMove = false;
-        var flashCharges = 3;
+        var flashCharges = maxFlashCharges;
         
         var maxHealth = 2000;
         var health = maxHealth;
@@ -76,10 +79,12 @@
             hitboxLarge.alpha = 1;
             hitboxSmall.alpha = 1;
             damageIndicator.alpha = 0;
-            flashCharges = 3;
+            randuinsCharges = maxRanduinsCharges;
+            updateRanduinsCharges();
+            flashCharges = maxFlashCharges;
             updateFlashCharges();
             stasisMilliseconds = 0;
-            zhonyasCharges = 3;
+            zhonyasCharges = maxZhonyasCharges;
             updateZhonyasCharges();
         }
         
@@ -167,7 +172,18 @@
                 y: hitbox.y
             };
         }
-
+        
+        // Returns true if a Randuin's charge could be used, and false if there were none to use.
+        function useRanduinsCharge() {
+            if (randuinsCharges > 0) {
+                --randuinsCharges;
+                updateRanduinsCharges();
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
         function isInStasis() {
             return stasisMilliseconds > 0;
         }
@@ -185,6 +201,16 @@
             damageIndicator.alpha = 1;
             if (health <= 0) {
                 this.dispatchEvent("dead");
+            }
+        }
+        
+        function updateRanduinsCharges() {
+            if (randuinsCharges == maxRanduinsCharges) {
+                for (var i = 0; i < maxRanduinsCharges; ++i) {
+                    $("#randuins" + i).css("visibility", "visible");
+                }
+            } else {
+                $("#randuins" + randuinsCharges).css("visibility", "hidden");
             }
         }
         
@@ -221,6 +247,7 @@
         this.resetPlayer = resetPlayer;
         this.movePlayer = movePlayer;
         this.getPosition = getPosition;
+        this.useRanduinsCharge = useRanduinsCharge;
         this.isInStasis = isInStasis;
         this.putInStasis = putInStasis;
         this.applyDamage = applyDamage;
