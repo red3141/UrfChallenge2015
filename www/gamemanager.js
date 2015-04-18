@@ -290,7 +290,7 @@
             stage.addChild(playerManager.hitbox);
 
             var c = $("#controls");
-            $("#abilities").show();
+            $("#abilities").css("visibility", "visible");
             $("#match-info").show();
 
             Ticker.reset();
