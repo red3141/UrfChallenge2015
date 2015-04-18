@@ -352,7 +352,7 @@
                 if (particle.attack.accel) {
                     var speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
                     // Enforce a minimum speed so that particles don't stop moving.
-                    if (speed > 60) {
+                    if (particle.attack.accel > 0 || speed > 60) {
                         particle.vx += particle.attack.accel * elapsedSeconds * particle.vx / speed;
                         particle.vy += particle.attack.accel * elapsedSeconds * particle.vy / speed;
                     }
