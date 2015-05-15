@@ -24,7 +24,7 @@
         }
 
         function getBackupGameData(gameId) {
-            var backupGameIds = ["1788237681", "1792447563", "1793039468", "1788238478"];
+            var backupGameIds = ["1788237681", "1788237827", "1788377376", "1792447563", "1793039468", "1788238478"];
             var backupGameId;
             if (gameId) {
                 $.each(backupGameIds, function(i, id) {
@@ -35,7 +35,7 @@
                 });
             }
             if (!backupGameId) {
-                var i = Math.floor(Math.random() * 4);
+                var i = Math.floor(Math.random() * backupGameIds.length);
                 backupGameId = backupGameIds[i];
             }
             return $.ajax({
