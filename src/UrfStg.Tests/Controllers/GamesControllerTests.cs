@@ -93,7 +93,7 @@ namespace UrfStg.Tests.Controllers
             var numIterations = 1000;
             var counts = new int[matches.Count()];
 
-            Parallel.For(0, 1000, i =>
+            for (var i = 0; i < 1000; ++i)
             {
                 var mockDb = Mock.Of<IRiotDataContext>(d =>
                     d.Matches == matches &&
@@ -105,7 +105,7 @@ namespace UrfStg.Tests.Controllers
                 var index = IndexOf(matches, match);
                 Assert.That(index, Is.AtLeast(0));
                 ++counts[index];
-            });
+            }
 
             var expected = (double)numIterations / counts.Length;
             var tolerance = 0.15;

@@ -17,8 +17,7 @@ namespace UrfStg.Web.Controllers
     /// </summary>
     public class GamesController : JsonNetController
     {
-        private IRiotDataContext dataContext;
-        private readonly Random random;
+        private readonly IRiotDataContext dataContext;
 
         public GamesController()
             : this(new RiotDataContext())
@@ -29,8 +28,6 @@ namespace UrfStg.Web.Controllers
             if (dataContext == null)
                 throw new ArgumentNullException("dataContext");
             this.dataContext = dataContext;
-
-            random = new Random();
         }
 
         /// <summary>
@@ -58,21 +55,8 @@ namespace UrfStg.Web.Controllers
         public ActionResult Random()
         {
             var ids = dataContext.Matches.Select(m => m.Id).ToList();
-
-            // Try to re-use the same random number generator to avoid burdening the garbage collector.
-            // However, if it is already in use by another thread, then just create a new one.
-            int index;
-            var useMonitor = Monitor.TryEnter(random);
-            try
-            {
-                var currentRandom = useMonitor ? random : new Random();
-                index = random.Next(ids.Count);
-            }
-            finally
-            {
-                if (useMonitor)
-                    Monitor.Exit(random);
-            }
+            var random = new Random();
+            var index = random.Next(ids.Count);
             var selectedId = ids[index];
             var match = GetMatch(selectedId);
 
